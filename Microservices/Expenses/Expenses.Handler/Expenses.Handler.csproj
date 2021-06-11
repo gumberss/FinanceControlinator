@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Domain\Handlers\" />
+    <Folder Include="Integration\Events\" />
+    <Folder Include="Integration\Handlers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FinanceControlinator.Common\FinanceControlinator.Common.csproj" />
+    <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
+    <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
+  </ItemGroup>
+
+</Project>
