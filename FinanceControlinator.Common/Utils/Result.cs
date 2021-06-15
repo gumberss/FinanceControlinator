@@ -5,7 +5,7 @@ using System.Text;
 namespace FinanceControlinator.Common.Utils
 {
     [Serializable]
-    public partial struct Result<T, E> where E : class
+    public struct Result<T, E> where E : class
     {
         public bool IsFailure { get; }
         public bool IsSuccess => !IsFailure;

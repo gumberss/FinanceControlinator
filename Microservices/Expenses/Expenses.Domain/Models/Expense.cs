@@ -1,11 +1,12 @@
 ﻿using Expenses.Domain.Enums;
+using FinanceControlinator.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Expenses.Domain.Models
 {
-    public record Expense
+    public record Expense : Entity
     {
         public Guid Id { get; init; }
 

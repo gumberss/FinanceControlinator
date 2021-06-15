@@ -2,7 +2,7 @@
 using FinanceControlinator.Common.Utils;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinanceControlinator.Common
+namespace Expenses.API.Commons
 {
     public class ApiControllerBase : ControllerBase
     {

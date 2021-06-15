@@ -1,6 +1,12 @@
-﻿using Expenses.Application.Domain.Cqrs.Events;
+﻿using Expenses.API.Commons;
+using Expenses.Application.Domain.Cqrs.Events;
+using Expenses.Data.Contexts;
+using Expenses.Data.Repositories;
 using Expenses.Domain.Models;
 using FinanceControlinator.Common;
+using FinanceControlinator.Common.Exceptions;
+using FinanceControlinator.Common.UnitOfWorks;
+using FinanceControlinator.Common.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -26,7 +32,5 @@ namespace Expenses.API.Controllers
         {
             return From(await _mediator.Send(new RegisterExpenseCommand { Expense = expense }));
         }
-
-       
     }
 }
