@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceControlinator.Common
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{21961752-1C34-4E9C-B3A0-8FD12D4FC3C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceControlinator.Events", "Common\FinanceControlinator.Events\FinanceControlinator.Events.csproj", "{EE2297D4-3ECD-49F2-8C5B-FAB95E2FD450}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{6B55A110-AA4C-41C8-8952-C89BFA7D83C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B55A110-AA4C-41C8-8952-C89BFA7D83C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B55A110-AA4C-41C8-8952-C89BFA7D83C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE2297D4-3ECD-49F2-8C5B-FAB95E2FD450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE2297D4-3ECD-49F2-8C5B-FAB95E2FD450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE2297D4-3ECD-49F2-8C5B-FAB95E2FD450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE2297D4-3ECD-49F2-8C5B-FAB95E2FD450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 		{CE9EA3E1-C93A-4A01-81BF-7FB1CF0167F4} = {39BCC868-9A61-4AC1-B5B0-56F1636C5AE7}
 		{B841D3E5-68B2-48AA-96BF-18757ED1FBC2} = {39BCC868-9A61-4AC1-B5B0-56F1636C5AE7}
 		{6B55A110-AA4C-41C8-8952-C89BFA7D83C0} = {7900280F-9520-44D5-B441-98146CDBEBC9}
+		{EE2297D4-3ECD-49F2-8C5B-FAB95E2FD450} = {7900280F-9520-44D5-B441-98146CDBEBC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB162E36-E524-4A3F-AD2D-FE4E554E814C}

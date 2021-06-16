@@ -1,0 +1,1 @@
+docker build -f "microservices\expenses\expenses.api\Dockerfile" --force-rm -t gumberss\financecontrolinator\expenses .

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expenses-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: financecontrolinator-expenses
+  template:
+    metadata:
+      labels:
+        app: financecontrolinator-expenses
+    spec:
+      containers:
+      - name: financecontrolinator-expenses
+        image: gumberss/financecontrolinator-expenses
+        ports:
+        - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: expenses-srv
+spec:
+  selector:
+    app: financecontrolinator-expenses
+  ports:
+    - name: financecontrolinator-port
+      protocol: TCP
+      port: 80
+      targetPort: 80
