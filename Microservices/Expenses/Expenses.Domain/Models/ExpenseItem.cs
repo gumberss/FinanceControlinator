@@ -2,7 +2,7 @@
 
 namespace Expenses.Domain.Models
 {
-    public record ExpenseItem
+    public class ExpenseItem
     {
         public Guid Id { get; init; }
 

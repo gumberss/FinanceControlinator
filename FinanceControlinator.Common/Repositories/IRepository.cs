@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FinanceControlinator.Common.Repositories
 {
-    public interface IRepository<T> : IRepositoryBase where T : Entity
+    public interface IRepository<T> : IRepositoryBase where T : IEntity
     {
         public Task<Result<List<T>, BusinessException>> GetAll(params Expression<Func<T, bool>>[] where);
 

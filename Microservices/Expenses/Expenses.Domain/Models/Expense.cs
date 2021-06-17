@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Expenses.Domain.Models
 {
-    public record Expense : Entity
+    public class Expense : Entity
     {
         public Guid Id { get; init; }
 
@@ -18,7 +18,7 @@ namespace Expenses.Domain.Models
 
         public ExpenseType Type { get; init; }
 
-        public bool IsRecurrent { get; init; }
+        public bool IsRecurrent { get; init; } //Monthly only yet
 
         public String Location { get; init; }
 

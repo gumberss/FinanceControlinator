@@ -5,12 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Expenses.Data\Expenses.Data.csproj" />
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

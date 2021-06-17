@@ -7,7 +7,6 @@ namespace Expenses.Application.Domain.Cqrs.Events
 {
     public class RegisterExpenseCommand : IRequest<Result<Expense, BusinessException>>
     {
-
         public Expense Expense { get; set; }
     }
 }

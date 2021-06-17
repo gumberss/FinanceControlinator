@@ -1,5 +1,7 @@
+using Expenses.API.Commons;
 using Expenses.Data.Contexts;
 using Expenses.Handler.Domain.Cqrs.Handlers;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,7 +46,8 @@ namespace Expenses.API
 
         private void RegisterServices(IServiceCollection services)
         {
-            //DependencyContainer.RegisterServices(services);
+            services.AddFluentValidation();
+            services.RegisterServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

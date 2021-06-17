@@ -7,7 +7,7 @@ namespace FinanceControlinator.Common.Entities
         public Guid Id { get; set; }
     }
 
-    public record Entity : IEntity
+    public class Entity : IEntity
     {
         public Guid Id { get; set; }
     }
