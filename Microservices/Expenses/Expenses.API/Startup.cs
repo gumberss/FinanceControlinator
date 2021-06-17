@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,7 @@ namespace Expenses.API
 
         private void RegisterServices(IServiceCollection services)
         {
+            services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
             services.AddFluentValidation();
             services.RegisterServices();
         }
@@ -53,8 +55,6 @@ namespace Expenses.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UsePathBase(new PathString("/api"));
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
