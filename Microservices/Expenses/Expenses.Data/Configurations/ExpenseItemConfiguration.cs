@@ -33,6 +33,13 @@ namespace Expenses.Data.Configurations
                 .HasOne(x => x.Expense)
                 .WithMany(x => x.Items)
                 .HasForeignKey(x => x.ExpenseId);
+
+            builder
+                .Property(x => x.InsertDate)
+                .IsRequired();
+
+            builder
+                .Property(x => x.UpdateDate);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FinanceControlinator.Common.Utils
 {
@@ -27,7 +28,7 @@ namespace FinanceControlinator.Common.Utils
 
         public Result(E error)
         {
-            IsFailure = error == default;
+            IsFailure = error != default;
             _value = default;
             _error = error;
         }
@@ -37,5 +38,31 @@ namespace FinanceControlinator.Common.Utils
 
         public static implicit operator Result<T, E>(E error)
             => new Result<T, E>(error);
+
+        public static implicit operator T(Result<T, E> result)
+            => result.Value;
+
+        public static implicit operator E(Result<T, E> result)
+            => result.Error;
+    }
+
+    public class Result
+    {
+        public static async Task<Result<T, Exception>> Try<T, EType>(Task<T> func) where EType : Exception
+        {
+            Func<Task<Result<T, Exception>>> tryFunction = async () =>
+            {
+                try
+                {
+                    return await func;
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
+            };
+
+            return await Task.Run(() => tryFunction.Invoke());
+        }
     }
 }

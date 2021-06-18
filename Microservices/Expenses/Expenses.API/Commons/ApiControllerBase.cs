@@ -1,6 +1,7 @@
 ﻿using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace Expenses.API.Commons
 {
@@ -12,10 +13,7 @@ namespace Expenses.API.Commons
             {
                 if (result.Error is BusinessException error)
                 {
-                    if (error is NotFoundException)
-                        return NotFound();
-
-                    return BadRequest(error.Serialize());
+                    return StatusCode(error.Code.GetHashCode(), error.Serialize());
                 }
             }
 

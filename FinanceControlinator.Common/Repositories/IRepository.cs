@@ -12,20 +12,20 @@ namespace FinanceControlinator.Common.Repositories
 {
     public interface IRepository<T> : IRepositoryBase where T : IEntity
     {
-        public Task<Result<List<T>, BusinessException>> GetAll(params Expression<Func<T, bool>>[] where);
+        public Task<Result<List<T>, BusinessException>> GetAllAsync(params Expression<Func<T, bool>>[] where);
 
-        public Task<Result<T, BusinessException>> Get(params Expression<Func<T, bool>>[] where);
+        public Task<Result<T, BusinessException>> GetAsync(params Expression<Func<T, bool>>[] where);
 
-        public Task<Result<T, BusinessException>> GetById(Guid id);
+        public Task<Result<T, BusinessException>> GetByIdAsync(Guid id);
 
-        public Task<Result<T, BusinessException>> Add(T entity);
+        public Task<Result<T, BusinessException>> AddAsync(T entity);
 
-        public Task<Result<T, BusinessException>> Update(T entity);
+        public Task<Result<T, BusinessException>> UpdateAsync(T entity);
 
-        public Task<Result<bool, BusinessException>> Delete(T entity);
+        public Task<Result<bool, BusinessException>> DeleteAsync(T entity);
 
-        public Task<Result<bool, BusinessException>> Delete(Guid id);
+        public Task<Result<bool, BusinessException>> DeleteAsync(Guid id);
 
-        public Task<Result<bool, BusinessException>> Delete(IEnumerable<Guid> ids);
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids);
     }
 }

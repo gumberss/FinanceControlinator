@@ -1,9 +1,12 @@
-﻿using FinanceControlinator.Common.Entities;
+﻿using Expenses.Domain.Enums;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Expenses.Domain.Models
+namespace Expenses.API.ViewModels
 {
-    public class ExpenseItem : Entity
+    public class ExpenseItemViewModel
     {
         public String Name { get; init; }
 
@@ -15,6 +18,5 @@ namespace Expenses.Domain.Models
 
         public Guid ExpenseId { get; set; }
 
-        public Expense Expense { get; init; }
     }
 }

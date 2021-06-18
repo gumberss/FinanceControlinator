@@ -41,10 +41,12 @@ namespace Expenses.Data.Configurations
             builder
                 .Property(x => x.Type);
 
-            
+            builder
+                .Property(x => x.InsertDate)
+                .IsRequired();
 
-
-
+            builder
+                .Property(x => x.UpdateDate);
         }
     }
 }

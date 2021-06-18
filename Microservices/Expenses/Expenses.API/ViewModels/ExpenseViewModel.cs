@@ -1,13 +1,12 @@
 ﻿using Expenses.Domain.Enums;
-using FinanceControlinator.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
-namespace Expenses.Domain.Models
+namespace Expenses.API.ViewModels
 {
-    public class Expense : Entity
+    public class ExpenseViewModel
     {
         public String Title { get; init; }
 
@@ -25,9 +24,6 @@ namespace Expenses.Domain.Models
 
         public decimal TotalCost { get; set; }
 
-        public List<ExpenseItem> Items { get; init; }
-
-        public bool TotalCostIsValid()
-        => TotalCost == Items.Sum(x => x.Cost * x.Amount);
+        public List<ExpenseItemViewModel> Items { get; init; }
     }
 }

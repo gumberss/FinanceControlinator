@@ -12,49 +12,65 @@ using System.Threading.Tasks;
 
 namespace Expenses.Data.Commons
 {
-    public class Repository<T> :   IRepository<T> where T : Entity
+    public class Repository<TEntity, TContext> : IRepository<TEntity>
+           where TEntity : class, IEntity
+           where TContext : DbContext
     {
-        public Repository(DbContext context) 
-        {
+        private readonly TContext _context;
+        private readonly DbSet<TEntity> _dbSet;
 
+        public Repository(TContext context)
+        {
+            _context = context;
+
+            _dbSet = _context.Set<TEntity>();
         }
 
-        public Task<Result<T, BusinessException>> Add(T entity)
+        public async Task<Result<TEntity, BusinessException>> AddAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbSet.AddAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+            }
+
+            return entity;
         }
 
-        public Task<Result<bool, BusinessException>> Delete(T entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<bool, BusinessException>> Delete(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<bool, BusinessException>> Delete(IEnumerable<Guid> ids)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<T, BusinessException>> Get(params Expression<Func<T, bool>>[] where)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<List<T>, BusinessException>> GetAll(params Expression<Func<T, bool>>[] where)
+        public Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<T, BusinessException>> GetById(Guid id)
+        public Task<Result<bool, BusinessException>> DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<T, BusinessException>> Update(T entity)
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<List<TEntity>, BusinessException>> GetAllAsync(params Expression<Func<TEntity, bool>>[] where)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
         {
             throw new NotImplementedException();
         }
