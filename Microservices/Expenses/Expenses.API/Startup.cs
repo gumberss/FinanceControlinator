@@ -1,7 +1,5 @@
 using Expenses.API.Commons;
-using Expenses.API.Mappers;
 using Expenses.Data.Contexts;
-using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Repositories;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;
@@ -13,7 +11,6 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
