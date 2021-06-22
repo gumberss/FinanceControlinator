@@ -6,7 +6,7 @@ using Expenses.Domain.Localizations;
 using Expenses.Domain.Validators;
 using Expenses.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.Localizations;
-using FinanceControlinator.Common.Log;
+using FinanceControlinator.Common.LogsBehaviors;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Expenses.API
@@ -68,7 +67,7 @@ namespace Expenses.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory logFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
