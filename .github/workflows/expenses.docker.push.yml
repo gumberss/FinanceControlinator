@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - run: echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
