@@ -6,7 +6,7 @@ using Expenses.Domain.Localizations;
 using Expenses.Domain.Validators;
 using Expenses.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.Localizations;
-using FinanceControlinator.Common.Log;
+using FinanceControlinator.Common.LogsBehaviors;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Expenses.API
