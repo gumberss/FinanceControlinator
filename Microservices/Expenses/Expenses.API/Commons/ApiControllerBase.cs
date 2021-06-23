@@ -1,7 +1,6 @@
 ﻿using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 
 namespace Expenses.API.Commons
 {
