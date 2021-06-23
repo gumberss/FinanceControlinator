@@ -15,6 +15,6 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -f "microservices/expenses/expenses.api/Dockerfile" --force-rm -t gumberss/financecontrolinator-expenses .
+      - run: docker build -f "./Microservices/Expenses/Expenses.API/Dockerfile" --force-rm -t gumberss/financecontrolinator-expenses .
       - run: docker push gumberss/financecontrolinator-expenses
       
