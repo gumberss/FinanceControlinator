@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-depl
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: financecontrolinator-{{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: financecontrolinator-{{ .Release.Name }}
+    spec:
+      containers:
+      - name: financecontrolinator-{{ .Release.Name }}
+        image: gumberss/financecontrolinator-{{ .Release.Name }}:{{ .Values.tag }}
+        env:
+          - name: "ConnectionStrings__ExpensesDbConnection"
+            value: Server={{ .Release.Name }}-db-srv;Database=Expenses;User Id={{.Values.dbUser}};Password={{.Values.dbPassword}}
+        ports:
+          - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-srv
+spec:
+  selector:
+    app: financecontrolinator-{{ .Release.Name }}
+  ports:
+    - name: financecontrolinator-port
+      protocol: TCP
+      port: 80
+      targetPort: 80
+
+      

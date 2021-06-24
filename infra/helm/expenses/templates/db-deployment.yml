@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-db-depl
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: financecontrolinator-{{ .Release.Name }}-db
+  template:
+    metadata:
+      labels:
+        app: financecontrolinator-{{ .Release.Name }}-db
+    spec:
+      containers:
+      - name: financecontrolinator-{{ .Release.Name }}-db
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: SA_PASSWORD
+            value: {{ .Values.dbPassword }}
+        ports:
+          - containerPort: 1433
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-db-srv
+spec:
+  selector:
+    app: financecontrolinator-{{ .Release.Name }}-db
+  ports:
+    - name: financecontrolinator-db-port
+      protocol: TCP
+      port: 1433
+      targetPort: 1433
+
+      
