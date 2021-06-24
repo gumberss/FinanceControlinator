@@ -1,0 +1,5 @@
+microserviceName: expenses
+replicaCount: 1
+tag: latest
+dbUser: $DB_USER
+dbPassword: $DB_PASSWORD
