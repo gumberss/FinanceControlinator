@@ -20,13 +20,13 @@ helm install finance-controlinator-rabbitmq bitnami/rabbitmq
 	- ref: https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-msbuild/
 - Commands to get metrics:
 ```
-	dotnet F:\Github\FinanceControlinator\infra\sonar\runner\SonarScanner.MSBuild.dll begin /k:"Financeinator" /d:sonar.login="sonar qube key"
+dotnet infra\sonar\runner\SonarScanner.MSBuild.dll begin /k:"Financeinator" /d:sonar.login="sonar qube key"
 
-dotnet build F:\Github\FinanceControlinator\FinanceControlinator.sln
+dotnet build FinanceControlinator.sln
 
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
-dotnet F:\Github\FinanceControlinator\infra\sonar\runner\SonarScanner.MSBuild.dll end /d:sonar.login="sonar qube key" 
+dotnet infra\sonar\runner\SonarScanner.MSBuild.dll end /d:sonar.login="sonar qube key" 
 
 ```
 
