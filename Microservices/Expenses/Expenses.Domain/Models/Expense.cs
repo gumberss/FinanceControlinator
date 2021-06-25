@@ -28,6 +28,6 @@ namespace Expenses.Domain.Models
         public List<ExpenseItem> Items { get; init; }
 
         public bool TotalCostIsValid()
-        => TotalCost == Items.Sum(x => x.Cost * x.Amount);
+            => TotalCost == Items.Sum(x => x.Cost * x.Amount);
     }
 }
