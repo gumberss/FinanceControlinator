@@ -14,6 +14,7 @@ helm install finance-controlinator-rabbitmq bitnami/rabbitmq
 
 
 # SonarQube:
+- install jdk
 - Run compose
 - dotnet tool install --global dotnet-sonarscanner
 - install sonar scanner: https://github.com/SonarSource/sonar-scanner-msbuild/releases/
