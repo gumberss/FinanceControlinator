@@ -9,23 +9,23 @@ namespace Expenses.Domain.Models
 {
     public class Expense : Entity
     {
-        public String Title { get; init; }
+        public String Title { get; set; }
 
-        public String Description { get; init; }
+        public String Description { get; set; }
 
-        public DateTime Date { get; init; }
+        public DateTime Date { get; set; }
 
-        public ExpenseType Type { get; init; }
+        public ExpenseType Type { get; set; }
 
-        public bool IsRecurrent { get; init; } //Monthly only yet
+        public bool IsRecurrent { get; set; } //Monthly only yet
 
-        public String Location { get; init; }
+        public String Location { get; set; }
 
-        public String Observation { get; init; }
+        public String Observation { get; set; }
 
         public decimal TotalCost { get; set; }
 
-        public List<ExpenseItem> Items { get; init; }
+        public List<ExpenseItem> Items { get; set; }
 
         public bool TotalCostIsValid()
             => TotalCost == Items.Sum(x => x.Cost * x.Amount);

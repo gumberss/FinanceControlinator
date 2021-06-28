@@ -4,6 +4,7 @@ using Expenses.Data.Repositories;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;
 using Expenses.Domain.Validators;
+using Expenses.Handler.Configurations;
 using Expenses.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.LogsBehaviors;
@@ -32,10 +33,19 @@ namespace Expenses.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var rabbitMqValues = new RabbitMqValues()
+            {
+                Host = Configuration.GetSection("RabbitMq:Host").Value,
+                Username = Configuration.GetSection("RabbitMq:Username").Value,
+                Password = Configuration.GetSection("RabbitMq:Password").Value,
+            };
+
+            services.ConfigureMassTransit(rabbitMqValues);
+
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                ); ;
+                );
 
             services.AddDbContext<ExpenseDbContext>(options =>
           {

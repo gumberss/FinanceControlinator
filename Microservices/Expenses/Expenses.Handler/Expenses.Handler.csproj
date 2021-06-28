@@ -10,10 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.1" />
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\FinanceControlinator.Events\FinanceControlinator.Events.csproj" />
     <ProjectReference Include="..\..\..\FinanceControlinator.Common\FinanceControlinator.Common.csproj" />
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
