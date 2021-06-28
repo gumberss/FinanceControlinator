@@ -1,4 +1,5 @@
-﻿using Expenses.Application.Interfaces.AppServices;
+﻿using AutoMapper;
+using Expenses.Application.Interfaces.AppServices;
 using Expenses.Domain.Models;
 using Expenses.Handler.Domain.Cqrs.Events;
 using FinanceControlinator.Common.Exceptions;
@@ -22,15 +23,18 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
         private readonly IExpenseAppService _expenseAppService;
         private readonly ILogger<ExpenseHandler> _logger;
         private readonly IBus _bus;
+        private readonly IMapper _mapper;
 
         public ExpenseHandler(
             IExpenseAppService expenseAppService
             , ILogger<ExpenseHandler> logger
-            , IBus bus)
+            , IBus bus,
+            IMapper mapper)
         {
             _expenseAppService = expenseAppService;
             _logger = logger;
             _bus = bus;
+            _mapper = mapper;
         }
 
         public async Task<Result<Expense, BusinessException>> Handle(RegisterExpenseCommand request, CancellationToken cancellationToken)
@@ -44,11 +48,9 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
                     return result;
                 }
 
-                //automapper??
-                await _bus.Publish(new ExpenseCreatedEvent
-                {
-                    //populate
-                });
+                var @event = _mapper.Map<Expense, ExpenseCreatedEvent>(result.Value);
+                
+                await _bus.Publish(@event);
 
                 return result;
             }

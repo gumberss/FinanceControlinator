@@ -1,15 +1,7 @@
 using Expenses.API.Commons;
 using Expenses.Data.Contexts;
-using Expenses.Data.Repositories;
-using Expenses.Domain.Interfaces.Validators;
-using Expenses.Domain.Localizations;
-using Expenses.Domain.Validators;
 using Expenses.Handler.Configurations;
-using Expenses.Handler.Domain.Cqrs.Handlers;
-using FinanceControlinator.Common.Localizations;
-using FinanceControlinator.Common.LogsBehaviors;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -48,9 +40,9 @@ namespace Expenses.API
                 );
 
             services.AddDbContext<ExpenseDbContext>(options =>
-          {
-              options.UseSqlServer(Configuration.GetConnectionString("ExpensesDbConnection"));
-          });
+            {
+                  options.UseSqlServer(Configuration.GetConnectionString("ExpensesDbConnection"));
+            });
 
             services.AddSwaggerGen(x =>
             {
@@ -58,22 +50,13 @@ namespace Expenses.API
             });
 
             services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-            services.AddFluentValidation();
-            services.RegisterServices();
-
+            
             RegisterServices(services);
         }
 
         private void RegisterServices(IServiceCollection services)
         {
-            services.AddMediatR(typeof(Startup));
-            services.AddMediatR(typeof(ExpenseHandler));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-
-            services.AddTransient<IExpenseRepository, ExpenseRepository>();
-            services.AddTransient<IExpenseValidator, ExpenseValidator>();
-            
-            services.AddTransient<ILocalization, Ptbr>();
+            services.RegisterServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,7 +66,6 @@ namespace Expenses.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
 
             app.UseSwagger();
             app.UseSwaggerUI(x =>
