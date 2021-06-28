@@ -12,7 +12,7 @@ namespace FinanceControlinator.Common.Repositories
 {
     public interface IRepository<T> : IRepositoryBase where T : IEntity
     {
-        public Task<Result<List<T>, BusinessException>> GetAllAsync(params Expression<Func<T, bool>>[] where);
+        Task<Result<List<T>, BusinessException>> GetAllAsync(Expression<Func<T, object>> include = null, params Expression<Func<T, bool>>[] where);
 
         public Task<Result<T, BusinessException>> GetAsync(params Expression<Func<T, bool>>[] where);
 

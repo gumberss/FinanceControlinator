@@ -1,11 +1,6 @@
 ﻿using Expenses.API.Commons;
-using Expenses.Application.Domain.Cqrs.Events;
-using Expenses.Data.Contexts;
-using Expenses.Data.Repositories;
 using Expenses.Domain.Models;
-using FinanceControlinator.Common;
-using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Utils;
+using Expenses.Handler.Domain.Cqrs.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,9 +28,21 @@ namespace Expenses.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromBody] Expense expense)
+        public async Task<IActionResult> Get()
         {
-            return Ok("Ok");
+            return From(await _mediator.Send(new GetAllExpensesQuery ()));
+        }
+
+        [HttpGet("Month")]
+        public async Task<IActionResult> GetMonth()
+        {
+            return From(await _mediator.Send(new GetMonthExpensesQuery()));
+        }
+
+        [HttpGet("LastMonth")]
+        public async Task<IActionResult> GetLastMonth()
+        {
+            return From(await _mediator.Send(new GetLastMonthExpensesQuery()));
         }
     }
 }

@@ -21,5 +21,7 @@ namespace Expenses.Domain.Localizations
         public string TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS => "O 'Valor Total' do custo não está igual com a soma dos valors dos items";
 
         public string AN_ERROR_OCCURRED_ON_THE_SERVER => "Ocorreu um erro no servidor";
+
+        public string EXPENSES_NOT_FOUND => "Nenhuma despesa foi encontrada";
     }
 }
