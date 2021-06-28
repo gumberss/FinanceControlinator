@@ -10,6 +10,7 @@ Handling connection for 15672
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 helm install finance-controlinator-rabbitmq bitnami/rabbitmq
+GetPassword: $(kubectl get secret --namespace default finance-controlinator-rabbitmq -o jsonpath="{.data.rabbitmq-password}" | base64 --decode)"
 ```
 
 
