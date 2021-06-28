@@ -70,7 +70,7 @@ namespace Expenses.Data.Commons
                 }
 
                 if (include is not null)
-                    dbSet.Include(include);
+                    dbSet = dbSet.Include(include);
 
                 return await dbSet.ToListAsync();
             }
