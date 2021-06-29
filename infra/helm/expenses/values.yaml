@@ -1,5 +1,9 @@
 microserviceName: expenses
 replicaCount: 1
-tag: latest
-dbUser: $DB_USER
-dbPassword: $DB_PASSWORD
+dbUser: sa
+dbPassword: P@ssw0rd!
+image: gumberss/financecontrolinator-expenses:latest
+rabbit:
+  host: amqp://finance-controlinator-rabbitmq/
+  password: 96xuOJMKYf
+  username: user

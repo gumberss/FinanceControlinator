@@ -14,10 +14,19 @@ spec:
     spec:
       containers:
       - name: financecontrolinator-{{ .Release.Name }}
-        image: gumberss/financecontrolinator-{{ .Release.Name }}:{{ .Values.tag }}
+        image: {{ .Values.image }}
         env:
           - name: "ConnectionStrings__ExpensesDbConnection"
             value: Server={{ .Release.Name }}-db-srv;Database=Expenses;User Id={{.Values.dbUser}};Password={{.Values.dbPassword}}
+          - name: "ConnectionStrings__ExpensesDbConnection"
+            value: Server={{ .Release.Name }}-db-srv;Database=Expenses;User Id={{.Values.dbUser}};Password={{.Values.dbPassword}}
+
+          - name: RabbitMq__Host 
+            value: {{.Values.rabbit.host}}
+          - name: RabbitMq__Password 
+            value: {{.Values.rabbit.password}}
+          - name: RabbitMq__Username 
+            value: {{.Values.rabbit.username}}
         ports:
           - containerPort: 80
 ---
