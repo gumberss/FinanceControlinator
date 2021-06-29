@@ -1,0 +1,25 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+    - 'Microservices/Expenses/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj
+    - name: Build
+      run: dotnet build Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj --no-restore
+    - name: Test
+      run: dotnet test Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj --no-build --verbosity normal
