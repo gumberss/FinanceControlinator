@@ -1,0 +1,26 @@
+apiVersion: skaffold/v2beta17
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: gumberss/financecontrolinator-expenses
+    context: ../
+    docker:
+      dockerfile: Microservices/Expenses/Expenses.API/Dockerfile
+   
+deploy:
+  helm:
+    releases:
+    - name: expenses
+      chartPath: helm/expenses
+      artifactOverrides:
+        image: gumberss/financecontrolinator-expenses
+   
+
+portForward:
+- resourceType: Service
+  resourceName: expenses-srv
+  namespace: default
+  port: 80
+  localPort: 5001
