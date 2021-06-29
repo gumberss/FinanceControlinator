@@ -1,10 +1,11 @@
-﻿using FinanceControlinator.Common.Entities;
-using System;
+﻿using System;
 
-namespace Expenses.Domain.Models
+namespace FinanceControlinator.Events.Expenses.DTOs
 {
-    public class ExpenseItem : Entity
+    public class ExpenseItemDTO
     {
+        public Guid Id { get; set; }
+
         public String Name { get; set; }
 
         public String Description { get; set; }
@@ -14,7 +15,5 @@ namespace Expenses.Domain.Models
         public int Amount { get; set; }
 
         public Guid ExpenseId { get; set; }
-
-        public Expense Expense { get; set; }
     }
 }

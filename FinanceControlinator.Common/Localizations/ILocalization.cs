@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinanceControlinator.Common.Exceptions;
+using System;
 
 namespace FinanceControlinator.Common.Localizations
 {
@@ -13,5 +14,6 @@ namespace FinanceControlinator.Common.Localizations
         string ITEM_COST_MUST_BE_GREATER_THAN_ZERO { get; }
         string TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS { get; }
         string AN_ERROR_OCCURRED_ON_THE_SERVER { get; }
+        string EXPENSES_NOT_FOUND { get; }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Expenses.Domain.Enums
+﻿namespace Expenses.Domain.Enums
 {
     public enum ExpenseType
     {

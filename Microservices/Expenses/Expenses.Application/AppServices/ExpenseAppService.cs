@@ -9,6 +9,7 @@ using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -36,6 +37,79 @@ namespace Expenses.Application.AppServices
             _expenseValidator = expenseValidator;
             _localization = localization;
             _logger = logger;
+        }
+
+        public async Task<Result<List<Expense>, BusinessException>> GetAllExpenses()
+        {
+            var result = await _expenseRepository.GetAllAsync(include: x => x.Items);
+
+            if (result.IsFailure)
+            {
+                //log
+                return result.Error;
+            }
+
+            var expenses = result.Value;
+
+            if (!expenses.Any())
+            {
+                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+            }
+
+            return expenses;
+        }
+        
+        public async Task<Result<List<Expense>, BusinessException>> GetMonthExpenses()
+        {
+            var month = DateTime.Now.Month;
+            var year = DateTime.Now.Year;
+
+            var result = await _expenseRepository.GetAllAsync(
+                include: e => e.Items
+                , e => e.Date.Month == month
+                , e => e.Date.Year == year);
+
+            if (result.IsFailure)
+            {
+                //log
+                return result.Error;
+            }
+
+            var expenses = result.Value;
+
+            if (!expenses.Any())
+            {
+                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+            }
+
+            return expenses;
+        }
+
+        public async Task<Result<List<Expense>, BusinessException>> GetLastMonthExpenses()
+        {
+            var lastMonth = DateTime.Now.AddMonths(-1);
+            var month = lastMonth.Month;
+            var year = lastMonth.Year;
+
+            var result = await _expenseRepository.GetAllAsync(
+                include: e => e.Items
+                , e => e.Date.Month == month
+                , e => e.Date.Year == year);
+
+            if (result.IsFailure)
+            {
+                //log
+                return result.Error;
+            }
+
+            var expenses = result.Value;
+
+            if (!expenses.Any())
+            {
+                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+            }
+
+            return expenses;
         }
 
         public async Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense)

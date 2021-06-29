@@ -55,10 +55,42 @@ namespace Expenses.Data.Commons
             throw new NotImplementedException();
         }
 
-        public Task<Result<List<TEntity>, BusinessException>> GetAllAsync(params Expression<Func<TEntity, bool>>[] where)
+        public async Task<Result<List<TEntity>, BusinessException>> GetAllAsync(Expression<Func<TEntity, object>> include = null, params Expression<Func<TEntity, bool>>[] where)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<TEntity> dbSet = _dbSet;
+
+                if (where is not null)
+                {
+                    foreach (var item in where)
+                    {
+                        dbSet = dbSet.Where(item);
+                    }
+                }
+
+                if (include is not null)
+                    dbSet = dbSet.Include(include);
+
+                return await dbSet.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+            }
         }
+        public async Task<Result<List<TEntity>, BusinessException>> GetAllIncludeAsync(params Expression<Func<TEntity, bool>>[] where)
+        {
+            try
+            {
+                return await _dbSet.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
 
         public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
         {
