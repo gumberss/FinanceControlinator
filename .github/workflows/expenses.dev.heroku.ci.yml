@@ -1,4 +1,4 @@
-name: docker-push-expenses
+name: Heroku CI
 
 on: workflow_dispatch
    
