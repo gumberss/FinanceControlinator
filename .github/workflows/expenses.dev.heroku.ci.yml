@@ -2,6 +2,13 @@ name: docker-push-expenses
 
 on:
   workflow_dispatch:
+   inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
 jobs:
   deploy-dev:
     runs-on: ubuntu-latest
