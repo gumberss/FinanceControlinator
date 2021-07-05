@@ -23,4 +23,4 @@ portForward:
   resourceName: expenses-srv
   namespace: default
   port: 80
-  localPort: 5001
+  localPort: 5001 
