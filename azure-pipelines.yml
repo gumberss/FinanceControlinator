@@ -11,7 +11,7 @@ pool:
 
 
 stages:
-- stage: Instal Helm
+- stage: install_helm
   jobs:
   - job: 
     steps:
@@ -20,7 +20,7 @@ stages:
         helmVersion: '2.14.1'
         installKubectl: true
 
-- stage: Run Helm
+- stage: deploy_expenses
   jobs:
   - job: 
     steps:
