@@ -10,7 +10,8 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY ["Microservices/Expenses/Expenses.API/Expenses.API.csproj", "Microservices/Expenses/Expenses.API/"]
 COPY ["Microservices/Expenses/Expenses.Domain/Expenses.Domain.csproj", "Microservices/Expenses/Expenses.Domain/"]
-COPY ["FinanceControlinator.Common/FinanceControlinator.Common.csproj", "FinanceControlinator.Common/"]
+COPY ["Common/FinanceControlinator.Common/FinanceControlinator.Common.csproj", "FinanceControlinator.Common/"]
+COPY ["Common/FinanceControlinator.Events/FinanceControlinator.Events.csproj", "FinanceControlinator.Events/"]
 COPY ["Microservices/Expenses/Expenses.Data/Expenses.Data.csproj", "Microservices/Expenses/Expenses.Data/"]
 COPY ["Microservices/Expenses/Expenses.Handler/Expenses.Handler.csproj", "Microservices/Expenses/Expenses.Handler/"]
 COPY ["Microservices/Expenses/Expenses.Application/Expenses.Application.csproj", "Microservices/Expenses/Expenses.Application/"]

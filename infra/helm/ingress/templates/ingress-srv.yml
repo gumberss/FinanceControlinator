@@ -13,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: expenses-srv
+                name: {{ .Values.expenseReleaseName }}-srv
                 port:
                   number: 80
