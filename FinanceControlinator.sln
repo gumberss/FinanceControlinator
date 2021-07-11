@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application", "Mic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{7900280F-9520-44D5-B441-98146CDBEBC9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceControlinator.Common", "FinanceControlinator.Common\FinanceControlinator.Common.csproj", "{6B55A110-AA4C-41C8-8952-C89BFA7D83C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceControlinator.Common", "Common\FinanceControlinator.Common\FinanceControlinator.Common.csproj", "{6B55A110-AA4C-41C8-8952-C89BFA7D83C0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{21961752-1C34-4E9C-B3A0-8FD12D4FC3C4}"
 EndProject
