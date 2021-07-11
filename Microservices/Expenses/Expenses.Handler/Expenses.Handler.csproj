@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\FinanceControlinator.Common\FinanceControlinator.Common.csproj" />
     <ProjectReference Include="..\..\..\Common\FinanceControlinator.Events\FinanceControlinator.Events.csproj" />
-    <ProjectReference Include="..\..\..\FinanceControlinator.Common\FinanceControlinator.Common.csproj" />
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
   </ItemGroup>
