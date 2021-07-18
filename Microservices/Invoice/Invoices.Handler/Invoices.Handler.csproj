@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\Profiles\" />
     <Folder Include="Domain\Handlers\" />
-    <Folder Include="Integration\Handlers\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Invoices.Domain.Models
 {
-    public class Invoice : Entity
+    public class Expense : Entity<String>
     {
         public String Title { get; set; }
 
@@ -17,7 +17,7 @@ namespace Invoices.Domain.Models
 
         public InvoiceType Type { get; set; }
 
-        public bool IsRecurrent { get; set; } //Monthly only yet
+        public bool IsRecurrent { get; set; } 
 
         public String Location { get; set; }
 
@@ -25,7 +25,7 @@ namespace Invoices.Domain.Models
 
         public decimal TotalCost { get; set; }
 
-        public List<InvoiceItem> Items { get; set; }
+        public List<ExpenseItem> Items { get; set; }
 
         public bool TotalCostIsValid()
             => TotalCost == Items.Sum(x => x.Cost * x.Amount);

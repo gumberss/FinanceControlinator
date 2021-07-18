@@ -1,7 +1,6 @@
+using Invoices.Handler.Integration.Handlers.Expenses;
 using MassTransit;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
 
 namespace Invoices.Handler.Configurations
@@ -12,7 +11,7 @@ namespace Invoices.Handler.Configurations
         {
            services.AddMassTransit(x =>
            {
-               //x.AddConsumer<ValueEnteredEventConsumer>();
+               x.AddConsumer<ExpenseHandler>();
 
                x.SetKebabCaseEndpointNameFormatter();
 
@@ -20,7 +19,6 @@ namespace Invoices.Handler.Configurations
                {
                    cfg.Host(new Uri(configuration.Host), host =>
                    {
-                       
                        host.Username(configuration.Username);
                        host.Password(configuration.Password);
                    });

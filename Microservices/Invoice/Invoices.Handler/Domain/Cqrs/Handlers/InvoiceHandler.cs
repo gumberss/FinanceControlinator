@@ -14,10 +14,10 @@ using System.Threading.Tasks;
 namespace Invoices.Handler.Domain.Cqrs.Handlers
 {
     public class InvoiceHandler
-        : IRequestHandler<RegisterInvoiceCommand, Result<Invoice, BusinessException>>
-        , IRequestHandler<GetAllInvoicesQuery, Result<List<Invoice>, BusinessException>>
-        , IRequestHandler<GetMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
-        , IRequestHandler<GetLastMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
+        : IRequestHandler<RegisterInvoiceCommand, Result<Expense, BusinessException>>
+        , IRequestHandler<GetAllInvoicesQuery, Result<List<Expense>, BusinessException>>
+        , IRequestHandler<GetMonthInvoicesQuery, Result<List<Expense>, BusinessException>>
+        , IRequestHandler<GetLastMonthInvoicesQuery, Result<List<Expense>, BusinessException>>
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly ILogger<InvoiceHandler> _logger;
@@ -36,11 +36,11 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
             _mapper = mapper;
         }
 
-        public async Task<Result<Invoice, BusinessException>> Handle(RegisterInvoiceCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Expense, BusinessException>> Handle(RegisterInvoiceCommand request, CancellationToken cancellationToken)
         {
             using (_logger.BeginScope(this.GetType().Name))
             {
-                var result = await _invoiceAppService.RegisterInvoice(request.Invoice);
+                var result = await _invoiceAppService.RegisterExpense(request.Invoice);
 
                 if (result.IsFailure)
                 {
@@ -55,17 +55,17 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
             }
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> Handle(GetAllInvoicesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<Expense>, BusinessException>> Handle(GetAllInvoicesQuery request, CancellationToken cancellationToken)
         {
             return await _invoiceAppService.GetAllInvoices();
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> Handle(GetMonthInvoicesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<Expense>, BusinessException>> Handle(GetMonthInvoicesQuery request, CancellationToken cancellationToken)
         {
             return await _invoiceAppService.GetMonthInvoices();
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> Handle(GetLastMonthInvoicesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<Expense>, BusinessException>> Handle(GetLastMonthInvoicesQuery request, CancellationToken cancellationToken)
         {
             return await _invoiceAppService.GetLastMonthInvoices();
         }

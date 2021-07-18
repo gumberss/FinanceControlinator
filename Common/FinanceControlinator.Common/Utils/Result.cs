@@ -48,13 +48,49 @@ namespace FinanceControlinator.Common.Utils
 
     public class Result
     {
-        public static async Task<Result<T, Exception>> Try<T, EType>(Task<T> func) where EType : Exception
+        public static async Task<Result<T, Exception>> Try<T>(Task<T> func)
         {
             Func<Task<Result<T, Exception>>> tryFunction = async () =>
             {
                 try
                 {
                     return await func;
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
+            };
+
+            return await Task.Run(() => tryFunction.Invoke());
+        }
+
+        public static async Task<Result<bool, Exception>> Try(Action func)
+        {
+            Func<Result<bool, Exception>> tryFunction = () =>
+            {
+                try
+                {
+                    func();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
+            };
+
+            return  await Task.Run(() => tryFunction.Invoke());
+        }
+
+        public static async Task<Result<T, Exception>> Try<T>(Func<T> func)
+        {
+            Func<Result<T, Exception>> tryFunction = () =>
+            {
+                try
+                {
+                    return func();
                 }
                 catch (Exception ex)
                 {

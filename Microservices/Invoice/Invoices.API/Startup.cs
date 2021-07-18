@@ -10,6 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
+using MassTransit;
+using Invoices.Handler.Integration.Handlers.Expenses;
 
 namespace Invoices.API
 {
@@ -39,10 +43,11 @@ namespace Invoices.API
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            services.AddDbContext<InvoiceDbContext>(options =>
-            {
-                  options.UseSqlServer(Configuration.GetConnectionString("InvoicesDbConnection"));
-            });
+            var dbConnection = Configuration.GetConnectionString("InvoicesDbConnection");
+            var dbName = Configuration.GetConnectionString("InvoicesDbName");
+            services.AddSingleton<IDocumentStore>(x => DocumentStoreHolder.GetStore(dbConnection, dbName));
+            //services.AddTransient<IDocumentSession>(x => x.GetService<IDocumentStore>().OpenSession());
+            services.AddScoped<IDocumentSession>(x => x.GetService<IDocumentStore>().OpenSession());
 
             services.AddSwaggerGen(x =>
             {
@@ -59,7 +64,7 @@ namespace Invoices.API
             services.RegisterServices();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipel1ine.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

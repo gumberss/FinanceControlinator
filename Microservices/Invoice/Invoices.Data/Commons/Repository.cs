@@ -2,7 +2,8 @@ using FinanceControlinator.Common.Entities;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Repositories;
 using FinanceControlinator.Common.Utils;
-using Microsoft.EntityFrameworkCore;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,45 +13,78 @@ using System.Threading.Tasks;
 
 namespace Invoices.Data.Commons
 {
-    public class Repository<TEntity, TContext> : IRepository<TEntity>
-           where TEntity : class, IEntity
-           where TContext : DbContext
+    public class Repository<TEntity, TEntityId> : IRepository<TEntity, TEntityId>
+           where TEntity : class, IEntity<TEntityId>
     {
-        private readonly TContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        private IDocumentSession _session;
 
-        public Repository(TContext context)
+        public Repository(IDocumentSession session)
         {
-            _context = context;
-
-            _dbSet = _context.Set<TEntity>();
+            _session = session;
         }
 
         public async Task<Result<TEntity, BusinessException>> AddAsync(TEntity entity)
         {
+            var result = await Result.Try(() =>
+            {
+                _session.Store(entity);
+                return entity;
+            });
+
+            if (result.IsFailure)
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
+            }
+
+            return result.Value;
+        }
+
+        public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
+        {
             try
             {
-                await _dbSet.AddAsync(entity);
+                _session.Delete(entity);
+
+                return await Task.FromResult(true);
             }
             catch (Exception ex)
             {
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
             }
-
-            return entity;
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _session.Delete(id.ToString());
+
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+            }
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(Guid id)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
         {
-            throw new NotImplementedException();
+            try
+            {
+                foreach (var id in ids)
+                {
+                    _session.Delete(id.ToString());
+                }
+
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+            }
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        public Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
         {
             throw new NotImplementedException();
         }
@@ -59,31 +93,41 @@ namespace Invoices.Data.Commons
         {
             try
             {
-                IQueryable<TEntity> dbSet = _dbSet;
+                var query = _session.Query<TEntity>();
+
+                if (include is not null)
+                    query = query.Include(include);
+
+                IQueryable<TEntity> queryableQuery = query;
 
                 if (where is not null)
                 {
                     foreach (var item in where)
                     {
-                        dbSet = dbSet.Where(item);
+                        queryableQuery = queryableQuery.Where(item);
                     }
                 }
 
-                if (include is not null)
-                    dbSet = dbSet.Include(include);
-
-                return await dbSet.ToListAsync();
+                return await queryableQuery.ToListAsync();
             }
             catch (Exception ex)
             {
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
             }
         }
-        public async Task<Result<List<TEntity>, BusinessException>> GetAllIncludeAsync(params Expression<Func<TEntity, bool>>[] where)
+
+        public async Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
         {
             try
             {
-                return await _dbSet.ToListAsync();
+                IQueryable<TEntity> query = _session.Query<TEntity>();
+
+                foreach (var item in where)
+                {
+                    query = query.Where(item);
+                }
+
+                return await query.FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -91,13 +135,17 @@ namespace Invoices.Data.Commons
             }
         }
 
-
-        public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
+        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await Result.Try(() => _session.Load<TEntity>(id.ToString()));
+
+            if (result.IsFailure)
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
+
+            return result.Value;
         }
 
-        public Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
+        public Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
         {
             throw new NotImplementedException();
         }

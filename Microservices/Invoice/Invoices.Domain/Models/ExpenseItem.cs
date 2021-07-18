@@ -3,7 +3,7 @@ using System;
 
 namespace Invoices.Domain.Models
 {
-    public class InvoiceItem : Entity
+    public class ExpenseItem : Entity<String>
     {
         public String Name { get; set; }
 
@@ -15,6 +15,6 @@ namespace Invoices.Domain.Models
 
         public Guid InvoiceId { get; set; }
 
-        public Invoice Invoice { get; set; }
+        public Expense Invoice { get; set; }
     }
 }

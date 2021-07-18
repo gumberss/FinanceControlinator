@@ -28,8 +28,7 @@ namespace Invoices.API.Commons
 
             services.AddFluentValidation();
 
-            services.AddScoped<IInvoiceAppService, InvoiceAppService>();
-            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddTransient<IInvoiceAppService, InvoiceAppService>();
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
             services.AddTransient<IInvoiceValidator, InvoiceValidator>();
         }

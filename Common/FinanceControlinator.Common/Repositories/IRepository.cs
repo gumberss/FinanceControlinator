@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace FinanceControlinator.Common.Repositories
 {
-    public interface IRepository<T> : IRepositoryBase where T : IEntity
+    public interface IRepository<T, TId> : IRepositoryBase where T : IEntity<TId>
     {
         Task<Result<List<T>, BusinessException>> GetAllAsync(Expression<Func<T, object>> include = null, params Expression<Func<T, bool>>[] where);
 
         public Task<Result<T, BusinessException>> GetAsync(params Expression<Func<T, bool>>[] where);
 
-        public Task<Result<T, BusinessException>> GetByIdAsync(Guid id);
+        public Task<Result<T, BusinessException>> GetByIdAsync(TId id);
 
         public Task<Result<T, BusinessException>> AddAsync(T entity);
 
@@ -24,7 +24,7 @@ namespace FinanceControlinator.Common.Repositories
 
         public Task<Result<bool, BusinessException>> DeleteAsync(T entity);
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(Guid id);
+        public Task<Result<bool, BusinessException>> DeleteAsync(TId id);
 
         public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids);
     }

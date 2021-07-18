@@ -11,8 +11,7 @@ namespace Invoices.API
         {
             CreateHostBuilder(args)
                 .Build()
-                .Migrate()
-                .Result
+                .EnsureDatabaseExists()
                 .Run();
         }
 

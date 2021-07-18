@@ -8,12 +8,12 @@ namespace Invoices.Application.Interfaces.AppServices
 {
     public interface IInvoiceAppService
     {
-        public Task<Result<Invoice, BusinessException>> RegisterInvoice(Invoice invoice);
+        public Task<Result<Expense, BusinessException>> RegisterExpense(Expense invoice);
 
-        Task<Result<List<Invoice>, BusinessException>> GetAllInvoices();
+        Task<Result<List<Expense>, BusinessException>> GetAllInvoices();
 
-        Task<Result<List<Invoice>, BusinessException>> GetMonthInvoices();
+        Task<Result<List<Expense>, BusinessException>> GetMonthInvoices();
 
-        Task<Result<List<Invoice>, BusinessException>> GetLastMonthInvoices();
+        Task<Result<List<Expense>, BusinessException>> GetLastMonthInvoices();
     }
 }

@@ -6,7 +6,7 @@ using System;
 
 namespace Invoices.Domain.Validators
 {
-    public class InvoiceValidator : AbstractValidator<Invoice>, IInvoiceValidator
+    public class InvoiceValidator : AbstractValidator<Expense>, IInvoiceValidator
     {
         public InvoiceValidator(ILocalization localization)
         {
@@ -31,7 +31,7 @@ namespace Invoices.Domain.Validators
         }
     }
 
-    public class InvoiceItemValidator : AbstractValidator<InvoiceItem>
+    public class InvoiceItemValidator : AbstractValidator<ExpenseItem>
     {
         public InvoiceItemValidator(ILocalization localization)
         {

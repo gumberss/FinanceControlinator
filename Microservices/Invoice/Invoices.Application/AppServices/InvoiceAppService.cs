@@ -13,35 +13,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Raven.Client.Documents.Session;
+using Raven.Client.Documents;
 
 namespace Invoices.Application.AppServices
 {
     public class InvoiceAppService : IInvoiceAppService
     {
-        private readonly IInvoiceDbContext _invoiceDbContext;
+        private readonly IDocumentStore _documentStore;
+        private readonly IDocumentSession _documentSession;
+
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IInvoiceValidator _invoiceValidator;
         private readonly ILocalization _localization;
         private readonly ILogger<IInvoiceAppService> _logger;
 
         public InvoiceAppService(
-                InvoiceDbContext invoiceDbContext
+                IDocumentStore documentStore
+                , IDocumentSession documentSession
                 , IInvoiceRepository invoiceRepository
                 , IInvoiceValidator invoiceValidator
                 , ILocalization localization
                 , ILogger<IInvoiceAppService> logger
             )
         {
-            _invoiceDbContext = invoiceDbContext;
+            _documentStore = documentStore;
+            _documentSession = documentSession;
             _invoiceRepository = invoiceRepository;
             _invoiceValidator = invoiceValidator;
             _localization = localization;
             _logger = logger;
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> GetAllInvoices()
+        public async Task<Result<List<Expense>, BusinessException>> RegisterNewExpense()
         {
-            var result = await _invoiceRepository.GetAllAsync(include: x => x.Items);
+            using (IDocumentSession session = _documentStore.OpenSession())
+            {
+                session.Query<Expense>();
+            }
+
+            dynamic result = null;// await _invoiceRepository.GetAllAsync(include: x => x.Items);
 
             if (result.IsFailure)
             {
@@ -58,16 +69,37 @@ namespace Invoices.Application.AppServices
 
             return invoices;
         }
-        
-        public async Task<Result<List<Invoice>, BusinessException>> GetMonthInvoices()
+
+
+        public async Task<Result<List<Expense>, BusinessException>> GetAllInvoices()
+        {
+            dynamic result = null; //var result = await _invoiceRepository.GetAllAsync(include: x => x.Items);
+
+            if (result.IsFailure)
+            {
+                //log
+                return result.Error;
+            }
+
+            var invoices = result.Value;
+
+            if (!invoices.Any())
+            {
+                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+            }
+
+            return invoices;
+        }
+
+        public async Task<Result<List<Expense>, BusinessException>> GetMonthInvoices()
         {
             var month = DateTime.Now.Month;
             var year = DateTime.Now.Year;
 
-            var result = await _invoiceRepository.GetAllAsync(
-                include: e => e.Items
-                , e => e.Date.Month == month
-                , e => e.Date.Year == year);
+            dynamic result = null; //var result = await _invoiceRepository.GetAllAsync(
+                                   //include: e => e.Items
+                                   //, e => e.Date.Month == month
+                                   //, e => e.Date.Year == year);
 
             if (result.IsFailure)
             {
@@ -85,16 +117,16 @@ namespace Invoices.Application.AppServices
             return invoices;
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> GetLastMonthInvoices()
+        public async Task<Result<List<Expense>, BusinessException>> GetLastMonthInvoices()
         {
             var lastMonth = DateTime.Now.AddMonths(-1);
             var month = lastMonth.Month;
             var year = lastMonth.Year;
 
-            var result = await _invoiceRepository.GetAllAsync(
-                include: e => e.Items
-                , e => e.Date.Month == month
-                , e => e.Date.Year == year);
+            dynamic result = null; // //var result = await _invoiceRepository.GetAllAsync(
+            //    include: e => e.Items
+            //    , e => e.Date.Month == month
+            //    , e => e.Date.Year == year);
 
             if (result.IsFailure)
             {
@@ -112,55 +144,24 @@ namespace Invoices.Application.AppServices
             return invoices;
         }
 
-        public async Task<Result<Invoice, BusinessException>> RegisterInvoice(Invoice invoice)
+        public async Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense)
         {
-            var validationResult = await _invoiceValidator.ValidateAsync(invoice);
+            expense.Id = null;
+            var result = await _invoiceRepository.AddAsync(expense);
 
-            if (!validationResult.IsValid)
+            if (result.IsFailure)
             {
-                var errorDatas = validationResult.Errors.Select(x => new ErrorData(x.ErrorMessage, x.PropertyName));
-                var exception = new BusinessException(HttpStatusCode.BadRequest, errorDatas);
-
-                _logger.LogInformation(exception.Log());
-
-                return exception;
+                //error
             }
 
-            if (!invoice.TotalCostIsValid())
-            {
-                var errorData = new ErrorData(_localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS, "TotalCost");
-                var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
-
-                _logger.LogInformation(exception.Log());
-
-                return exception;
-            }
-
-            var addResult = await _invoiceRepository.AddAsync(invoice);
-
-            if (addResult.IsFailure)
-            {
-                var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
-                var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
-
-                _logger.LogError(exception.Log());
-
-                return exception;
-            }
-
-            var saveResult = await Result.Try<int, Exception>(_invoiceDbContext.Commit());
+            var saveResult = await Result.Try(_documentSession.SaveChanges);
 
             if (saveResult.IsFailure)
             {
-                var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
-                var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
-
-                _logger.LogError(exception.Log());
-
-                return exception;
+                //error
             }
 
-            return addResult;
+            return result.Value;
         }
     }
 }

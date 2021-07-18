@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Invoices.Domain.Interfaces.Validators
 {
-    public interface IInvoiceValidator : IValidator<Invoice>
+    public interface IInvoiceValidator : IValidator<Expense>
     {
     }
 }

@@ -21,28 +21,6 @@ namespace Invoices.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Invoice invoice)
-        {
-            return From(await _mediator.Send(new RegisterInvoiceCommand { Invoice = invoice }));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            return From(await _mediator.Send(new GetAllInvoicesQuery ()));
-        }
-
-        [HttpGet("Month")]
-        public async Task<IActionResult> GetMonth()
-        {
-            return From(await _mediator.Send(new GetMonthInvoicesQuery()));
-        }
-
-        [HttpGet("LastMonth")]
-        public async Task<IActionResult> GetLastMonth()
-        {
-            return From(await _mediator.Send(new GetLastMonthInvoicesQuery()));
-        }
+        
     }
 }
