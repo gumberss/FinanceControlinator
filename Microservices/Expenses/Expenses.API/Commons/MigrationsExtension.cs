@@ -26,8 +26,6 @@ namespace Expenses.API.Commons
                     return host;
                 }
             }
-
-           
         }
     }
 }

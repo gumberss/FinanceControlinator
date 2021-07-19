@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RavenDB.Client" Version="5.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\FinanceControlinator.Common\FinanceControlinator.Common.csproj" />
+    <ProjectReference Include="..\Invoices.Domain\Invoices.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

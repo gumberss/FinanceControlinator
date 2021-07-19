@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 
 namespace Expenses.Data.Commons
 {
-    public class Repository<TEntity, TContext> : IRepository<TEntity>
-           where TEntity : class, IEntity
+    public class Repository<TEntity, TContext, TEntityId> : IRepository<TEntity, TEntityId>
+           where TEntity : class, IEntity<TEntityId>
            where TContext : DbContext
     {
         private readonly TContext _context;
@@ -45,12 +45,12 @@ namespace Expenses.Data.Commons
             throw new NotImplementedException();
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(Guid id)
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        public Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
         {
             throw new NotImplementedException();
         }
@@ -91,13 +91,12 @@ namespace Expenses.Data.Commons
             }
         }
 
-
         public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
+        public Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
         {
             throw new NotImplementedException();
         }

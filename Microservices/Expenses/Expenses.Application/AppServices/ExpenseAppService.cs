@@ -148,7 +148,7 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
-            var saveResult = await Result.Try<int, Exception>(_expenseDbContext.Commit());
+            var saveResult = await Result.Try(_expenseDbContext.Commit());
 
             if (saveResult.IsFailure)
             {

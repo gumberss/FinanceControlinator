@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Invoices.Data\Invoices.Data.csproj" />
+    <ProjectReference Include="..\Invoices.Domain\Invoices.Domain.csproj" />
+    <ProjectReference Include="..\Invoices.Domain\Invoices.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
