@@ -14,7 +14,7 @@ namespace Invoices.Data.Repositories
 
     public class InvoiceRepository : Repository<Expense, String>, IInvoiceRepository
     {
-        public InvoiceRepository(IDocumentSession context) : base(context)
+        public InvoiceRepository(IAsyncDocumentSession context) : base(context)
         {
 
         }

@@ -16,27 +16,23 @@ namespace Invoices.Data.Commons
     public class Repository<TEntity, TEntityId> : IRepository<TEntity, TEntityId>
            where TEntity : class, IEntity<TEntityId>
     {
-        private IDocumentSession _session;
+        private IAsyncDocumentSession _session;
 
-        public Repository(IDocumentSession session)
+        public Repository(IAsyncDocumentSession session)
         {
             _session = session;
         }
 
         public async Task<Result<TEntity, BusinessException>> AddAsync(TEntity entity)
         {
-            var result = await Result.Try(() =>
-            {
-                _session.Store(entity);
-                return entity;
-            });
+            var result = await Result.Try(_session.StoreAsync(entity));
 
             if (result.IsFailure)
             {
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
             }
 
-            return result.Value;
+            return entity;
         }
 
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
@@ -137,7 +133,7 @@ namespace Invoices.Data.Commons
 
         public async Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
         {
-            var result = await Result.Try(() => _session.Load<TEntity>(id.ToString()));
+            var result = await Result.Try(_session.LoadAsync<TEntity>(id.ToString()));
 
             if (result.IsFailure)
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);

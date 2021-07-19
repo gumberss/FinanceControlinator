@@ -65,14 +65,13 @@ namespace FinanceControlinator.Common.Utils
             return await Task.Run(() => tryFunction.Invoke());
         }
 
-        public static async Task<Result<bool, Exception>> Try(Action func)
+        public static async Task<Result<bool, Exception>> Try(Task func)
         {
-            Func<Result<bool, Exception>> tryFunction = () =>
+            Func<Task<Result<bool, Exception>>> tryFunction = async () =>
             {
                 try
                 {
-                    func();
-
+                    await func;
                     return true;
                 }
                 catch (Exception ex)

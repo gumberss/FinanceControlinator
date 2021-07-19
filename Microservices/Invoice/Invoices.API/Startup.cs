@@ -47,7 +47,7 @@ namespace Invoices.API
             var dbName = Configuration.GetConnectionString("InvoicesDbName");
             services.AddSingleton<IDocumentStore>(x => DocumentStoreHolder.GetStore(dbConnection, dbName));
             //services.AddTransient<IDocumentSession>(x => x.GetService<IDocumentStore>().OpenSession());
-            services.AddScoped<IDocumentSession>(x => x.GetService<IDocumentStore>().OpenSession());
+            services.AddScoped<IAsyncDocumentSession>(x => x.GetService<IDocumentStore>().OpenAsyncSession());
 
             services.AddSwaggerGen(x =>
             {

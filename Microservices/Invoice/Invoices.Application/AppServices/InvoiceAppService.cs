@@ -21,7 +21,7 @@ namespace Invoices.Application.AppServices
     public class InvoiceAppService : IInvoiceAppService
     {
         private readonly IDocumentStore _documentStore;
-        private readonly IDocumentSession _documentSession;
+        private readonly IAsyncDocumentSession _documentSession;
 
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IInvoiceValidator _invoiceValidator;
@@ -30,7 +30,7 @@ namespace Invoices.Application.AppServices
 
         public InvoiceAppService(
                 IDocumentStore documentStore
-                , IDocumentSession documentSession
+                , IAsyncDocumentSession documentSession
                 , IInvoiceRepository invoiceRepository
                 , IInvoiceValidator invoiceValidator
                 , ILocalization localization
@@ -146,7 +146,6 @@ namespace Invoices.Application.AppServices
 
         public async Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense)
         {
-            expense.Id = null;
             var result = await _invoiceRepository.AddAsync(expense);
 
             if (result.IsFailure)
@@ -154,7 +153,7 @@ namespace Invoices.Application.AppServices
                 //error
             }
 
-            var saveResult = await Result.Try(_documentSession.SaveChanges);
+            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
 
             if (saveResult.IsFailure)
             {
