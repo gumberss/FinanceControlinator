@@ -6,6 +6,8 @@ namespace FinanceControlinator.Events.Expenses.DTOs
 {
     public class ExpenseDTO
     {
+        public Guid Id { get; set; }
+
         public String Title { get; set; }
 
         public String Description { get; set; }

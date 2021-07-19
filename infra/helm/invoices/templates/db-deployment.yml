@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-db-depl
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: financecontrolinator-{{ .Release.Name }}-db
+  template:
+    metadata:
+      labels:
+        app: financecontrolinator-{{ .Release.Name }}-db
+    spec:
+      containers:
+      - name: financecontrolinator-{{ .Release.Name }}-db
+        image: ravendb/ravendb:ubuntu-latest
+        env:
+          - name: RAVEN_Setup_Mode
+            value: 'None'
+          - name: RAVEN_Security_UnsecuredAccessAllowed
+            value: 'PrivateNetwork'
+          - name: RAVEN_ARGS
+            value: '--log-to-console'
+
+        ports:
+          - containerPort: 8080
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-db-srv
+spec:
+  selector:
+    app: financecontrolinator-{{ .Release.Name }}-db
+  ports:
+    - name: financecontrolinator-db-port
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+      

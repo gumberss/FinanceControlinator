@@ -3,7 +3,7 @@ using System;
 
 namespace Expenses.Domain.Models
 {
-    public class ExpenseItem : Entity
+    public class ExpenseItem : Entity<Guid>
     {
         public String Name { get; set; }
 

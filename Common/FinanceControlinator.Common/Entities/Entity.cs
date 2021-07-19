@@ -2,18 +2,18 @@
 
 namespace FinanceControlinator.Common.Entities
 {
-    public interface IEntity
+    public interface IEntity<T>
     {
-        public Guid Id { get; set; }
+        public T Id { get; set; }
 
         public DateTime InsertDate { get; set; }
 
         public DateTime UpdateDate { get; set; }
     }
 
-    public class Entity : IEntity
+    public class Entity<T> : IEntity<T>
     {
-        public Guid Id { get; set; }
+        public T Id { get; set; }
 
         public DateTime InsertDate { get; set; }
 

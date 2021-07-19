@@ -43,7 +43,7 @@ namespace Expenses.Data.Contexts
         }
         public override EntityEntry<TEntity> Add<TEntity>(TEntity entity)
         {
-            if(entity is IEntity theEntity)
+            if(entity is IEntity<Guid> theEntity)
             {
                 theEntity.InsertDate = DateTime.Now;
             }
@@ -53,7 +53,7 @@ namespace Expenses.Data.Contexts
 
         public override EntityEntry Update(object entity)
         {
-            if (entity is IEntity theEntity)
+            if (entity is IEntity<Guid> theEntity)
             {
                 theEntity.UpdateDate = DateTime.Now;
             }

@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  invoicesdb:
+    image: ravendb/ravendb:ubuntu-latest
+    container_name: invoices-db
+    ports:
+      - "38888:38888"
+      - "8080:8080"
+    environment:
+      RAVEN_Setup_Mode: 'None'
+      RAVEN_Security_UnsecuredAccessAllowed: 'PrivateNetwork'
+      RAVEN_ARGS: '--log-to-console'
+    deploy:
+      resources:
+          limits:
+            cpus: 0.50
+            memory: 512M
+          reservations:
+            cpus: 0.25
+            memory: 128M
+
+  expensesdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: expenses-db
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "P@ssw0rd!"
+      ACCEPT_EULA: "Y"

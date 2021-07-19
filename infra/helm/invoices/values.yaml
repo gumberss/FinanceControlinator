@@ -1,0 +1,9 @@
+microserviceName: invoices
+replicaCount: 1
+dbUser: sa
+dbPassword: P@ssw0rd!
+image: gumberss/financecontrolinator-invoices:latest
+rabbit:
+  host: amqp://finance-controlinator-rabbitmq/
+  password: 96xuOJMKYf
+  username: user
