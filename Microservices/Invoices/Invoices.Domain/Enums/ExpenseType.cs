@@ -1,6 +1,6 @@
 namespace Invoices.Domain.Enums
 {
-    public enum InvoiceType
+    public enum ExpenseType
     {
         Market = 0,
 

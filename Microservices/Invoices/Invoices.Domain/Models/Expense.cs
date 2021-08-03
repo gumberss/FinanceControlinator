@@ -13,11 +13,11 @@ namespace Invoices.Domain.Models
 
         public String Description { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime PurchaseDay { get; set; }
 
-        public InvoiceType Type { get; set; }
+        public ExpenseType Type { get; set; }
 
-        public bool IsRecurrent { get; set; } 
+        public bool InstallmentsCount { get; set; }
 
         public String Location { get; set; }
 

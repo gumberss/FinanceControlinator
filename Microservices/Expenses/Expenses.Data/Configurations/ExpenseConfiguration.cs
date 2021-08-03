@@ -20,14 +20,17 @@ namespace Expenses.Data.Configurations
                 .IsRequired();
 
             builder
-                .Property(x => x.Date)
+                .Property(x => x.PurchaseDay)
                 .IsRequired();
 
             builder
                 .Property(x => x.Description)
                 .HasMaxLength(250);
 
-            builder.Property(x => x.IsRecurrent);
+            builder
+                .Property(x => x.InstallmentsCount)
+                .IsRequired();
+
 
             builder
                 .Property(x => x.Location)

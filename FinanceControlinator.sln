@@ -41,6 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Handler", "Microse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invoices.Tests", "Microservices\Invoices\Invoices.Tests\Invoices.Tests.csproj", "{5C12F7ED-ABF5-4475-9797-0E4A7E954948}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{4F931012-519F-4494-8AF7-FB6755B3F563}"
+	ProjectSection(SolutionItems) = preProject
+		Db.md = Db.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +134,7 @@ Global
 		{EA234322-BA1C-4A8D-B243-145D6D9BACB6} = {868CB8C3-A56C-4A63-945E-E0FBFBF82671}
 		{62BFD616-A7CE-4CF0-AB55-85F554D67329} = {868CB8C3-A56C-4A63-945E-E0FBFBF82671}
 		{5C12F7ED-ABF5-4475-9797-0E4A7E954948} = {868CB8C3-A56C-4A63-945E-E0FBFBF82671}
+		{4F931012-519F-4494-8AF7-FB6755B3F563} = {39BCC868-9A61-4AC1-B5B0-56F1636C5AE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB162E36-E524-4A3F-AD2D-FE4E554E814C}

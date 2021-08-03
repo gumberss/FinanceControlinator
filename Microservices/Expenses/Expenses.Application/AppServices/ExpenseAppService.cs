@@ -66,8 +66,8 @@ namespace Expenses.Application.AppServices
 
             var result = await _expenseRepository.GetAllAsync(
                 include: e => e.Items
-                , e => e.Date.Month == month
-                , e => e.Date.Year == year);
+                , e => e.PurchaseDay.Month == month
+                , e => e.PurchaseDay.Year == year);
 
             if (result.IsFailure)
             {
@@ -93,8 +93,8 @@ namespace Expenses.Application.AppServices
 
             var result = await _expenseRepository.GetAllAsync(
                 include: e => e.Items
-                , e => e.Date.Month == month
-                , e => e.Date.Year == year);
+                , e => e.PurchaseDay.Month == month
+                , e => e.PurchaseDay.Year == year);
 
             if (result.IsFailure)
             {
