@@ -16,9 +16,10 @@ spec:
       - name: financecontrolinator-{{ .Release.Name }}
         image: {{ .Values.image }}
         env:
-          - name: "ConnectionStrings__ExpensesDbConnection"
-            value: Server={{ .Release.Name }}-db-srv;Database=Expenses;User Id={{.Values.dbUser}};Password={{.Values.dbPassword}}
-
+          - name: "ConnectionStrings__InvoicesDbConnection"
+            value: http://{{ .Release.Name }}-db-srv:8080
+          - name: "ConnectionStrings__InvoicesDbName"
+            value: Invoices
           - name: RabbitMq__Host
             value: {{.Values.rabbit.host}}
           - name: RabbitMq__Password 
