@@ -35,7 +35,7 @@ namespace Expenses.Data.Configurations
                 .HasForeignKey(x => x.ExpenseId);
 
             builder
-                .Property(x => x.InsertDate)
+                .Property(x => x.CreatedDate)
                 .IsRequired();
 
             builder

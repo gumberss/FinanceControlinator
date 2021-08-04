@@ -17,7 +17,7 @@ namespace Expenses.Domain.Models
 
         public ExpenseType Type { get; set; }
 
-        public bool InstallmentsCount { get; set; }
+        public int InstallmentsCount { get; set; }
 
         public String Location { get; set; }
 

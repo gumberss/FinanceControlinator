@@ -7,12 +7,12 @@ using System;
 
 namespace Invoices.Data.Repositories
 {
-    public interface IInvoiceRepository : IRepository<Expense, String>
+    public interface IInvoiceRepository : IRepository<Invoice, String>
     {
 
     }
 
-    public class InvoiceRepository : Repository<Expense, String>, IInvoiceRepository
+    public class InvoiceRepository : Repository<Invoice, String>, IInvoiceRepository
     {
         public InvoiceRepository(IAsyncDocumentSession context) : base(context)
         {

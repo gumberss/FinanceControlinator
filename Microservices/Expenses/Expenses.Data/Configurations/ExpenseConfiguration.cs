@@ -45,7 +45,7 @@ namespace Expenses.Data.Configurations
                 .Property(x => x.Type);
 
             builder
-                .Property(x => x.InsertDate)
+                .Property(x => x.CreatedDate)
                 .IsRequired();
 
             builder

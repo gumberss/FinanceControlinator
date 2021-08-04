@@ -8,7 +8,7 @@ namespace Invoices.Application.Interfaces.AppServices
 {
     public interface IInvoiceAppService
     {
-        public Task<Result<Expense, BusinessException>> RegisterExpense(Expense invoice);
+        public Task<Result<List<Invoice>, BusinessException>> RegisterExpense(Expense invoice);
 
         Task<Result<List<Expense>, BusinessException>> GetAllInvoices();
 
