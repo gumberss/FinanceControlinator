@@ -13,11 +13,11 @@ namespace Expenses.Domain.Models
 
         public String Description { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime PurchaseDay { get; set; }
 
         public ExpenseType Type { get; set; }
 
-        public bool IsRecurrent { get; set; } //Monthly only yet
+        public int InstallmentsCount { get; set; }
 
         public String Location { get; set; }
 

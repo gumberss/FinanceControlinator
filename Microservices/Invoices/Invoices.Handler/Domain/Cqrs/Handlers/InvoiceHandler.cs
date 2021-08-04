@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 namespace Invoices.Handler.Domain.Cqrs.Handlers
 {
     public class InvoiceHandler
-        : IRequestHandler<RegisterInvoiceCommand, Result<Expense, BusinessException>>
-        , IRequestHandler<GetAllInvoicesQuery, Result<List<Expense>, BusinessException>>
+        :// IRequestHandler<RegisterInvoiceCommand, Result<Expense, BusinessException>>,
+         IRequestHandler<GetAllInvoicesQuery, Result<List<Expense>, BusinessException>>
         , IRequestHandler<GetMonthInvoicesQuery, Result<List<Expense>, BusinessException>>
         , IRequestHandler<GetLastMonthInvoicesQuery, Result<List<Expense>, BusinessException>>
     {
@@ -36,24 +36,10 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
             _mapper = mapper;
         }
 
-        public async Task<Result<Expense, BusinessException>> Handle(RegisterInvoiceCommand request, CancellationToken cancellationToken)
-        {
-            using (_logger.BeginScope(this.GetType().Name))
-            {
-                var result = await _invoiceAppService.RegisterExpense(request.Invoice);
-
-                if (result.IsFailure)
-                {
-                    return result;
-                }
-
-                //var @event = _mapper.Map<Invoice, InvoiceCreatedEvent>(result.Value);
-                
-                //await _bus.Publish(@event);
-
-                return result;
-            }
-        }
+        //public async Task<Result<Expense, BusinessException>> Handle(RegisterInvoiceCommand request, CancellationToken cancellationToken)
+        //{
+        //    return await _invoiceAppService.GetMonthInvoices();
+        //}
 
         public async Task<Result<List<Expense>, BusinessException>> Handle(GetAllInvoicesQuery request, CancellationToken cancellationToken)
         {

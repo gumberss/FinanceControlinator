@@ -45,7 +45,7 @@ namespace Expenses.Data.Contexts
         {
             if(entity is IEntity<Guid> theEntity)
             {
-                theEntity.InsertDate = DateTime.Now;
+                theEntity.CreatedDate = DateTime.Now;
             }
 
             return base.Add(entity);

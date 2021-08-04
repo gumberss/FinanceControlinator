@@ -27,12 +27,9 @@ namespace Invoices.Data.Commons
         {
             var result = await Result.Try(_session.StoreAsync(entity));
 
-            if (result.IsFailure)
-            {
-                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
-            }
-
-            return entity;
+            return result.IsFailure 
+                ? result.Error 
+                : entity;
         }
 
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)

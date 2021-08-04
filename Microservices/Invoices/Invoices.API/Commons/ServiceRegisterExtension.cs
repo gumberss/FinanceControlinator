@@ -1,9 +1,7 @@
 using Invoices.Application.AppServices;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Data.Repositories;
-using Invoices.Domain.Interfaces.Validators;
 using Invoices.Domain.Localizations;
-using Invoices.Domain.Validators;
 using Invoices.Handler.Configurations;
 using Invoices.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.Localizations;
@@ -11,6 +9,7 @@ using FinanceControlinator.Common.LogsBehaviors;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Invoices.Domain.Services;
 
 namespace Invoices.API.Commons
 {
@@ -30,7 +29,17 @@ namespace Invoices.API.Commons
 
             services.AddTransient<IInvoiceAppService, InvoiceAppService>();
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
-            services.AddTransient<IInvoiceValidator, InvoiceValidator>();
+            services.AddTransient<IExpenseRepository, ExpenseRepository>();
+            services.AddTransient<IInvoiceService, InvoiceService>();
+
+            /*
+                IDocumentStore documentStore
+                , IAsyncDocumentSession documentSession
+                , IInvoiceValidator invoiceValidator
+                , ILocalization localization
+                , ILogger<IInvoiceAppService> logger
+                , IInvoiceService invoiceService
+             */
         }
     }
 }
