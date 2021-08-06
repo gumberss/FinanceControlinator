@@ -10,10 +10,10 @@ namespace Invoices.Application.Interfaces.AppServices
     {
         public Task<Result<List<Invoice>, BusinessException>> RegisterExpense(Expense invoice);
 
-        Task<Result<List<Expense>, BusinessException>> GetAllInvoices();
+        Task<Result<List<Invoice>, BusinessException>> GetAllInvoices();
 
-        Task<Result<List<Expense>, BusinessException>> GetMonthInvoices();
+        Task<Result<List<Invoice>, BusinessException>> GetMonthInvoice();
 
-        Task<Result<List<Expense>, BusinessException>> GetLastMonthInvoices();
+        Task<Result<List<Invoice>, BusinessException>> GetLastMonthInvoice();
     }
 }

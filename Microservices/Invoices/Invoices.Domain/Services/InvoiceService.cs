@@ -68,7 +68,6 @@ namespace Invoices.Domain.Services
             return currentInvoiceDate;
         }
 
-
         private InvoiceItem GetInvoceItemFrom(Expense expense, int installment)
         {
             var totalExpenseCost = expense.TotalCost;
