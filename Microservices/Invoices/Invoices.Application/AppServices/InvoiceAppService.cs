@@ -48,33 +48,7 @@ namespace Invoices.Application.AppServices
             _invoiceService = invoiceService;
         }
 
-        public async Task<Result<List<Expense>, BusinessException>> RegisterNewExpense()
-        {
-            using (IDocumentSession session = _documentStore.OpenSession())
-            {
-                session.Query<Expense>();
-            }
-
-            dynamic result = null;// await _invoiceRepository.GetAllAsync(include: x => x.Items);
-
-            if (result.IsFailure)
-            {
-                //log
-                return result.Error;
-            }
-
-            var invoices = result.Value;
-
-            if (!invoices.Any())
-            {
-                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
-            }
-
-            return invoices;
-        }
-
-
-        public async Task<Result<List<Expense>, BusinessException>> GetAllInvoices()
+        public async Task<Result<List<Invoice>, BusinessException>> GetAllInvoices()
         {
             dynamic result = null; //var result = await _invoiceRepository.GetAllAsync(include: x => x.Items);
 
@@ -94,7 +68,7 @@ namespace Invoices.Application.AppServices
             return invoices;
         }
 
-        public async Task<Result<List<Expense>, BusinessException>> GetMonthInvoices()
+        public async Task<Result<List<Invoice>, BusinessException>> GetMonthInvoice()
         {
             var month = DateTime.Now.Month;
             var year = DateTime.Now.Year;
@@ -120,7 +94,7 @@ namespace Invoices.Application.AppServices
             return invoices;
         }
 
-        public async Task<Result<List<Expense>, BusinessException>> GetLastMonthInvoices()
+        public async Task<Result<List<Invoice>, BusinessException>> GetLastMonthInvoice()
         {
             var lastMonth = DateTime.Now.AddMonths(-1);
             var month = lastMonth.Month;
