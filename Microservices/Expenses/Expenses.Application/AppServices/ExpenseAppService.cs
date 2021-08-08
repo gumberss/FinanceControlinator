@@ -114,6 +114,8 @@ namespace Expenses.Application.AppServices
 
         public async Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense)
         {
+            _logger.LogWarning("Hi");
+
             var validationResult = await _expenseValidator.ValidateAsync(expense);
 
             if (!validationResult.IsValid)
