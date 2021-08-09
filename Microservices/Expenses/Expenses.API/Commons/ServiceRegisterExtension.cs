@@ -20,6 +20,7 @@ namespace Expenses.API.Commons
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
             services.ConfigureHandlerAutoMapper();
 
             services.AddMediatR(typeof(Startup));
