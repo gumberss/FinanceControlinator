@@ -5,11 +5,12 @@ using Invoices.Domain.Localizations;
 using Invoices.Handler.Configurations;
 using Invoices.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.Localizations;
-using FinanceControlinator.Common.LogsBehaviors;
+using FinanceControlinator.Common.CustomLogs;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Invoices.Domain.Services;
+using FinanceControlinator.Common.LogsBehaviors;
 
 namespace Invoices.API.Commons
 {

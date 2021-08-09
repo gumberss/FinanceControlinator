@@ -7,10 +7,11 @@ using Expenses.Domain.Validators;
 using Expenses.Handler.Configurations;
 using Expenses.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.Localizations;
-using FinanceControlinator.Common.LogsBehaviors;
+using FinanceControlinator.Common.CustomLogs;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using FinanceControlinator.Common.LogsBehaviors;
 
 namespace Expenses.API.Commons
 {
@@ -19,6 +20,7 @@ namespace Expenses.API.Commons
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
             services.ConfigureHandlerAutoMapper();
 
             services.AddMediatR(typeof(Startup));

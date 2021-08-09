@@ -14,6 +14,8 @@ using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using MassTransit;
 using Invoices.Handler.Integration.Handlers.Expenses;
+using Microsoft.Extensions.Logging;
+using FinanceControlinator.Common.CustomLogs;
 
 namespace Invoices.API
 {
@@ -65,8 +67,13 @@ namespace Invoices.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipel1ine.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app
+          , IWebHostEnvironment env
+          , ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddProvider(new CustomLogProvider(new CustomLogConfig()));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
