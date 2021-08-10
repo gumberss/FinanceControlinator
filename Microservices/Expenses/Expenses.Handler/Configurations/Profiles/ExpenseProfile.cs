@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Expenses.Domain.Models;
+using Expenses.Domain.Models.Expenses;
 using FinanceControlinator.Events.Expenses;
 using FinanceControlinator.Events.Expenses.DTOs;
 

@@ -22,7 +22,7 @@ namespace Expenses.Data.Migrations
                 .HasAnnotation("ProductVersion", "6.0.0-preview.4.21253.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Expenses.Domain.Models.Expense", b =>
+            modelBuilder.Entity("Expenses.Domain.Models.Expenses.Expense", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace Expenses.Data.Migrations
                     b.ToTable("Expenses");
                 });
 
-            modelBuilder.Entity("Expenses.Domain.Models.ExpenseItem", b =>
+            modelBuilder.Entity("Expenses.Domain.Models.Expenses.ExpenseItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,9 +97,9 @@ namespace Expenses.Data.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("Expenses.Domain.Models.ExpenseItem", b =>
+            modelBuilder.Entity("Expenses.Domain.Models.Expenses.ExpenseItem", b =>
                 {
-                    b.HasOne("Expenses.Domain.Models.Expense", "Expense")
+                    b.HasOne("Expenses.Domain.Models.Expenses.Expense", "Expense")
                         .WithMany("Items")
                         .HasForeignKey("ExpenseId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -108,7 +108,7 @@ namespace Expenses.Data.Migrations
                     b.Navigation("Expense");
                 });
 
-            modelBuilder.Entity("Expenses.Domain.Models.Expense", b =>
+            modelBuilder.Entity("Expenses.Domain.Models.Expenses.Expense", b =>
                 {
                     b.Navigation("Items");
                 });

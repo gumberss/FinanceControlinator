@@ -1,5 +1,5 @@
 ﻿using Expenses.Domain.Interfaces.Validators;
-using Expenses.Domain.Models;
+using Expenses.Domain.Models.Expenses;
 using FinanceControlinator.Common.Localizations;
 using FluentValidation;
 using System;

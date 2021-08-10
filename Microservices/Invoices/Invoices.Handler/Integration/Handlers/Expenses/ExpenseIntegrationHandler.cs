@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FinanceControlinator.Events.Expenses;
+using FinanceControlinator.Events.Invoices;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Domain.Models;
 using MassTransit;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Invoices.Handler.Integration.Handlers.Expenses
 {
-    public class ExpenseHandler : IConsumer<ExpenseCreatedEvent>
+    public class ExpenseIntegrationHandler : IConsumer<ExpenseCreatedEvent>
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly IMapper _mapper;
 
-        public ExpenseHandler(
+        public ExpenseIntegrationHandler(
             IInvoiceAppService invoiceAppService,
             IMapper mapper
             )
@@ -30,6 +31,13 @@ namespace Invoices.Handler.Integration.Handlers.Expenses
             if (result.IsFailure) throw result.Error;
 
             //log
+
+            if (result.IsSuccess)
+            {
+                var @event = _mapper.Map<InvoicesChangedEvent>(result.Value);
+
+                await context.Publish(@event);
+            }
         }
     }
 }

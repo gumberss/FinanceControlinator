@@ -12,26 +12,26 @@ namespace FinanceControlinator.Common.CustomLogs
         public CustomLogData(
             string message
           , LogLevel logLevel
-          , EventId eventId
+          , int eventId
           , string flow
           , Exception exception
         )
         {
             Message = message;
-            this.logLevel = logLevel;
+            this.logLevel = logLevel.ToString();
             this.eventId = eventId;
             Flow = flow;
-            Exception = exception;
+            Exception = exception?.ToString();
         }
 
         public String Message { get; set; }
 
-        public LogLevel logLevel { get; set; }
+        public String logLevel { get; set; }
 
-        public EventId eventId { get; set; }
+        public int eventId { get; set; }
 
         public String Flow { get; set; }
 
-        public Exception Exception { get; set; }
+        public String Exception { get; set; }
     }
 }

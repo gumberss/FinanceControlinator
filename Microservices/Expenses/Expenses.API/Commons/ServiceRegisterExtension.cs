@@ -30,9 +30,12 @@ namespace Expenses.API.Commons
 
             services.AddFluentValidation();
 
-            services.AddScoped<IExpenseAppService, ExpenseAppService>();
-            services.AddScoped<IExpenseRepository, ExpenseRepository>();
+            services.AddTransient<IExpenseAppService, ExpenseAppService>();
+            services.AddTransient<IInvoiceAppService, InvoiceAppService>();
+            
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
+            services.AddTransient<IInvoiceRepository, InvoiceRepository>();
+            services.AddTransient<IInvoiceItemRepository, InvoiceItemRepository>();
             services.AddTransient<IExpenseValidator, ExpenseValidator>();
         }
     }

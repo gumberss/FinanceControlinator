@@ -17,7 +17,6 @@ namespace Invoices.Handler.Configurations.Profiles
                 .ReverseMap();
             CreateMap<ExpenseItem, ExpenseItemDTO>()
                 .ReverseMap();
-
         }
     }
 }

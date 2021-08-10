@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Expenses.Domain.Models
+namespace Expenses.Domain.Models.Expenses
 {
     public class Expense : Entity<Guid>
     {

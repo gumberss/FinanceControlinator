@@ -40,7 +40,7 @@ namespace FinanceControlinator.Common.CustomLogs
                 var data = new CustomLogData(
                     formatter(state, exception)
                   , logLevel
-                  , eventId
+                  , eventId.Id
                   , _flow
                   , exception
                 );

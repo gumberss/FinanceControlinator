@@ -7,8 +7,11 @@ namespace Invoices.Domain.Models
 {
     public class Invoice : Entity<String>
     {
+        protected Invoice() { }
+
         public Invoice(DateTime dueDate)
         {
+            Id = Guid.NewGuid().ToString();
             DueDate = dueDate;
             Items = new List<InvoiceItem>();
             CreatedDate = DateTime.Now;
@@ -18,13 +21,18 @@ namespace Invoices.Domain.Models
 
         public List<InvoiceItem> Items { get; set; }
 
-        public DateTime CloseDate { get; set; }
-
         public DateTime DueDate { get; set; }
 
         public Invoice AddNew(InvoiceItem invoiceItem)
         {
             Items.Add(invoiceItem);
+
+            return this;
+        }
+
+        public Invoice WasUpdated()
+        {
+            UpdatedDate = DateTime.Now;
 
             return this;
         }

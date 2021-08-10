@@ -1,6 +1,6 @@
 ﻿using Expenses.Data.Commons;
 using Expenses.Data.Contexts;
-using Expenses.Domain.Models;
+using Expenses.Domain.Models.Expenses;
 using FinanceControlinator.Common.Repositories;
 using System;
 

@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Models;
+﻿using Expenses.Domain.Models.Expenses;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using System.Collections.Generic;
@@ -15,5 +15,6 @@ namespace Expenses.Application.Interfaces.AppServices
         Task<Result<List<Expense>, BusinessException>> GetMonthExpenses();
 
         Task<Result<List<Expense>, BusinessException>> GetLastMonthExpenses();
+        Task<Result<List<Expense>, BusinessException>> UpdateExpense(Expense expense);
     }
 }

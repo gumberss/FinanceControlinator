@@ -1,7 +1,7 @@
 ﻿using FinanceControlinator.Common.Entities;
 using System;
 
-namespace Expenses.Domain.Models
+namespace Expenses.Domain.Models.Expenses
 {
     public class ExpenseItem : Entity<Guid>
     {
