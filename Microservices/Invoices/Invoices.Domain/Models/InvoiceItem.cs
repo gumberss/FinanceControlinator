@@ -17,6 +17,7 @@ namespace Invoices.Domain.Models
             Id = Guid.NewGuid().ToString();
             InstallmentNumber = installmentNumber;
             InstallmentCost = installmentCost;
+            CreatedDate = DateTime.Now;
         }
 
         public String ExpenseId { get; set; }

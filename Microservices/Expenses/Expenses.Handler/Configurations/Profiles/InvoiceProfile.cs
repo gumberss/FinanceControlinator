@@ -11,11 +11,9 @@ namespace Expenses.Handler.Configurations.Profiles
     {
         public InvoiceProfile()
         {
-            CreateMap<InvoiceDTO, Invoice>()
-                .ForMember(x => x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)));
+            CreateMap<InvoiceDTO, Invoice>();
 
             CreateMap<InvoiceItemDTO, InvoiceItem>()
-                .ForMember(x => x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)))
                 .ForMember(x => x.ExpenseId, x => x.MapFrom(y => Guid.Parse(y.ExpenseId)));
 
             CreateMap<InvoicesChangedEvent, ChangeInvoicesCommand>();

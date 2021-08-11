@@ -4,7 +4,7 @@ namespace FinanceControlinator.Events.Invoices.DTOs
 {
     public class InvoiceItemDTO
     {
-        public String Id { get; set; }
+        public Guid Id { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
