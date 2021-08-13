@@ -29,52 +29,23 @@ namespace Expenses.Application.AppServices
             _invoiceItemRepository = invoiceItemRepository;
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> Change(List<Invoice> changedInvoices)
+        public async Task<Result<Invoice, BusinessException>> RegisterPaid(Invoice paidInvoice)
         {
-            var invoicesIds = changedInvoices.Select(x => x.Id);
+            var registeredInvoice = await _invoiceRepository.GetByIdAsync(paidInvoice.Id);
 
-            var existentInvoices = await _invoiceRepository.GetAllAsync(x => x.Items, x => invoicesIds.Contains(x.Id));
-
-            if (existentInvoices.IsFailure)
+            if (registeredInvoice.IsFailure)
             {
                 //log
-                return existentInvoices.Error;
+                return registeredInvoice.Error;
             }
 
-            var oldInvoiceItems = new List<InvoiceItem>();
-
-            foreach (var existentInvoice in existentInvoices.Value)
+            if (registeredInvoice.Value is not null)
             {
-                var changedInvoice = changedInvoices.Find(x => x.Id == existentInvoice.Id);
-
-                oldInvoiceItems.AddRange(existentInvoice.Items);
-
-                existentInvoice
-                    .ChangeDueDate(changedInvoice.DueDate)
-                    .ReplaceItems(changedInvoice.Items);
-
-                var updateResult = await _invoiceRepository.UpdateAsync(existentInvoice);
-
-                if (updateResult.IsFailure)
-                {
-                    //log
-                    return updateResult.Error;
-                }
+                //log
+                return registeredInvoice.Value;
             }
 
-            var newInvoices = changedInvoices
-                .Where(x => existentInvoices.Value.All(y => y.Id != x.Id));
-
-            foreach (var item in oldInvoiceItems)
-                await _invoiceItemRepository.DeleteAsync(item);
-
-            foreach (var item in existentInvoices.Value.SelectMany(x=> x.Items))
-                await _invoiceItemRepository.AddAsync(item);
-
-            foreach (var newInvoice in newInvoices)
-                await _invoiceRepository.AddAsync(newInvoice);
-
-            return newInvoices.Union(existentInvoices.Value).ToList();
+            return await _invoiceRepository.AddAsync(paidInvoice);
         }
     }
 }

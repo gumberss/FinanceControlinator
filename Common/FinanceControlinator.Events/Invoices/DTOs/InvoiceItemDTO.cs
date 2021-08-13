@@ -10,7 +10,7 @@ namespace FinanceControlinator.Events.Invoices.DTOs
 
         public DateTime? UpdateDate { get; set; }
 
-        public String ExpenseId { get; set; }
+        public Guid ExpenseId { get; set; }
 
         public int InstallmentNumber { get; set; }
 

@@ -1,22 +1,17 @@
 ﻿using Expenses.Application.Interfaces.AppServices;
 using Expenses.Data.Contexts;
-using Expenses.Domain.Models.Expenses;
 using Expenses.Domain.Models.Invoices;
 using Expenses.Handler.Domain.Cqrs.Events.Invoices;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Expenses.Handler.Domain.Cqrs.Handlers
 {
     public class InvoiceHandler
-        : IRequestHandler<ChangeInvoicesCommand, Result<List<Invoice>, BusinessException>>
+        : IRequestHandler<RegisterPaidInvoiceCommand, Result<Invoice, BusinessException>>
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly ExpenseDbContext _expenseDbContext;
@@ -30,9 +25,9 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
             _expenseDbContext = expenseDbContext;
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> Handle(ChangeInvoicesCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Invoice, BusinessException>> Handle(RegisterPaidInvoiceCommand request, CancellationToken cancellationToken)
         {
-            var changedInvoices = await _invoiceAppService.Change(request.Invoices);
+            var changedInvoices = await _invoiceAppService.RegisterPaid(request.Invoice);
 
             var saveResult = await Result.Try(_expenseDbContext.SaveChangesAsync());
 

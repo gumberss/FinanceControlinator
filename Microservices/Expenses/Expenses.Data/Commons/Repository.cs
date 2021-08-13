@@ -17,7 +17,7 @@ namespace Expenses.Data.Commons
            where TContext : DbContext
     {
         private readonly TContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet;
 
         public Repository(TContext context)
         {

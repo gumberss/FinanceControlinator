@@ -15,6 +15,7 @@ using Raven.Client.Documents.Session;
 using Raven.Client.Documents;
 using Invoices.Domain.Services;
 using System.Linq;
+using Invoices.Domain.Enums;
 
 namespace Invoices.Application.AppServices
 {
@@ -123,14 +124,6 @@ namespace Invoices.Application.AppServices
 
         public async Task<Result<List<Invoice>, BusinessException>> RegisterExpense(Expense expense)
         {
-            var result = await _expenseRepositorty.AddAsync(expense);
-
-            if (result.IsFailure)
-            {
-                return result.Error;
-                //log
-            }
-
             var firstInvoiceDate = _invoiceService.GetCurrentInvoiceDate();
 
             var lastInvoiceDate = firstInvoiceDate.AddMonths(expense.InstallmentsCount);
@@ -173,6 +166,13 @@ namespace Invoices.Application.AppServices
             }
 
             return changedInvoices;
+        }
+
+        public Task<Result<Invoice, BusinessException>> Pay(Invoice invoice)
+        {
+            //invoice.WasPaidIn();
+            //invoice.update
+            return null;
         }
     }
 }

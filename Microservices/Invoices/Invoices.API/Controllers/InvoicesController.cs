@@ -21,6 +21,11 @@ namespace Invoices.API.Controllers
             _mediator = mediator;
         }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Invoice invoice)
+        {
+            return From(await _mediator.Send(new PayInvoiceCommand { Invoice = invoice }));
+        }
+
     }
 }

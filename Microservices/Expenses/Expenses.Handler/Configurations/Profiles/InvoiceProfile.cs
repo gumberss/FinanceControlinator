@@ -13,10 +13,9 @@ namespace Expenses.Handler.Configurations.Profiles
         {
             CreateMap<InvoiceDTO, Invoice>();
 
-            CreateMap<InvoiceItemDTO, InvoiceItem>()
-                .ForMember(x => x.ExpenseId, x => x.MapFrom(y => Guid.Parse(y.ExpenseId)));
+            CreateMap<InvoiceItemDTO, InvoiceItem>();
 
-            CreateMap<InvoicesChangedEvent, ChangeInvoicesCommand>();
+            CreateMap<InvoicePaidEvent, RegisterPaidInvoiceCommand>();
         }
     }
 }

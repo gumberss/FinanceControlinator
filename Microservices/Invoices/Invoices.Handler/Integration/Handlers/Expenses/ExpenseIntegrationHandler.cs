@@ -34,7 +34,9 @@ namespace Invoices.Handler.Integration.Handlers.Expenses
 
             if (result.IsSuccess)
             {
-                var @event = _mapper.Map<InvoicesChangedEvent>(result.Value);
+                var invoices = result.Value;
+
+                var @event = _mapper.Map<InvoicesChangedEvent>(invoices);
 
                 await context.Publish(@event);
             }

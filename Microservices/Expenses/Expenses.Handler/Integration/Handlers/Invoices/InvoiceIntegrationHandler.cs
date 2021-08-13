@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Expenses.Handler.Integration.Handlers.Invoices
 {
-    class InvoiceIntegrationHandler : IConsumer<InvoicesChangedEvent>
+    class InvoiceIntegrationHandler : IConsumer<InvoicePaidEvent>
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
@@ -21,9 +21,9 @@ namespace Expenses.Handler.Integration.Handlers.Invoices
             _mapper = mapper;
             _mediator = mediator;
         }
-        public async Task Consume(ConsumeContext<InvoicesChangedEvent> context)
+        public async Task Consume(ConsumeContext<InvoicePaidEvent> context)
         {
-            var command = _mapper.Map<ChangeInvoicesCommand>(context.Message);
+            var command = _mapper.Map<RegisterPaidInvoiceCommand>(context.Message);
 
             var result = await _mediator.Send(command);
 
