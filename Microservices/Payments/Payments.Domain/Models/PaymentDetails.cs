@@ -3,7 +3,7 @@ using System;
 
 namespace Payments.Domain.Models
 {
-    public class PaymentItem : Entity<String>
+    public class PaymentDetails : Entity<String>
     {
        
     }

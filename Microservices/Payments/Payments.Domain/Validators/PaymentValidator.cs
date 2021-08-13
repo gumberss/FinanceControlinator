@@ -14,7 +14,7 @@ namespace Payments.Domain.Validators
         }
     }
 
-    public class PaymentItemValidator : AbstractValidator<PaymentItem>
+    public class PaymentItemValidator : AbstractValidator<PaymentDetails>
     {
         public PaymentItemValidator(ILocalization localization)
         {
