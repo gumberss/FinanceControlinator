@@ -1,6 +1,6 @@
-using Invoices.API.Commons;
-using Invoices.Data.Contexts;
-using Invoices.Handler.Configurations;
+using Payments.API.Commons;
+using Payments.Data.Contexts;
+using Payments.Handler.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ using Raven.Client.Documents.Session;
 using Microsoft.Extensions.Logging;
 using FinanceControlinator.Common.CustomLogs;
 
-namespace Invoices.API
+namespace Payments.API
 {
     public class Startup
     {
@@ -50,7 +50,7 @@ namespace Invoices.API
 
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Invoices Microservice", Version = "v1" });
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Payments Microservice", Version = "v1" });
             });
 
             services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
@@ -63,14 +63,13 @@ namespace Invoices.API
             services.RegisterServices();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipel1ine.
-        public void Configure(
-            IApplicationBuilder app
-          , IWebHostEnvironment env
-          , ILoggerFactory loggerFactory)
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app
+            , IWebHostEnvironment env
+            , ILoggerFactory loggerFactory)
         {
             loggerFactory.AddProvider(new CustomLogProvider(new CustomLogConfig()));
-
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -79,7 +78,7 @@ namespace Invoices.API
             app.UseSwagger();
             app.UseSwaggerUI(x =>
             {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Invoices Microservice V1");
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Payments Microservice V1");
             });
 
             app.UseHttpsRedirection();

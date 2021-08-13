@@ -1,6 +1,4 @@
 using Invoices.Application.Interfaces.AppServices;
-using Invoices.Data.Contexts;
-using Invoices.Data.Interfaces.Contexts;
 using Invoices.Data.Repositories;
 using Invoices.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
@@ -15,7 +13,6 @@ using Raven.Client.Documents.Session;
 using Raven.Client.Documents;
 using Invoices.Domain.Services;
 using System.Linq;
-using Invoices.Domain.Enums;
 
 namespace Invoices.Application.AppServices
 {
