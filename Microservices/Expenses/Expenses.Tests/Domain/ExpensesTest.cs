@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Models;
+﻿using Expenses.Domain.Models.Expenses;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;

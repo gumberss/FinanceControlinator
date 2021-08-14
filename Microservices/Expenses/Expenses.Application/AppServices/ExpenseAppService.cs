@@ -3,7 +3,7 @@ using Expenses.Data.Contexts;
 using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Repositories;
 using Expenses.Domain.Interfaces.Validators;
-using Expenses.Domain.Models;
+using Expenses.Domain.Models.Expenses;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.Utils;
@@ -25,7 +25,7 @@ namespace Expenses.Application.AppServices
         private readonly ILogger<IExpenseAppService> _logger;
 
         public ExpenseAppService(
-                ExpenseDbContext expenseDbContext
+                IExpenseDbContext expenseDbContext
                 , IExpenseRepository expenseRepository
                 , IExpenseValidator expenseValidator
                 , ILocalization localization
@@ -114,8 +114,6 @@ namespace Expenses.Application.AppServices
 
         public async Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense)
         {
-            _logger.LogWarning("Hi");
-
             var validationResult = await _expenseValidator.ValidateAsync(expense);
 
             if (!validationResult.IsValid)
@@ -145,7 +143,7 @@ namespace Expenses.Application.AppServices
                 var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
                 var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
 
-                _logger.LogError(exception.Log());
+                _logger.LogError(addResult.Error, exception.Log());
 
                 return exception;
             }
@@ -157,12 +155,63 @@ namespace Expenses.Application.AppServices
                 var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
                 var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
 
-                _logger.LogError(exception.Log());
+                _logger.LogError(saveResult.Error, exception.Log());
 
                 return exception;
             }
 
             return addResult;
+        }
+
+        public async Task<Result<List<Expense>, BusinessException>> UpdateExpense(Expense expense)
+        {
+            var validationResult = await _expenseValidator.ValidateAsync(expense);
+
+            if (!validationResult.IsValid)
+            {
+                var errorDatas = validationResult.Errors.Select(x => new ErrorData(x.ErrorMessage, x.PropertyName));
+                var exception = new BusinessException(HttpStatusCode.BadRequest, errorDatas);
+
+                _logger.LogInformation(exception.Log());
+
+                return exception;
+            }
+
+            if (!expense.TotalCostIsValid())
+            {
+                var errorData = new ErrorData(_localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS, "TotalCost");
+                var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
+
+                _logger.LogInformation(exception.Log());
+
+                return exception;
+            }
+
+            //var addResult = await _expenseRepository.AddAsync(expense);
+
+            //if (addResult.IsFailure)
+            //{
+            //    var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
+            //    var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
+
+            //    _logger.LogError(exception.Log());
+
+            //    return exception;
+            //}
+
+            //var saveResult = await Result.Try(_expenseDbContext.Commit());
+
+            //if (saveResult.IsFailure)
+            //{
+            //    var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
+            //    var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
+
+            //    _logger.LogError(exception.Log());
+
+            //    return exception;
+            //}
+
+            return new List<Expense>();
         }
     }
 }

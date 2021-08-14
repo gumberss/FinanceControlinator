@@ -1,7 +1,6 @@
 using Invoices.API.Commons;
 using Invoices.Data.Contexts;
 using Invoices.Handler.Configurations;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +11,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
-using MassTransit;
-using Invoices.Handler.Integration.Handlers.Expenses;
 using Microsoft.Extensions.Logging;
 using FinanceControlinator.Common.CustomLogs;
 

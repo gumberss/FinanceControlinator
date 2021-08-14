@@ -1,6 +1,7 @@
 ﻿using Expenses.Data.Commons;
 using Expenses.Data.Contexts;
-using Expenses.Domain.Models;
+using Expenses.Data.Interfaces.Contexts;
+using Expenses.Domain.Models.Expenses;
 using FinanceControlinator.Common.Repositories;
 using System;
 
@@ -13,7 +14,7 @@ namespace Expenses.Data.Repositories
 
     public class ExpenseRepository : Repository<Expense, ExpenseDbContext, Guid>, IExpenseRepository
     {
-        public ExpenseRepository(ExpenseDbContext context) : base(context)
+        public ExpenseRepository(IExpenseDbContext context) : base(context as ExpenseDbContext)
         {
 
         }

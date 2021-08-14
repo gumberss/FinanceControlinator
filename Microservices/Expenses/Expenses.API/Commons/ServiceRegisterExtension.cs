@@ -12,6 +12,9 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using FinanceControlinator.Common.LogsBehaviors;
+using Expenses.Data.Interfaces.Contexts;
+using Expenses.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Expenses.API.Commons
 {
@@ -30,9 +33,12 @@ namespace Expenses.API.Commons
 
             services.AddFluentValidation();
 
-            services.AddScoped<IExpenseAppService, ExpenseAppService>();
-            services.AddScoped<IExpenseRepository, ExpenseRepository>();
+            services.AddTransient<IExpenseAppService, ExpenseAppService>();
+            services.AddTransient<IInvoiceAppService, InvoiceAppService>();
+            
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
+            services.AddTransient<IInvoiceRepository, InvoiceRepository>();
+            services.AddTransient<IInvoiceItemRepository, InvoiceItemRepository>();
             services.AddTransient<IExpenseValidator, ExpenseValidator>();
         }
     }

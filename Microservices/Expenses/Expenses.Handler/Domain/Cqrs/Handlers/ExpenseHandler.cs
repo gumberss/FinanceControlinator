@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Expenses.Application.Interfaces.AppServices;
-using Expenses.Domain.Models;
-using Expenses.Handler.Domain.Cqrs.Events;
+using Expenses.Domain.Models.Expenses;
+using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using FinanceControlinator.Events.Expenses;
@@ -16,6 +16,7 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
 {
     public class ExpenseHandler
         : IRequestHandler<RegisterExpenseCommand, Result<Expense, BusinessException>>
+        , IRequestHandler<UpdateExpenseCommand, Result<Expense, BusinessException>>
         , IRequestHandler<GetAllExpensesQuery, Result<List<Expense>, BusinessException>>
         , IRequestHandler<GetMonthExpensesQuery, Result<List<Expense>, BusinessException>>
         , IRequestHandler<GetLastMonthExpensesQuery, Result<List<Expense>, BusinessException>>
@@ -54,6 +55,11 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
 
                 return result;
             }
+        }
+
+        public Task<Result<Expense, BusinessException>> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<Result<List<Expense>, BusinessException>> Handle(GetAllExpensesQuery request, CancellationToken cancellationToken)

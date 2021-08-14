@@ -27,6 +27,24 @@ services:
             cpus: 0.25
             memory: 128M
 
+  paymentsdb:
+    image: ravendb/ravendb:ubuntu-latest
+    container_name: payments-db
+    ports:
+      - "38889:38888"
+      - "10000:8080"
+    environment:
+      RAVEN_Setup_Mode: 'None'
+      RAVEN_Security_UnsecuredAccessAllowed: 'PrivateNetwork'
+      RAVEN_ARGS: '--log-to-console'
+    deploy:
+      resources:
+          limits:
+            cpus: 0.50
+            memory: 512M
+          reservations:
+            cpus: 0.25
+            memory: 128M
   expensesdb:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: expenses-db

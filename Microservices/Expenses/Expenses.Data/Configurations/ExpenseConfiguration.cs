@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Models;
+﻿using Expenses.Domain.Models.Expenses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -49,7 +49,7 @@ namespace Expenses.Data.Configurations
                 .IsRequired();
 
             builder
-                .Property(x => x.UpdateDate);
+                .Property(x => x.UpdatedDate);
         }
     }
 }

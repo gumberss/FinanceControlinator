@@ -49,7 +49,9 @@ namespace Invoices.Domain.Services
                 }
                 else
                 {
-                    changedInvoices.Add(currentInstallmentInvoice.AddNew(invoiceItem));
+                    changedInvoices.Add(currentInstallmentInvoice
+                        .AddNew(invoiceItem)
+                        .WasUpdated());
                 }
             }
 

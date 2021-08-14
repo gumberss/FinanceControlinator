@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Models;
+﻿using Expenses.Domain.Models.Expenses;
 using FluentValidation;
 
 namespace Expenses.Domain.Interfaces.Validators

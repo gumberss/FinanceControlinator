@@ -17,7 +17,7 @@ namespace Expenses.Data.Commons
            where TContext : DbContext
     {
         private readonly TContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet;
 
         public Repository(TContext context)
         {
@@ -40,9 +40,16 @@ namespace Expenses.Data.Commons
             return entity;
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            var result = await Result.Try(() =>  _dbSet.Remove(entity));
+
+            if (result.IsFailure)
+            {
+                return result.Error;
+            }
+
+            return true;
         }
 
         public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
@@ -101,9 +108,16 @@ namespace Expenses.Data.Commons
             throw new NotImplementedException();
         }
 
-        public Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
+        public async Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            var updateResult = await Result.Try(() => _dbSet.Update(entity));
+
+            if (updateResult.IsFailure)
+            {
+                return updateResult.Error;
+            }
+
+            return entity;
         }
     }
 }

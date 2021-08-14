@@ -15,5 +15,6 @@ namespace Invoices.Application.Interfaces.AppServices
         Task<Result<List<Invoice>, BusinessException>> GetMonthInvoice();
 
         Task<Result<List<Invoice>, BusinessException>> GetLastMonthInvoice();
+        Task<Result<Invoice, BusinessException>> Pay(Invoice invoice);
     }
 }

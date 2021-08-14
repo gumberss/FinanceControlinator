@@ -16,7 +16,7 @@ namespace Expenses.API.ViewModels
 
         public ExpenseType Type { get; init; }
 
-        public bool IsRecurrent { get; init; } //Monthly only yet
+        public bool IsRecurrent { get; init; }
 
         public String Location { get; init; }
 
