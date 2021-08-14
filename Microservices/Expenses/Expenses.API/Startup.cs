@@ -1,5 +1,6 @@
 using Expenses.API.Commons;
 using Expenses.Data.Contexts;
+using Expenses.Data.Interfaces.Contexts;
 using Expenses.Handler.Configurations;
 using FinanceControlinator.Common.CustomLogs;
 using FluentValidation.AspNetCore;
@@ -41,7 +42,7 @@ namespace Expenses.API
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            services.AddDbContext<ExpenseDbContext>(options =>
+            services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ExpensesDbConnection"));
             });

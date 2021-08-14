@@ -25,7 +25,7 @@ namespace Expenses.Application.AppServices
         private readonly ILogger<IExpenseAppService> _logger;
 
         public ExpenseAppService(
-                ExpenseDbContext expenseDbContext
+                IExpenseDbContext expenseDbContext
                 , IExpenseRepository expenseRepository
                 , IExpenseValidator expenseValidator
                 , ILocalization localization
@@ -143,7 +143,7 @@ namespace Expenses.Application.AppServices
                 var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
                 var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
 
-                _logger.LogError(exception.Log());
+                _logger.LogError(addResult.Error, exception.Log());
 
                 return exception;
             }
@@ -155,7 +155,7 @@ namespace Expenses.Application.AppServices
                 var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
                 var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
 
-                _logger.LogError(exception.Log());
+                _logger.LogError(saveResult.Error, exception.Log());
 
                 return exception;
             }

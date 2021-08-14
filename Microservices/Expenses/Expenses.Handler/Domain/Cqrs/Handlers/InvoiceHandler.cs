@@ -1,5 +1,6 @@
 ﻿using Expenses.Application.Interfaces.AppServices;
 using Expenses.Data.Contexts;
+using Expenses.Data.Interfaces.Contexts;
 using Expenses.Domain.Models.Invoices;
 using Expenses.Handler.Domain.Cqrs.Events.Invoices;
 using FinanceControlinator.Common.Exceptions;
@@ -14,11 +15,11 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
         : IRequestHandler<RegisterPaidInvoiceCommand, Result<Invoice, BusinessException>>
     {
         private readonly IInvoiceAppService _invoiceAppService;
-        private readonly ExpenseDbContext _expenseDbContext;
+        private readonly IExpenseDbContext _expenseDbContext;
 
         public InvoiceHandler(
             IInvoiceAppService invoiceAppService,
-            ExpenseDbContext expenseDbContext
+            IExpenseDbContext expenseDbContext
             )
         {
             _invoiceAppService = invoiceAppService;
@@ -29,7 +30,7 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
         {
             var changedInvoices = await _invoiceAppService.RegisterPaid(request.Invoice);
 
-            var saveResult = await Result.Try(_expenseDbContext.SaveChangesAsync());
+            var saveResult = await Result.Try(_expenseDbContext.Commit());
 
             if (saveResult.IsFailure)
             {

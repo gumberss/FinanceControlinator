@@ -12,6 +12,9 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using FinanceControlinator.Common.LogsBehaviors;
+using Expenses.Data.Interfaces.Contexts;
+using Expenses.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Expenses.API.Commons
 {

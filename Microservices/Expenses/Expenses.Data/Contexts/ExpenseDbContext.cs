@@ -48,7 +48,7 @@ namespace Expenses.Data.Contexts
         }
 
         public static readonly ILoggerFactory MyLoggerFactory
-    = LoggerFactory.Create(builder => { builder.AddConsole(); });
+            = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -78,16 +78,16 @@ namespace Expenses.Data.Contexts
 
         public async Task<int> Commit()
         {
-            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("InsertDate") != null))
+            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("CreatedDate") != null))
             {
                 if (item.State == EntityState.Added)
                 {
-                    item.Property("InsertDate").CurrentValue = DateTime.Now;
+                    item.Property("CreatedDate").CurrentValue = DateTime.Now;
                 }
 
                 if (item.State == EntityState.Modified)
                 {
-                    item.Property("InsertDate").IsModified = false;
+                    item.Property("CreatedDate").IsModified = false;
                 }
             }
 

@@ -1,4 +1,5 @@
 ﻿using Expenses.Data.Contexts;
+using Expenses.Data.Interfaces.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,7 @@ namespace Expenses.API.Commons
 
             using (var scope = serviceScopeFactory.CreateScope())
             {
-                using (var context = (ExpenseDbContext)scope.ServiceProvider.GetService(typeof(ExpenseDbContext)))
+                using (var context = (ExpenseDbContext)scope.ServiceProvider.GetService(typeof(IExpenseDbContext)))
                 {
                     var needMigration = (await context.Database.GetPendingMigrationsAsync()).Any();
 

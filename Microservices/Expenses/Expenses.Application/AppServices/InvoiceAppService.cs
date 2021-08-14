@@ -1,5 +1,6 @@
 ﻿using Expenses.Application.Interfaces.AppServices;
 using Expenses.Data.Contexts;
+using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Repositories;
 using Expenses.Domain.Models.Invoices;
 using FinanceControlinator.Common.Exceptions;
@@ -15,13 +16,13 @@ namespace Expenses.Application.AppServices
     public class InvoiceAppService : IInvoiceAppService
     {
         private readonly IInvoiceRepository _invoiceRepository;
-        private readonly ExpenseDbContext _expenseDbContext;
+        private readonly IExpenseDbContext _expenseDbContext;
         private readonly IInvoiceItemRepository _invoiceItemRepository;
 
         public InvoiceAppService(
             IInvoiceRepository invoiceRepository,
             IInvoiceItemRepository invoiceItemRepository,
-                ExpenseDbContext expenseDbContext
+            IExpenseDbContext expenseDbContext
             )
         {
             _invoiceRepository = invoiceRepository;

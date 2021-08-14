@@ -1,5 +1,6 @@
 ﻿using Expenses.Data.Commons;
 using Expenses.Data.Contexts;
+using Expenses.Data.Interfaces.Contexts;
 using Expenses.Domain.Models.Invoices;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Repositories;
@@ -17,7 +18,7 @@ namespace Expenses.Data.Repositories
 
     public class InvoiceRepository : Repository<Invoice, ExpenseDbContext, Guid>, IInvoiceRepository
     {
-        public InvoiceRepository(ExpenseDbContext context) : base(context)
+        public InvoiceRepository(IExpenseDbContext context) : base(context as ExpenseDbContext)
         {
 
         }
