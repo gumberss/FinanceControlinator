@@ -1,7 +1,6 @@
 using MassTransit;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Payments.Handler.Integration.Handlers;
 using System;
 
 namespace Payments.Handler.Configurations
@@ -12,7 +11,7 @@ namespace Payments.Handler.Configurations
         {
            services.AddMassTransit(x =>
            {
-               //x.AddConsumer<ValueEnteredEventConsumer>();
+               x.AddConsumer<InvoicesIntegrationHandler>();
 
                x.SetKebabCaseEndpointNameFormatter();
 

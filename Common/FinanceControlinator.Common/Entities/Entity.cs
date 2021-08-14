@@ -9,6 +9,8 @@ namespace FinanceControlinator.Common.Entities
         public DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+        public int Version { get; }
     }
 
     public class Entity<T> : IEntity<T>
@@ -18,5 +20,8 @@ namespace FinanceControlinator.Common.Entities
         public DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+        public int Version { get; private set; }
+
     }
 }

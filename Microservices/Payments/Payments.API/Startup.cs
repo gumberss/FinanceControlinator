@@ -42,10 +42,9 @@ namespace Payments.API
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            var dbConnection = Configuration.GetConnectionString("InvoicesDbConnection");
-            var dbName = Configuration.GetConnectionString("InvoicesDbName");
+            var dbConnection = Configuration.GetConnectionString("PaymentsDbConnection");
+            var dbName = Configuration.GetConnectionString("PaymentsDbName");
             services.AddSingleton<IDocumentStore>(x => DocumentStoreHolder.GetStore(dbConnection, dbName));
-            //services.AddTransient<IDocumentSession>(x => x.GetService<IDocumentStore>().OpenSession());
             services.AddScoped<IAsyncDocumentSession>(x => x.GetService<IDocumentStore>().OpenAsyncSession());
 
             services.AddSwaggerGen(x =>

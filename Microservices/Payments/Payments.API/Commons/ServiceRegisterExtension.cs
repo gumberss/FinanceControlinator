@@ -29,8 +29,11 @@ namespace Payments.API.Commons
             services.AddFluentValidation();
 
             services.AddScoped<IPaymentAppService, PaymentAppService>();
+            services.AddScoped<IInvoiceAppService, InvoiceAppService>();
+            
             services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddTransient<IPaymentRepository, PaymentRepository>();
+            services.AddTransient<IInvoiceRepository, InvoiceRepository>();
+
             services.AddTransient<IPaymentValidator, PaymentValidator>();
         }
     }

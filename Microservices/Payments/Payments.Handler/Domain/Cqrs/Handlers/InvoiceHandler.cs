@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Payments.Application.Interfaces.AppServices;
 using Payments.Domain.Models;
 using Payments.Handler.Domain.Cqrs.Events.Commands;
+using Raven.Client.Documents.Session;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -17,18 +18,32 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly ILogger<PaymentHandler> _logger;
+        private readonly IAsyncDocumentSession _documentSession;
 
         public InvoiceHandler(
             IInvoiceAppService invoiceAppService
+            , IAsyncDocumentSession documentSession
             , ILogger<PaymentHandler> logger)
         {
             _invoiceAppService = invoiceAppService;
             _logger = logger;
+            _documentSession = documentSession;
         }
 
-        async Task<Result<List<Invoice>, BusinessException>> IRequestHandler<AddOrUpdateInvoicesCommand, Result<List<Invoice>, BusinessException>>.Handle(AddOrUpdateInvoicesCommand request, CancellationToken cancellationToken)
+        public async Task<Result<List<Invoice>, BusinessException>> Handle(AddOrUpdateInvoicesCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+           var changedInvoices =  await _invoiceAppService.Change(request.Invoices);
+
+            var result = await Result.Try(_documentSession.SaveChangesAsync());
+
+            if (result.IsFailure)
+            {
+                //log
+
+                return result.Error;
+            }
+
+            return changedInvoices;
         }
     }
 }

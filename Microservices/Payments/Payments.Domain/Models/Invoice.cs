@@ -18,5 +18,23 @@ namespace Payments.Domain.Models
         public InvoicePaymentStatus PaymentStatus { get; set; }
 
         public DateTime PaymentDate { get; set; }
+
+        public Invoice ReplaceItems(List<InvoiceItem> items)
+        {
+            Items = new List<InvoiceItem>(items);
+
+            return this;
+        }
+
+        public Invoice UpdateFrom(Invoice changedInvoice)
+        {
+            TotalCost = changedInvoice.TotalCost;
+            DueDate = changedInvoice.DueDate;
+            PaymentStatus = changedInvoice.PaymentStatus;
+            PaymentDate = changedInvoice.PaymentDate;
+            UpdatedDate = changedInvoice.UpdatedDate;
+
+            return this;
+        }
     }
 }
