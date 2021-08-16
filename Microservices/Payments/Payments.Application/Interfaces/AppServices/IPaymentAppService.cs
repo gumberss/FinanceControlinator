@@ -8,6 +8,6 @@ namespace Payments.Application.Interfaces.AppServices
 {
     public interface IPaymentAppService
     {
-        
+        Task<Result<PaymentItem, BusinessException>> RegisterItem(PaymentItem paymentItem);
     }
 }

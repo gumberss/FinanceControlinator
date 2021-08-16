@@ -15,7 +15,7 @@ namespace Payments.Domain.Models
 
         public DateTime DueDate { get; set; }
 
-        public InvoicePaymentStatus PaymentStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
 
         public DateTime PaymentDate { get; set; }
 

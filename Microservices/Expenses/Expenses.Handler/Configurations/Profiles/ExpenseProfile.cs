@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Expenses.Domain.Models.Expenses;
-using FinanceControlinator.Events.Expenses;
-using FinanceControlinator.Events.Expenses.DTOs;
+using FinanceControlinator.Events.Invoices;
+using FinanceControlinator.Events.Invoices.DTOs;
 
 namespace Expenses.Handler.Configurations.Profiles
 {
@@ -9,15 +9,11 @@ namespace Expenses.Handler.Configurations.Profiles
     {
         public ExpenseProfile()
         {
-            CreateMap<Expense, ExpenseCreatedEvent>()
-                .ForMember(x => x.Expense, x => x.MapFrom(y => y))
-                .ReverseMap();
+            CreateMap<Expense, GenerateInvoicesEvent>()
+                .ForMember(x => x.InvoiceExpense, x => x.MapFrom(y => y));
 
-            CreateMap<Expense, ExpenseDTO>()
-                .ReverseMap();
-            CreateMap<ExpenseItem, ExpenseItemDTO>()
-                .ReverseMap();
-
+            CreateMap<Expense, InvoiceExpenseDTO>()
+                .ForMember(x => x.DetailsPath, x => x.MapFrom(y => $"expenses/{y.Id}"));
         }
     }
 }

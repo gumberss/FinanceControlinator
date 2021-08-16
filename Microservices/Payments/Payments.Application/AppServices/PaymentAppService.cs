@@ -22,10 +22,12 @@ namespace Payments.Application.AppServices
         private readonly ILocalization _localization;
         private readonly ILogger<IPaymentAppService> _logger;
         private readonly IAsyncDocumentSession _documentSession;
+        private readonly IPaymentItemRepository _paymentItemRepository;
 
         public PaymentAppService(
                 IAsyncDocumentSession documentSession
                 , IPaymentRepository paymentRepository
+                , IPaymentItemRepository paymentItemRepository
                 , IPaymentValidator paymentValidator
                 , ILocalization localization
                 , ILogger<IPaymentAppService> logger
@@ -33,14 +35,16 @@ namespace Payments.Application.AppServices
         {
             _documentSession = documentSession;
             _paymentRepository = paymentRepository;
+            _paymentItemRepository = paymentItemRepository;
             _paymentValidator = paymentValidator;
             _localization = localization;
             _logger = logger;
+
         }
 
         public async Task<Result<List<Payment>, BusinessException>> GetAllPayments()
         {
-            var result = await _paymentRepository.GetAllAsync(include: x => x.Items);
+            var result = await _paymentRepository.GetAllAsync(include: x => x.PaymentMethods);
 
             if (result.IsFailure)
             {
@@ -57,6 +61,33 @@ namespace Payments.Application.AppServices
 
             return payments;
         }
-    
+
+        public async Task<Result<PaymentItem, BusinessException>> RegisterItem(PaymentItem paymentItem)
+        {
+            var registeredItem = await _paymentItemRepository.GetByIdAsync(paymentItem.Id);
+
+            if (registeredItem.IsFailure)
+            {
+                //log
+                return registeredItem.Error;
+            }
+
+            if (registeredItem.Value is not null)
+            {
+                if (registeredItem.Value.CanUpdate())
+                    registeredItem.Value.UpdateFrom(paymentItem);
+                else
+                {
+                    var errorData = new ErrorData("It's not possible to update the paymentItem", paymentItem.Id);
+                    return new BusinessException(HttpStatusCode.BadRequest, errorData);
+                }
+
+                return registeredItem.Value;
+            }
+            else
+            {
+                return await _paymentItemRepository.AddAsync(paymentItem);
+            }
+        }
     }
 }

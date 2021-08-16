@@ -32,6 +32,8 @@ namespace Payments.API.Commons
             services.AddScoped<IInvoiceAppService, InvoiceAppService>();
             
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentItemRepository, PaymentItemRepository>();
+            
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
 
             services.AddTransient<IPaymentValidator, PaymentValidator>();

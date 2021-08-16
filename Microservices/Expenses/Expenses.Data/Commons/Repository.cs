@@ -52,7 +52,7 @@ namespace Expenses.Data.Commons
             return true;
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntityId> ids)
         {
             throw new NotImplementedException();
         }

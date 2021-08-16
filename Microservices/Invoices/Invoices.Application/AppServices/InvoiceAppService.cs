@@ -119,25 +119,48 @@ namespace Invoices.Application.AppServices
             return invoices;
         }
 
-        public async Task<Result<List<Invoice>, BusinessException>> RegisterExpense(Expense expense)
+        public async Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(Expense expense)
         {
+            var registeredExpense = await _expenseRepositorty.GetByIdAsync(expense.Id);
+
+            if (registeredExpense.IsFailure)
+            {
+                //log
+                return registeredExpense.Error;
+            }
+
+            if (registeredExpense.Value is not null)
+            {
+                //existent expense
+            }
+            else
+            {
+                var addExpenseResult = await _expenseRepositorty.AddAsync(expense);
+
+                if (addExpenseResult.IsFailure)
+                {
+                    //log
+                    return addExpenseResult.Error;
+                }
+            }
+
             var firstInvoiceDate = _invoiceService.GetCurrentInvoiceDate();
 
             var lastInvoiceDate = firstInvoiceDate.AddMonths(expense.InstallmentsCount);
 
-            var invoicesResult =
+            var registeredInvoices =
                 await _invoiceRepository.GetAllAsync(x => x.Items,
                  x => x.DueDate.Month >= firstInvoiceDate.Month
                    && x.DueDate.Month < lastInvoiceDate.Month
                 );
 
-            if (invoicesResult.IsFailure)
+            if (registeredInvoices.IsFailure)
             {
-                return invoicesResult.Error;
+                return registeredInvoices.Error;
                 //log
             }
 
-            var existentInvoices = invoicesResult.Value;
+            var existentInvoices = registeredInvoices.Value;
 
             var changedInvoices = _invoiceService.RegisterExpense(expense, existentInvoices, firstInvoiceDate);
 
@@ -145,7 +168,7 @@ namespace Invoices.Application.AppServices
 
             foreach (var newInvoice in newInvoicesResult)
             {
-               var addResult =  await _invoiceRepository.AddAsync(newInvoice);
+                var addResult = await _invoiceRepository.AddAsync(newInvoice);
 
                 if (addResult.IsFailure)
                 {
@@ -153,6 +176,7 @@ namespace Invoices.Application.AppServices
                     return new BusinessException(HttpStatusCode.InternalServerError, new ErrorData(addResult.Error.Message));
                 }
             }
+
 
             var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
 
