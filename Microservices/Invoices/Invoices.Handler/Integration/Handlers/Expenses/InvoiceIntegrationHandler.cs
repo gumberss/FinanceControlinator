@@ -1,20 +1,22 @@
 ﻿using AutoMapper;
-using FinanceControlinator.Events.Expenses;
 using FinanceControlinator.Events.Invoices;
+using FinanceControlinator.Events.Invoices;
+using FinanceControlinator.Events.Payments;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Domain.Models;
 using MassTransit;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Invoices.Handler.Integration.Handlers.Expenses
 {
-    public class ExpenseIntegrationHandler : IConsumer<ExpenseCreatedEvent>
+    public class InvoiceIntegrationHandler : IConsumer<GenerateInvoicesEvent>
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly IMapper _mapper;
 
-        public ExpenseIntegrationHandler(
+        public InvoiceIntegrationHandler(
             IInvoiceAppService invoiceAppService,
             IMapper mapper
             )
@@ -22,11 +24,11 @@ namespace Invoices.Handler.Integration.Handlers.Expenses
             _invoiceAppService = invoiceAppService;
             _mapper = mapper;
         }
-        public async Task Consume(ConsumeContext<ExpenseCreatedEvent> context)
+        public async Task Consume(ConsumeContext<GenerateInvoicesEvent> context)
         {
-            var expense = _mapper.Map<Expense>(context.Message.Expense);
+            var expense = _mapper.Map<Expense>(context.Message.InvoiceExpense);
 
-            var result =  await _invoiceAppService.RegisterExpense(expense);
+            var result =  await _invoiceAppService.RegisterInvoiceItems(expense);
 
             if (result.IsFailure) throw result.Error;
 
@@ -37,6 +39,12 @@ namespace Invoices.Handler.Integration.Handlers.Expenses
                 var invoices = result.Value;
 
                 var @event = _mapper.Map<InvoicesChangedEvent>(invoices);
+
+                foreach (var invoice in invoices)
+                {
+                    var paymentEvent = _mapper.Map<RegisterItemToPayEvent>(invoice);
+                    await context.Publish(paymentEvent);
+                }
 
                 await context.Publish(@event);
             }

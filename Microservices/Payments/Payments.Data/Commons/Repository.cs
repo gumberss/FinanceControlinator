@@ -59,7 +59,7 @@ namespace Payments.Data.Commons
             }
         }
 
-        public async Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntityId> ids)
         {
             try
             {
@@ -76,9 +76,9 @@ namespace Payments.Data.Commons
             }
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
         {
-            throw new NotImplementedException();
+            return await DeleteAsync(new List<TEntityId> { id });
         }
 
         public async Task<Result<List<TEntity>, BusinessException>> GetAllAsync(Expression<Func<TEntity, object>> include = null, params Expression<Func<TEntity, bool>>[] where)
@@ -137,14 +137,21 @@ namespace Payments.Data.Commons
             return result.Value;
         }
 
-        public Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
+        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
         {
-            throw new NotImplementedException();
+            var result = await Result.Try(_session.LoadAsync<TEntity>(id.ToString()));
+
+            if (result.IsFailure)
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
+
+            return result.Value;
         }
 
         public Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            Result<TEntity, BusinessException> result = entity;
+
+            return Task.FromResult(result);
         }
     }
 }

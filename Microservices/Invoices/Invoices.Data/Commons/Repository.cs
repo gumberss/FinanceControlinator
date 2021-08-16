@@ -27,8 +27,8 @@ namespace Invoices.Data.Commons
         {
             var result = await Result.Try(_session.StoreAsync(entity));
 
-            return result.IsFailure 
-                ? result.Error 
+            return result.IsFailure
+                ? result.Error
                 : entity;
         }
 
@@ -60,7 +60,7 @@ namespace Invoices.Data.Commons
             }
         }
 
-        public async Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntityId> ids)
         {
             try
             {
@@ -77,9 +77,9 @@ namespace Invoices.Data.Commons
             }
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
         {
-            throw new NotImplementedException();
+            return await DeleteAsync(new List<TEntityId> { id });
         }
 
         public async Task<Result<List<TEntity>, BusinessException>> GetAllAsync(Expression<Func<TEntity, object>> include = null, params Expression<Func<TEntity, bool>>[] where)
@@ -128,7 +128,7 @@ namespace Invoices.Data.Commons
             }
         }
 
-        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
+        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
         {
             var result = await Result.Try(_session.LoadAsync<TEntity>(id.ToString()));
 
@@ -138,14 +138,11 @@ namespace Invoices.Data.Commons
             return result.Value;
         }
 
-        public Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            Result<TEntity, BusinessException> result = entity;
+
+            return Task.FromResult(result);
         }
     }
 }

@@ -4,7 +4,7 @@ using Expenses.Domain.Models.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
-using FinanceControlinator.Events.Expenses;
+using FinanceControlinator.Events.Invoices;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -49,9 +49,9 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
                     return result;
                 }
 
-                var @event = _mapper.Map<Expense, ExpenseCreatedEvent>(result.Value);
-                
-                await _bus.Publish(@event);
+                var generateInvoicesEvent = _mapper.Map<Expense, GenerateInvoicesEvent>(result.Value);
+
+                await _bus.Publish(generateInvoicesEvent);
 
                 return result;
             }

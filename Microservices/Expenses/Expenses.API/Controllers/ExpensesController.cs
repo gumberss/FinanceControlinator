@@ -36,7 +36,7 @@ namespace Expenses.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return From(await _mediator.Send(new GetAllExpensesQuery ()));
+            return From(await _mediator.Send(new GetAllExpensesQuery()));
         }
 
         [HttpGet("Month")]

@@ -16,5 +16,7 @@ namespace FinanceControlinator.Events.Invoices.DTOs
         public List<InvoiceItemDTO> Items { get; set; }
 
         public DateTime DueDate { get; set; }
+
+        public String Title { get; set; }
     }
 }

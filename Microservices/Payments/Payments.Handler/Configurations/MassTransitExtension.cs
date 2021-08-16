@@ -11,7 +11,7 @@ namespace Payments.Handler.Configurations
         {
            services.AddMassTransit(x =>
            {
-               x.AddConsumer<InvoicesIntegrationHandler>();
+               x.AddConsumer<PaymentIntegrationHandler>();
 
                x.SetKebabCaseEndpointNameFormatter();
 

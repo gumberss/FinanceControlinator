@@ -1,6 +1,6 @@
 ﻿namespace Invoices.Domain.Enums
 {
-    public enum InvoicePaymentStatus
+    public enum PaymentStatus
     {
         Opened = 0,
         Paid = 1

@@ -26,6 +26,6 @@ namespace FinanceControlinator.Common.Repositories
 
         public Task<Result<bool, BusinessException>> DeleteAsync(TId id);
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids);
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TId> ids);
     }
 }

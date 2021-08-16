@@ -10,24 +10,30 @@ namespace Invoices.Domain.Models
     {
         protected Invoice() { }
 
-        public Invoice(DateTime dueDate)
+        public Invoice(DateTime closeDate)
         {
             Id = Guid.NewGuid().ToString();
-            DueDate = dueDate;
+            CloseDate = closeDate;
             Items = new List<InvoiceItem>();
             CreatedDate = DateTime.Now;
-            PaymentStatus = InvoicePaymentStatus.Opened;
+            PaymentStatus = PaymentStatus.Opened;
+
+            DueDate = closeDate.AddDays(7);// todo: Days to pay the invoice: Invoice Configuration
         }
 
         public decimal TotalCost { get => Items.Sum(x => x.InstallmentCost); }
+        
+        public DateTime CloseDate { get; private set; }
 
-        public List<InvoiceItem> Items { get; set; }
+        public List<InvoiceItem> Items { get; private set; }
 
-        public DateTime DueDate { get; set; }
+        public DateTime DueDate { get; private set; }
 
-        public InvoicePaymentStatus PaymentStatus { get; set; }
+        public DateTime? PaymentDate { get; private set; }
 
-        public DateTime PaymentDate { get; set; }
+        public PaymentStatus PaymentStatus { get; private set; }
+
+        public String Title => DueDate.ToString();
 
         public Invoice AddNew(InvoiceItem invoiceItem)
         {
@@ -46,7 +52,7 @@ namespace Invoices.Domain.Models
         public Invoice WasPaidIn(DateTime date)
         {
             PaymentDate = date;
-            PaymentStatus = InvoicePaymentStatus.Paid;
+            PaymentStatus = PaymentStatus.Paid;
             WasUpdated();
 
             return this;

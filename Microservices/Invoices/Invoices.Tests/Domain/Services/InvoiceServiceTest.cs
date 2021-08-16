@@ -34,7 +34,7 @@ namespace Invoices.Tests.Domain.Services
                 TotalCost = 100,
                 Location = "Location",
                 PurchaseDay = _purchaseDay,
-                Type = ExpenseType.Investment
+                Type = InvoiceItemType.Investment
             };
         }
 
@@ -82,7 +82,7 @@ namespace Invoices.Tests.Domain.Services
             firstInvoiceItemFromExpense.Title.Should().Be(_expense.Title);
             firstInvoiceItemFromExpense.Location.Should().Be(_expense.Location);
             firstInvoiceItemFromExpense.PurchaseDay.Should().Be(_expense.PurchaseDay);
-            firstInvoiceItemFromExpense.Type.Should().Be((InvoiceItemType)_expense.Type);
+            firstInvoiceItemFromExpense.Type.Should().Be(_expense.Type);
 
             var secondInvoiceItemFromExpense = invoices.Last().Items.First();
 
@@ -91,7 +91,7 @@ namespace Invoices.Tests.Domain.Services
             secondInvoiceItemFromExpense.Title.Should().Be(_expense.Title);
             secondInvoiceItemFromExpense.Location.Should().Be(_expense.Location);
             secondInvoiceItemFromExpense.PurchaseDay.Should().Be(_expense.PurchaseDay);
-            secondInvoiceItemFromExpense.Type.Should().Be((InvoiceItemType)_expense.Type);
+            secondInvoiceItemFromExpense.Type.Should().Be(_expense.Type);
         }
 
         [TestMethod]
@@ -101,11 +101,12 @@ namespace Invoices.Tests.Domain.Services
 
             _expense.PurchaseDay = purchaseDay;
 
-            var existentInvoice = new Invoice(dueDate: purchaseDay)
+            var existentInvoice = new Invoice(closeDate: purchaseDay)
             {
                 Id = Guid.NewGuid().ToString(),
-                Items = new List<InvoiceItem> { new InvoiceItem(1, 100) }
             };
+            
+            existentInvoice.AddNew(new InvoiceItem(1, 100));
 
             var existentInvoices = new List<Invoice>() { existentInvoice };
 
@@ -126,7 +127,7 @@ namespace Invoices.Tests.Domain.Services
             newInvoiceItem.Title.Should().Be(_expense.Title);
             newInvoiceItem.Location.Should().Be(_expense.Location);
             newInvoiceItem.PurchaseDay.Should().Be(_expense.PurchaseDay);
-            newInvoiceItem.Type.Should().Be((InvoiceItemType)_expense.Type);
+            newInvoiceItem.Type.Should().Be(_expense.Type);
 
             existentInvoice.Items.Should().HaveCount(2, because: "First must be the existent item, the second one must be the new item from new expense");
 
@@ -136,7 +137,7 @@ namespace Invoices.Tests.Domain.Services
             existentInvoiceItem.Title.Should().Be(_expense.Title);
             existentInvoiceItem.Location.Should().Be(_expense.Location);
             existentInvoiceItem.PurchaseDay.Should().Be(_expense.PurchaseDay);
-            existentInvoiceItem.Type.Should().Be((InvoiceItemType)_expense.Type);
+            existentInvoiceItem.Type.Should().Be(_expense.Type);
         }
 
         [TestMethod]
@@ -144,11 +145,11 @@ namespace Invoices.Tests.Domain.Services
         {
             var existentInvoiceDate = new DateTime(2004, 08, 05);
 
-            var existentInvoice = new Invoice(dueDate: existentInvoiceDate)
+            var existentInvoice = new Invoice(closeDate: existentInvoiceDate)
             {
-                Id = Guid.NewGuid().ToString(),
-                Items = new List<InvoiceItem> { new InvoiceItem(1, 100) }
+                Id = Guid.NewGuid().ToString()
             };
+            existentInvoice.AddNew(new InvoiceItem(1, 100));
 
             var existentInvoices = new List<Invoice>() { existentInvoice };
 

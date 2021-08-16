@@ -1,10 +1,6 @@
 ﻿using FinanceControlinator.Common.Entities;
 using Invoices.Domain.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Invoices.Domain.Models
 {
@@ -20,27 +16,30 @@ namespace Invoices.Domain.Models
             CreatedDate = DateTime.Now;
         }
 
-        public String ExpenseId { get; set; }
+        public String ExpenseId { get; private set; }
 
-        public int InstallmentNumber { get; set; }
+        public int InstallmentNumber { get; private set; }
 
-        public decimal InstallmentCost { get; set; }
+        public decimal InstallmentCost { get; private set; }
 
-        public InvoiceItemType Type { get; set; }
+        public InvoiceItemType Type { get; private set; }
 
-        public DateTime PurchaseDay { get; set; }
+        public DateTime PurchaseDay { get; private set; }
 
-        public String Location { get; set; }
+        public String Location { get; private set; }
 
-        public String Title { get; set; }
+        public String Title { get; private set; }
+
+        public String DetailsPath { get; private set; }
 
         public InvoiceItem From(Expense expense)
         {
             ExpenseId = expense.Id;
-            Type = (InvoiceItemType)expense.Type;
+            Type = expense.Type;
             PurchaseDay = expense.PurchaseDay;
             Location = expense.Location;
             Title = expense.Title;
+            DetailsPath = expense.DetailsPath;
 
             return this;
         }
