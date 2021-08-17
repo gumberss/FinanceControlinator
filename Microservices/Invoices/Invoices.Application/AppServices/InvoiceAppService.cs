@@ -125,7 +125,6 @@ namespace Invoices.Application.AppServices
 
             if (registeredExpense.IsFailure)
             {
-                //log
                 return registeredExpense.Error;
             }
 
@@ -139,7 +138,6 @@ namespace Invoices.Application.AppServices
 
                 if (addExpenseResult.IsFailure)
                 {
-                    //log
                     return addExpenseResult.Error;
                 }
             }
