@@ -11,6 +11,7 @@ namespace Payments.API
         {
             CreateHostBuilder(args)
                 .Build()
+                .EnsureDatabaseExists()
                 .Run();
         }
 

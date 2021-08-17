@@ -8,7 +8,7 @@ using Raven.Client.ServerWide;
 using Raven.Client.ServerWide.Operations;
 using System;
 
-namespace Invoices.API.Commons
+namespace Payments.API.Commons
 {
     public static class MigrationsExtension
     {
