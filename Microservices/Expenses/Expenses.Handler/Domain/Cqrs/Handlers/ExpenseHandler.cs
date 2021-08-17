@@ -3,9 +3,9 @@ using Expenses.Application.Interfaces.AppServices;
 using Expenses.Domain.Models.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using FinanceControlinator.Common.Exceptions;
+using FinanceControlinator.Common.Messaging;
 using FinanceControlinator.Common.Utils;
 using FinanceControlinator.Events.Invoices;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -23,13 +23,13 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
     {
         private readonly IExpenseAppService _expenseAppService;
         private readonly ILogger<ExpenseHandler> _logger;
-        private readonly IBus _bus;
+        private readonly IMessageBus _bus;
         private readonly IMapper _mapper;
 
         public ExpenseHandler(
             IExpenseAppService expenseAppService
             , ILogger<ExpenseHandler> logger
-            , IBus bus,
+            , IMessageBus bus,
             IMapper mapper)
         {
             _expenseAppService = expenseAppService;
