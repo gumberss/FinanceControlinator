@@ -42,7 +42,7 @@ namespace Expenses.Data.Commons
 
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
         {
-            var result = await Result.Try(() =>  _dbSet.Remove(entity));
+            var result = await Result.Try(() => _dbSet.Remove(entity));
 
             if (result.IsFailure)
             {
@@ -86,26 +86,27 @@ namespace Expenses.Data.Commons
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
             }
         }
-        public async Task<Result<List<TEntity>, BusinessException>> GetAllIncludeAsync(params Expression<Func<TEntity, bool>>[] where)
-        {
-            try
-            {
-                return await _dbSet.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
-            }
-        }
 
         public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
+        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id, Expression<Func<TEntity, object>> include = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<TEntity> dbSet = _dbSet;
+
+                if (include is not null)
+                    dbSet = _dbSet.Include(include);
+
+                return await dbSet.FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+            }
         }
 
         public async Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)

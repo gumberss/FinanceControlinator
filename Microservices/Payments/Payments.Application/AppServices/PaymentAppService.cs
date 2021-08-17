@@ -12,6 +12,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Raven.Client.Documents.Session;
 using Payments.Domain.Localizations;
+using Payments.Domain.Enums;
+using Raven.Client.Documents.Linq;
 
 namespace Payments.Application.AppServices
 {
@@ -44,19 +46,18 @@ namespace Payments.Application.AppServices
 
         public async Task<Result<List<PaymentItem>, BusinessException>> GetClosedItems()
         {
-            return await _paymentItemRepository
-                .GetAllAsync(null, x => x.CloseDate < DateTime.Now);
+            return await _paymentItemRepository.GetAllAsync(null, x => x.CloseDate < DateTime.Now);
         }
 
         public async Task<Result<Payment, BusinessException>> Pay(string itemId, string description, List<PaymentMethod> paymentMethods)
         {
-            var itemToPay = await _paymentItemRepository.GetByIdAsync(itemId);
+            var itemToPay = await _paymentItemRepository.GetByIdAsync(itemId, x => x.PaymentIds);
 
             if (itemToPay.IsFailure) return itemToPay.Error;
 
-            if(itemToPay.Value is null)
+            if (itemToPay.Value is null)
             {
-               var errorData = new ErrorData(_localization.ITEM_NOT_FOUND);
+                var errorData = new ErrorData(_localization.ITEM_NOT_FOUND);
                 return new BusinessException(HttpStatusCode.NotFound, errorData);
             }
 
@@ -72,7 +73,7 @@ namespace Payments.Application.AppServices
                 return exception;
             }
 
-            var paymentsAlreadyRegistered = await _paymentRepository.GetAllAsync(null, x => x.ItemId == itemToPay.Value.Id);
+            var paymentsAlreadyRegistered = await _paymentRepository.GetAllAsync(null, x => x.Id.In(itemToPay.Value.PaymentIds));
 
             if (paymentsAlreadyRegistered.IsFailure)
             {
@@ -80,7 +81,7 @@ namespace Payments.Application.AppServices
                 return paymentsAlreadyRegistered.Error;
             }
 
-            if(paymentsAlreadyRegistered.Value.Any(x => x.InProcess()))
+            if (paymentsAlreadyRegistered.Value.Any(x => x.InProcess()))
             {
                 var errorData = new ErrorData(_localization.PAYMENT_ALREADY_IN_PROCESS);
 
@@ -93,7 +94,7 @@ namespace Payments.Application.AppServices
 
                 return new BusinessException(HttpStatusCode.BadRequest, errorData);
             }
-            
+
             var payment =
                    new Payment(DateTime.Now)
                    .For(itemToPay.Value)

@@ -38,8 +38,8 @@ namespace Payments.Domain.Models
         public Payment For(PaymentItem item)
         {
             ItemId = item.Id;
+            item.AddPaymentRequest(this);
 
-            item.PaymentIds.Add(this.Id);
             return this;
         }
 

@@ -1,4 +1,5 @@
 ﻿using FinanceControlinator.Common.Entities;
+using Payments.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +22,8 @@ namespace Payments.Domain.Models
 
         public String DetailsPath { get; private set; }
 
+        public PaymentStatus PaymentStatus { get; set; }
+
         public List<String> PaymentIds { get; private set; }
 
         public bool CanUpdate() => CloseDate < DateTime.Now;
@@ -37,5 +40,11 @@ namespace Payments.Domain.Models
         }
 
         public bool CanBePaid() => CloseDate < DateTime.Now;
+
+        public void AddPaymentRequest(Payment payment)
+        {
+            PaymentStatus = payment.Status;
+            PaymentIds.Add(payment.Id);
+        }
     }
 }

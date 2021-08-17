@@ -127,9 +127,16 @@ namespace Payments.Data.Commons
             }
         }
 
-        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
+        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id, Expression<Func<TEntity, object>> include = null)
         {
-            var result = await Result.Try(_session.LoadAsync<TEntity>(id.ToString()));
+            var query = _session.Query<TEntity>();
+
+            if (include is not null)
+                query = query.Include(include);
+
+            IQueryable<TEntity> queryableQuery = query;
+
+            var result = await Result.Try(queryableQuery.FirstOrDefaultAsync<TEntity>(x => x.Id.ToString() == id.ToString()));
 
             if (result.IsFailure)
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
