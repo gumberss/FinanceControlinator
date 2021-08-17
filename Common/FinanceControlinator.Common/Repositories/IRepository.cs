@@ -16,7 +16,7 @@ namespace FinanceControlinator.Common.Repositories
 
         public Task<Result<T, BusinessException>> GetAsync(params Expression<Func<T, bool>>[] where);
 
-        public Task<Result<T, BusinessException>> GetByIdAsync(TId id);
+        public Task<Result<T, BusinessException>> GetByIdAsync(TId id, Expression<Func<T, object>> include = null);
 
         public Task<Result<T, BusinessException>> AddAsync(T entity);
 

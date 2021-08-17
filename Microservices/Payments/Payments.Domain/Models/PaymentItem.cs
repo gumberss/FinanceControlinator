@@ -1,14 +1,17 @@
 ﻿using FinanceControlinator.Common.Entities;
+using Payments.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Payments.Domain.Models
 {
     public class PaymentItem : Entity<String>
     {
+        public PaymentItem()
+        {
+            PaymentIds = new List<string>();
+        }
+
         public String Title { get; private set; }
 
         public decimal TotalCost { get; private set; }
@@ -18,6 +21,10 @@ namespace Payments.Domain.Models
         public DateTime CloseDate { get; private set; }
 
         public String DetailsPath { get; private set; }
+
+        public PaymentStatus PaymentStatus { get; set; }
+
+        public List<String> PaymentIds { get; private set; }
 
         public bool CanUpdate() => CloseDate < DateTime.Now;
 
@@ -30,6 +37,14 @@ namespace Payments.Domain.Models
             DetailsPath = paymentItem.DetailsPath;
 
             return this;
+        }
+
+        public bool CanBePaid() => CloseDate < DateTime.Now;
+
+        public void AddPaymentRequest(Payment payment)
+        {
+            PaymentStatus = payment.Status;
+            PaymentIds.Add(payment.Id);
         }
     }
 }

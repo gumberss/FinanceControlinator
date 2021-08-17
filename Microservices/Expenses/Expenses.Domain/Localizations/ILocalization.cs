@@ -1,7 +1,7 @@
 ﻿using FinanceControlinator.Common.Exceptions;
 using System;
 
-namespace FinanceControlinator.Common.Localizations
+namespace Expenses.Domain.Localizations
 {
     public interface ILocalization
     {

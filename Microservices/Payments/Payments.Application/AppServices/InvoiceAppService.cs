@@ -1,5 +1,4 @@
 ﻿using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Extensions.Logging;
 using Payments.Application.Interfaces.AppServices;

@@ -6,7 +6,6 @@ using Payments.Domain.Localizations;
 using Payments.Domain.Validators;
 using Payments.Handler.Configurations;
 using Payments.Handler.Domain.Cqrs.Handlers;
-using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.LogsBehaviors;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -36,7 +35,7 @@ namespace Payments.API.Commons
             
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
 
-            services.AddTransient<IPaymentValidator, PaymentValidator>();
+            services.AddTransient<IPaymentItemValidator, PaymentItemValidator>();
         }
     }
 }

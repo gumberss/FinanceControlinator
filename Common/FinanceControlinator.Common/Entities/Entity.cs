@@ -15,6 +15,11 @@ namespace FinanceControlinator.Common.Entities
 
     public class Entity<T> : IEntity<T>
     {
+        public Entity()
+        {
+            CreatedDate = DateTime.Now;
+        }
+
         public T Id { get; set; }
 
         public DateTime CreatedDate { get; set; }

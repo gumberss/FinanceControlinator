@@ -19,13 +19,11 @@ namespace Payments.Handler.Configurations
                {
                    cfg.Host(new Uri(configuration.Host), host =>
                    {
-                       
                        host.Username(configuration.Username);
                        host.Password(configuration.Password);
                    });
 
                    cfg.ConfigureEndpoints(context);
-                   
                });
            });
 
