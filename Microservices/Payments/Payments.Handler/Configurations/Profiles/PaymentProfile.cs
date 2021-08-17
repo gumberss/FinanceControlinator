@@ -13,6 +13,9 @@ namespace Payments.Handler.Configurations.Profiles
                 .ForMember(x => x.PaymentItem, x => x.MapFrom(y => y));
 
             CreateMap<RegisterItemToPayEvent, PaymentItem>();
+
+            CreateMap<PaymentMethodDTO, PaymentMethod>()
+                .ForMember(x => x.AmountSourceId, x => x.MapFrom(y => y.AmountSourceId.ToString()));
         }
     }
 }

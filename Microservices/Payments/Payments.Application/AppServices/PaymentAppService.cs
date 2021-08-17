@@ -3,7 +3,6 @@ using Payments.Data.Repositories;
 using Payments.Domain.Interfaces.Validators;
 using Payments.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,13 +11,14 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Raven.Client.Documents.Session;
+using Payments.Domain.Localizations;
 
 namespace Payments.Application.AppServices
 {
     public class PaymentAppService : IPaymentAppService
     {
         private readonly IPaymentRepository _paymentRepository;
-        private readonly IPaymentValidator _paymentValidator;
+        private readonly IPaymentItemValidator _paymentItemValidator;
         private readonly ILocalization _localization;
         private readonly ILogger<IPaymentAppService> _logger;
         private readonly IAsyncDocumentSession _documentSession;
@@ -28,7 +28,7 @@ namespace Payments.Application.AppServices
                 IAsyncDocumentSession documentSession
                 , IPaymentRepository paymentRepository
                 , IPaymentItemRepository paymentItemRepository
-                , IPaymentValidator paymentValidator
+                , IPaymentItemValidator paymentItemValidator
                 , ILocalization localization
                 , ILogger<IPaymentAppService> logger
             )
@@ -36,30 +36,71 @@ namespace Payments.Application.AppServices
             _documentSession = documentSession;
             _paymentRepository = paymentRepository;
             _paymentItemRepository = paymentItemRepository;
-            _paymentValidator = paymentValidator;
+            _paymentItemValidator = paymentItemValidator;
             _localization = localization;
             _logger = logger;
 
         }
 
-        public async Task<Result<List<Payment>, BusinessException>> GetAllPayments()
+        public async Task<Result<List<PaymentItem>, BusinessException>> GetClosedItems()
         {
-            var result = await _paymentRepository.GetAllAsync(include: x => x.PaymentMethods);
+            return await _paymentItemRepository
+                .GetAllAsync(null, x => x.CloseDate < DateTime.Now);
+        }
 
-            if (result.IsFailure)
+        public async Task<Result<Payment, BusinessException>> Pay(string itemId, string description, List<PaymentMethod> paymentMethods)
+        {
+            var itemToPay = await _paymentItemRepository.GetByIdAsync(itemId);
+
+            if (itemToPay.IsFailure) return itemToPay.Error;
+
+            if(itemToPay.Value is null)
             {
-                //log
-                return result.Error;
+               var errorData = new ErrorData(_localization.ITEM_NOT_FOUND);
+                return new BusinessException(HttpStatusCode.NotFound, errorData);
             }
 
-            var payments = result.Value;
+            var validationResult = await _paymentItemValidator.ValidateAsync(itemToPay);
 
-            if (!payments.Any())
+            if (!validationResult.IsValid)
             {
-                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+                var errorDatas = validationResult.Errors.Select(x => new ErrorData(x.ErrorMessage, x.PropertyName));
+                var exception = new BusinessException(HttpStatusCode.BadRequest, errorDatas);
+
+                _logger.LogInformation(exception.Log());
+
+                return exception;
             }
 
-            return payments;
+            var paymentsAlreadyRegistered = await _paymentRepository.GetAllAsync(null, x => x.ItemId == itemToPay.Value.Id);
+
+            if (paymentsAlreadyRegistered.IsFailure)
+            {
+
+                return paymentsAlreadyRegistered.Error;
+            }
+
+            if(paymentsAlreadyRegistered.Value.Any(x => x.InProcess()))
+            {
+                var errorData = new ErrorData(_localization.PAYMENT_ALREADY_IN_PROCESS);
+
+                return new BusinessException(HttpStatusCode.BadRequest, errorData);
+            }
+
+            if (paymentsAlreadyRegistered.Value.Any(x => x.Paid()))
+            {
+                var errorData = new ErrorData(_localization.ITEM_ALREADY_WAS_PAID);
+
+                return new BusinessException(HttpStatusCode.BadRequest, errorData);
+            }
+            
+            var payment =
+                   new Payment(DateTime.Now)
+                   .For(itemToPay.Value)
+                   .PaidWith(paymentMethods)
+                   .With(description);
+
+            return await _paymentRepository.AddAsync(payment);
         }
 
         public async Task<Result<PaymentItem, BusinessException>> RegisterItem(PaymentItem paymentItem)

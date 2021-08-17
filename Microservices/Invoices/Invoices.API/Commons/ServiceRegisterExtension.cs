@@ -4,8 +4,6 @@ using Invoices.Data.Repositories;
 using Invoices.Domain.Localizations;
 using Invoices.Handler.Configurations;
 using Invoices.Handler.Domain.Cqrs.Handlers;
-using FinanceControlinator.Common.Localizations;
-using FinanceControlinator.Common.CustomLogs;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,15 +30,6 @@ namespace Invoices.API.Commons
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
             services.AddTransient<IInvoiceService, InvoiceService>();
-
-            /*
-                IDocumentStore documentStore
-                , IAsyncDocumentSession documentSession
-                , IInvoiceValidator invoiceValidator
-                , ILocalization localization
-                , ILogger<IInvoiceAppService> logger
-                , IInvoiceService invoiceService
-             */
         }
     }
 }

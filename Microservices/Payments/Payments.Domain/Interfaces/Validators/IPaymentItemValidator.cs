@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Payments.Domain.Interfaces.Validators
 {
-    public interface IPaymentValidator : IValidator<Payment>
+    public interface IPaymentItemValidator : IValidator<PaymentItem>
     {
     }
 }

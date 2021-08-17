@@ -4,6 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Payments.Handler.Domain.Cqrs.Events.Commands;
+using Payments.Handler.Domain.Cqrs.Events.Queries;
 
 namespace Payments.API.Controllers
 {
@@ -21,13 +23,15 @@ namespace Payments.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Invoice invoice)
+        public async Task<IActionResult> Post([FromBody] PayInvoiceCommand paymentCommand)
         {
-            //return From(await _mediator.Send(new PayInvoiceCommand { Invoice = invoice }));
-
-            return Ok();
+            return From(await _mediator.Send(paymentCommand));
         }
 
-        
+        [HttpGet]
+        public async Task<IActionResult> GetClosedItems()
+        {
+            return From(await _mediator.Send(new ClosedItemsQuery()));
+        }
     }
 }

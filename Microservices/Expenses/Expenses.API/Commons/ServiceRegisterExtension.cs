@@ -6,7 +6,6 @@ using Expenses.Domain.Localizations;
 using Expenses.Domain.Validators;
 using Expenses.Handler.Configurations;
 using Expenses.Handler.Domain.Cqrs.Handlers;
-using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.CustomLogs;
 using FluentValidation.AspNetCore;
 using MediatR;

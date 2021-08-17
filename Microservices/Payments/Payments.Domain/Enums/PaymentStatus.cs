@@ -3,7 +3,8 @@
     public enum PaymentStatus
     {
         Opened = 0,
-        Paid = 1,
-        PaymentRejected = 2
+        PaymentRequested = 10,
+        Paid = 20,
+        PaymentRejected = 30,
     }
 }

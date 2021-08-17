@@ -2,7 +2,6 @@ using Invoices.Application.Interfaces.AppServices;
 using Invoices.Data.Repositories;
 using Invoices.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Localizations;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,6 +12,7 @@ using Raven.Client.Documents.Session;
 using Raven.Client.Documents;
 using Invoices.Domain.Services;
 using System.Linq;
+using Invoices.Domain.Localizations;
 
 namespace Invoices.Application.AppServices
 {
@@ -60,7 +60,7 @@ namespace Invoices.Application.AppServices
 
             if (!invoices.Any())
             {
-                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+                return new BusinessException(HttpStatusCode.NotFound, "");
             }
 
             return invoices;
@@ -86,7 +86,7 @@ namespace Invoices.Application.AppServices
 
             if (!invoices.Any())
             {
-                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+                return new BusinessException(HttpStatusCode.NotFound, "");
             }
 
             return invoices;
@@ -113,7 +113,7 @@ namespace Invoices.Application.AppServices
 
             if (!invoices.Any())
             {
-                return new BusinessException(HttpStatusCode.NotFound, _localization.EXPENSES_NOT_FOUND);
+                return new BusinessException(HttpStatusCode.NotFound, "");//_localization.EXPENSES_NOT_FOUND
             }
 
             return invoices;
