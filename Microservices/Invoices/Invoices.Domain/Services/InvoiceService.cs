@@ -60,9 +60,13 @@ namespace Invoices.Domain.Services
 
         public DateTime GetCurrentInvoiceDate()
         {
-            var currentInvoiceDate = DateTime.Now;
+            var now = DateTime.Now;
 
-            if (currentInvoiceDate.Day >= 30) /*Todo: config - Close date*/
+            var closeDay = DateTime.DaysInMonth(now.Year, now.Month);/*Todo: config - Close date*/
+
+            var currentInvoiceDate = new DateTime(now.Year, now.Month, closeDay);
+
+            if (currentInvoiceDate >= now) 
             {
                 currentInvoiceDate.AddMonths(1);
             }

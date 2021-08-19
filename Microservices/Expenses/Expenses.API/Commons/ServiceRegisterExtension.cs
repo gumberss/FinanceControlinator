@@ -14,6 +14,7 @@ using FinanceControlinator.Common.LogsBehaviors;
 using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using FinanceControlinator.Common.Messaging;
 
 namespace Expenses.API.Commons
 {
@@ -27,14 +28,16 @@ namespace Expenses.API.Commons
 
             services.AddMediatR(typeof(Startup));
             services.AddMediatR(typeof(ExpenseHandler));
-            
+
+            services.AddTransient<IMessageBus, MassTransitMessageBus>();
+
             services.AddTransient<ILocalization, Ptbr>();
 
             services.AddFluentValidation();
 
             services.AddTransient<IExpenseAppService, ExpenseAppService>();
             services.AddTransient<IInvoiceAppService, InvoiceAppService>();
-            
+
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
             services.AddTransient<IInvoiceItemRepository, InvoiceItemRepository>();
