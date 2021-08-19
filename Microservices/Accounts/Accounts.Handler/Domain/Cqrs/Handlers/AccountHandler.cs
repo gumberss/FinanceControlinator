@@ -10,13 +10,14 @@ using Accounts.Handler.Domain.Cqrs.Events.Queries;
 using System.Threading.Tasks;
 using System.Threading;
 using Accounts.Data.Repositories;
+using System.Collections.Generic;
 
 namespace Accounts.Handler.Domain.Cqrs.Handlers
 {
     public class AccountHandler
          : IRequestHandler<AccountReceiveMoneyCommand, Result<Account, BusinessException>>
           , IRequestHandler<AccountWithdrawMoneyCommand, Result<Account, BusinessException>>
-          , IRequestHandler<AccountDataQuery, Result<Account, BusinessException>>
+          , IRequestHandler<AccountDataQuery, Result<List<Account>, BusinessException>>
     { 
         private readonly IAccountAppService _accountAppService;
         private readonly IAccountRepository _accountRepository;
@@ -36,9 +37,9 @@ namespace Accounts.Handler.Domain.Cqrs.Handlers
             _mapper = mapper;
         }
 
-        public async Task<Result<Account, BusinessException>> Handle(AccountDataQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<Account>, BusinessException>> Handle(AccountDataQuery request, CancellationToken cancellationToken)
         {
-            return await _accountRepository.GetAsync();
+            return await _accountRepository.GetAllAsync();
         }
 
         public Task<Result<Account, BusinessException>> Handle(AccountWithdrawMoneyCommand request, CancellationToken cancellationToken)
@@ -48,23 +49,29 @@ namespace Accounts.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<Account, BusinessException>> Handle(AccountReceiveMoneyCommand request, CancellationToken cancellationToken)
         {
-            var account = await _accountRepository.GetAsync();
+            var dbAccount = await _accountRepository.GetAsync();
 
-            if (account.IsFailure)
+            if (dbAccount.IsFailure)
             {
-                return account.Error;
+                return dbAccount.Error;
             }
 
-            account.Value.TotalAmount += request.Amount;
+            Result<Account, BusinessException> processResult;
 
-            var updateResult = await _accountRepository.UpdateAsync(account.Value);
-
-            if (updateResult.IsFailure)
+            if(dbAccount.Value is null)
             {
-                return updateResult.Error;
+                var account = new Account().Receive(request.Amount);
+
+                processResult = await _accountRepository.AddAsync(account);
+            }
+            else
+            {
+                dbAccount.Value.Receive(request.Amount);
+
+                processResult = await _accountRepository.UpdateAsync(dbAccount.Value);
             }
 
-            return updateResult.Value;
+            return processResult;
         }
     }
 }

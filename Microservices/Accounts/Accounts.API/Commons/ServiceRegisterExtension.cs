@@ -1,9 +1,7 @@
 using Accounts.Application.AppServices;
 using Accounts.Application.Interfaces.AppServices;
 using Accounts.Data.Repositories;
-using Accounts.Domain.Interfaces.Validators;
 using Accounts.Domain.Localizations;
-using Accounts.Domain.Validators;
 using Accounts.Handler.Configurations;
 using Accounts.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.LogsBehaviors;
@@ -30,8 +28,6 @@ namespace Accounts.API.Commons
             services.AddScoped<IAccountAppService, AccountAppService>();
             
             services.AddScoped<IAccountRepository, AccountRepository>();
-            
-            services.AddTransient<IAccountItemValidator, AccountItemValidator>();
         }
     }
 }
