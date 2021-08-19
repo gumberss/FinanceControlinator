@@ -49,26 +49,33 @@ namespace Accounts.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<Account, BusinessException>> Handle(AccountReceiveMoneyCommand request, CancellationToken cancellationToken)
         {
-            var dbAccount = await _accountRepository.GetAsync();
+            Account existentAcount = default;
 
-            if (dbAccount.IsFailure)
+            if (request.AccountId.HasValue)
             {
-                return dbAccount.Error;
+                var dbAccount = await _accountRepository.GetByIdAsync(request.AccountId.Value.ToString());
+
+                if (dbAccount.IsFailure)
+                {
+                    return dbAccount.Error;
+                }
+
+                existentAcount = dbAccount;
             }
 
             Result<Account, BusinessException> processResult;
 
-            if(dbAccount.Value is null)
+            if(existentAcount is null)
             {
-                var account = new Account().Receive(request.Amount);
+                var account = new Account(request.AccountId).Receive(request.Amount);
 
                 processResult = await _accountRepository.AddAsync(account);
             }
             else
             {
-                dbAccount.Value.Receive(request.Amount);
+                existentAcount.Receive(request.Amount);
 
-                processResult = await _accountRepository.UpdateAsync(dbAccount.Value);
+                processResult = await _accountRepository.UpdateAsync(existentAcount);
             }
 
             return processResult;

@@ -39,10 +39,6 @@ namespace Accounts.API
 
             services.AddControllers();
 
-            var uriEndpoint = Configuration.GetSection("EndpointUri").Value;
-            var primaryKey = Configuration.GetSection("PrimaryKey").Value;
-
-            services.AddSingleton<IDocumentClient>(x => new DocumentClient(new Uri(uriEndpoint), primaryKey));
 
             services.AddSwaggerGen(x =>
             {
@@ -56,7 +52,7 @@ namespace Accounts.API
 
         private void RegisterServices(IServiceCollection services)
         {
-            services.RegisterServices();
+            services.RegisterServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

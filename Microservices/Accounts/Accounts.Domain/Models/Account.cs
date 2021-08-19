@@ -5,12 +5,12 @@ namespace Accounts.Domain.Models
 {
     public class Account : Entity<String>
     {
-        public Account()
+        public Account(Guid? id = null)
         {
-            Id = Guid.NewGuid().ToString();
+            Id = (id ?? Guid.NewGuid()).ToString();
         }
 
-        public decimal TotalAmount { get; private set; }
+        public decimal TotalAmount { get;  set; }
 
         public Account Receive(decimal amount)
         {

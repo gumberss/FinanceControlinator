@@ -93,7 +93,7 @@ namespace Accounts.Data.Commons
                 foreach (var item in where) query.Where(item);
 
             var iterator = query.ToFeedIterator<TEntity>();
-            
+
             var results = new List<TEntity>();
 
             using (iterator)
@@ -159,11 +159,18 @@ namespace Accounts.Data.Commons
             }
         }
 
-        public Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
+        public async Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
         {
-            Result<TEntity, BusinessException> result = entity;
+            try
+            {
+                var result = await _container.UpsertItemAsync(entity, new PartitionKey(entity.Id.ToString()));
 
-            return Task.FromResult(result);
+                return result.Resource;
+            }
+            catch (Exception ex) 
+            {
+                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+            }
         }
     }
 }

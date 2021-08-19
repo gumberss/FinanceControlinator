@@ -5,6 +5,7 @@ using Accounts.Handler.Domain.Cqrs.Events.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace Accounts.API.Controllers
@@ -33,10 +34,10 @@ namespace Accounts.API.Controllers
             return From(await _mediator.Send(paymentCommand));
         }
 
-        [HttpPut("money/{id}")]
-        public async Task<IActionResult> PutMoney([FromBody] AccountReceiveMoneyCommand paymentCommand)
+        [HttpPut("money")]
+        public async Task<IActionResult> PutMoney([FromBody] AccountReceiveMoneyCommand receiveMoneyCommand)
         {
-            return From(await _mediator.Send(new AccountReceiveMoneyCommand()));
+            return From(await _mediator.Send(receiveMoneyCommand));
         }
     }
 }
