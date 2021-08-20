@@ -150,8 +150,8 @@ namespace Invoices.Application.AppServices
 
             var registeredInvoices =
                 await _invoiceRepository.GetAllAsync(x => x.Items,
-                    x => x.DueDate >= invoiceStartSearchDate
-                      && x.DueDate <= lastInvoiceCloseDate
+                    x => x.CloseDate >= invoiceStartSearchDate
+                      && x.CloseDate <= lastInvoiceCloseDate
                 );
 
             if (registeredInvoices.IsFailure)

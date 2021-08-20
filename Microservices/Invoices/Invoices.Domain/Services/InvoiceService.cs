@@ -37,8 +37,8 @@ namespace Invoices.Domain.Services
                 var currentMonth = currentInvoiceDate.AddMonths(i);
 
                 var currentInstallmentInvoice = existentInvoices.Find(
-                  x => x.DueDate.Month == currentMonth.Month
-                    && x.DueDate.Year == currentMonth.Year
+                  x => x.CloseDate.Month == currentMonth.Month
+                    && x.CloseDate.Year == currentMonth.Year
                 );
 
                 var invoiceItem = GetInvoceItemFrom(expense, currentInstallment);
