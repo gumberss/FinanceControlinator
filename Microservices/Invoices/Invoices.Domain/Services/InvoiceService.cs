@@ -9,7 +9,7 @@ namespace Invoices.Domain.Services
 {
     public interface IInvoiceService
     {
-        DateTime GetCurrentInvoiceDate();
+        DateTime GetCurrentInvoiceCloseDate();
 
         List<Invoice> RegisterExpense(
             Expense expense
@@ -37,8 +37,8 @@ namespace Invoices.Domain.Services
                 var currentMonth = currentInvoiceDate.AddMonths(i);
 
                 var currentInstallmentInvoice = existentInvoices.Find(
-                  x => x.DueDate.Month == currentMonth.Month
-                    && x.DueDate.Year == currentMonth.Year
+                  x => x.CloseDate.Month == currentMonth.Month
+                    && x.CloseDate.Year == currentMonth.Year
                 );
 
                 var invoiceItem = GetInvoceItemFrom(expense, currentInstallment);
@@ -58,7 +58,7 @@ namespace Invoices.Domain.Services
             return changedInvoices;
         }
 
-        public DateTime GetCurrentInvoiceDate()
+        public DateTime GetCurrentInvoiceCloseDate()
         {
             var now = DateTime.Now;
 
