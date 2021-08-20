@@ -142,14 +142,16 @@ namespace Invoices.Application.AppServices
                 }
             }
 
-            var firstInvoiceDate = _invoiceService.GetCurrentInvoiceDate();
+            var firstInvoiceCloseDate = _invoiceService.GetCurrentInvoiceCloseDate();
 
-            var lastInvoiceDate = firstInvoiceDate.AddMonths(expense.InstallmentsCount);
+            var lastInvoiceCloseDate = firstInvoiceCloseDate.AddMonths(expense.InstallmentsCount);
+
+            var invoiceStartSearchDate = new DateTime(firstInvoiceCloseDate.Year, firstInvoiceCloseDate.Month, DateTime.Now.Day);
 
             var registeredInvoices =
                 await _invoiceRepository.GetAllAsync(x => x.Items,
-                 x => x.DueDate.Month >= firstInvoiceDate.Month
-                   && x.DueDate.Month < lastInvoiceDate.Month
+                    x => x.DueDate >= invoiceStartSearchDate
+                      && x.DueDate <= lastInvoiceCloseDate
                 );
 
             if (registeredInvoices.IsFailure)
@@ -160,7 +162,7 @@ namespace Invoices.Application.AppServices
 
             var existentInvoices = registeredInvoices.Value;
 
-            var changedInvoices = _invoiceService.RegisterExpense(expense, existentInvoices, firstInvoiceDate);
+            var changedInvoices = _invoiceService.RegisterExpense(expense, existentInvoices, firstInvoiceCloseDate);
 
             var newInvoicesResult = changedInvoices.Except(existentInvoices);
 

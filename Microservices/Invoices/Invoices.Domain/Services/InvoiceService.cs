@@ -9,7 +9,7 @@ namespace Invoices.Domain.Services
 {
     public interface IInvoiceService
     {
-        DateTime GetCurrentInvoiceDate();
+        DateTime GetCurrentInvoiceCloseDate();
 
         List<Invoice> RegisterExpense(
             Expense expense
@@ -58,7 +58,7 @@ namespace Invoices.Domain.Services
             return changedInvoices;
         }
 
-        public DateTime GetCurrentInvoiceDate()
+        public DateTime GetCurrentInvoiceCloseDate()
         {
             var now = DateTime.Now;
 
