@@ -27,14 +27,14 @@ namespace Accounts.Handler.Integration.Handlers
             _mediator = mediator;
             _bus = bus;
         }
-
+        
         public async Task Consume(ConsumeContext<PaymentRequestedEvent> context)
         {
             var command = _mapper.Map<PaymentRequestedEvent, PayCommand>(context.Message);
 
             var accountChanges = await _mediator.Send(command);
 
-            if (accountChanges.IsFailure) throw accountChanges.Error;
+            if (accountChanges.IsFailure) throw accountChanges.Error; //If a rollback occurs here, is can be a problem
 
             var @event = _mapper.Map<List<AccountChange>, AccountChangedEvent>(accountChanges.Value);
 

@@ -18,6 +18,7 @@ namespace Payments.Domain.Models
         public Payment(DateTime paymentDate)
         {
             Id = Guid.NewGuid().ToString();
+            Date = paymentDate;
             PaymentMethods = new List<PaymentMethod>();
         }
 

@@ -62,7 +62,6 @@ namespace Invoices.Tests.Application.AppServices
             {
                 InstallmentsCount = 12,
                 TotalCost = 120,
-                
             });
 
             result.Value.Except(invoices).Should().HaveCount(0);

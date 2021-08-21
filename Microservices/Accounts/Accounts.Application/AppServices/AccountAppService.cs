@@ -46,6 +46,9 @@ namespace Accounts.Application.AppServices
             {
                 var changes = _accountService.Pay(paymentRequested, accounts);
 
+                foreach (var account in accounts.Value)
+                    await _accountRepository.UpdateAsync(account);
+
                 return changes;
             }
 

@@ -24,7 +24,7 @@ namespace Accounts.Handler.Configurations.Profiles
                 .ForMember(x => x.Id, x => x.MapFrom(y => y.Id.ToString()))
                 .ForMember(x => x.AmountSourceId, x => x.MapFrom(y => y.AmountSourceId.ToString()));
 
-            CreateMap<AccountChange, PaymentConfirmed>()
+            CreateMap<AccountChange, PaymentConfirmedEvent>()
                 .ForMember(x=> x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)));
 
             CreateMap<List<AccountChange>, AccountChangedEvent>()

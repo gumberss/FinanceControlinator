@@ -7,7 +7,9 @@ using FinanceControlinator.Common.Messaging;
 using FinanceControlinator.Common.Utils;
 using FinanceControlinator.Events.Payments;
 using MediatR;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,11 +36,18 @@ namespace Accounts.Handler.Domain.Cqrs.Handlers
         {
             var changes = await _accountAppService.Register(request.Payment);
 
-            if (changes.IsFailure) return changes.Error;
+            if (changes.IsFailure)
+            {
+                await _bus.Publish(new PaymentRejectedEvent
+                {
+                    Id = Guid.Parse(request.Payment.Id),
+                    Reason = changes.Error.Message
+                });
 
-            var events = _mapper.Map<List<AccountChange>, List<PaymentConfirmed>>(changes.Value);
+                return changes.Error;
+            }
 
-            foreach (var @event in events) await _bus.Publish(@event);
+            await _bus.Publish(new PaymentConfirmedEvent { Id = Guid.Parse(request.Payment.Id) });
 
             return changes;
         }

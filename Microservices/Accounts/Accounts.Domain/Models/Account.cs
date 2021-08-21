@@ -19,15 +19,7 @@ namespace Accounts.Domain.Models
             return this;
         }
 
-        public bool AbleToPay(decimal amount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Retrieve(decimal amount)
-        {
-            throw new NotImplementedException();
-        }
+        public bool AbleToPay(decimal amount) => TotalAmount >= amount;
 
         public AccountChange Withdraw(decimal amount, String paymentId)
         {

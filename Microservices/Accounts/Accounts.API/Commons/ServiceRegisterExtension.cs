@@ -38,8 +38,6 @@ namespace Accounts.API.Commons
             services.AddScoped<IAccountAppService, AccountAppService>();
             services.AddScoped<IAccountService, AccountService>();
 
-            services.AddScoped<IMessageBus, MassTransitMessageBus>();
-
             services.AddSingleton<CosmosClient>(InitializeCosmosClientInstanceAsync(configurationSection).GetAwaiter().GetResult());
         }
 

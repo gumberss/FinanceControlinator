@@ -29,6 +29,11 @@ namespace Payments.Handler.Configurations.Profiles
             CreateMap<PaymentMethod, PaymentMethodDTO>()
                 .ForMember(x => x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)))
                 .ForMember(x => x.AmountSourceId, x => x.MapFrom(y => Guid.Parse(y.AmountSourceId)));
+
+            CreateMap<PaymentMethodCommandDTO, PaymentMethod>()
+                .ForMember(x => x.AmountSourceId, x => x.MapFrom(y => y.AmountSourceId.ToString()));
+
+
         }
     }
 }

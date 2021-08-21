@@ -1,11 +1,9 @@
-using Accounts.Domain.Models;
 using FinanceControlinator.Common.Entities;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Repositories;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
-using Microsoft.Azure.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +88,7 @@ namespace Accounts.Data.Commons
             var query = _container.GetItemLinqQueryable<TEntity>();
 
             if (where is not null)
-                foreach (var item in where) query.Where(item);
+                foreach (var item in where) query = (IOrderedQueryable<TEntity>)query.Where(item);
 
             var iterator = query.ToFeedIterator<TEntity>();
 
