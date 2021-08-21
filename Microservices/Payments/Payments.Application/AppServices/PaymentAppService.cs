@@ -77,7 +77,6 @@ namespace Payments.Application.AppServices
 
             if (paymentsAlreadyRegistered.IsFailure)
             {
-
                 return paymentsAlreadyRegistered.Error;
             }
 
@@ -99,7 +98,8 @@ namespace Payments.Application.AppServices
                    new Payment(DateTime.Now)
                    .For(itemToPay.Value)
                    .PaidWith(paymentMethods)
-                   .With(description);
+                   .With(description)
+                   .AsRequested();
 
             return await _paymentRepository.AddAsync(payment);
         }

@@ -23,7 +23,7 @@ namespace Payments.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PayInvoiceCommand paymentCommand)
+        public async Task<IActionResult> Post([FromBody] PayItemCommand paymentCommand)
         {
             return From(await _mediator.Send(paymentCommand));
         }
@@ -33,5 +33,6 @@ namespace Payments.API.Controllers
         {
             return From(await _mediator.Send(new ClosedItemsQuery()));
         }
+
     }
 }

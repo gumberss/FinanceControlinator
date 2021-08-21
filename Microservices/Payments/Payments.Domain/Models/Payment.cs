@@ -15,12 +15,10 @@ namespace Payments.Domain.Models
 
         }
 
-        public Payment(DateTime paymentDate) 
+        public Payment(DateTime paymentDate)
         {
             Id = Guid.NewGuid().ToString();
             PaymentMethods = new List<PaymentMethod>();
-            
-            Status = PaymentStatus.PaymentRequested;
         }
 
         public String Description { get; set; }
@@ -52,6 +50,13 @@ namespace Payments.Domain.Models
         public Payment With(String description)
         {
             Description = description;
+            return this;
+        }
+
+        public Payment AsRequested()
+        {
+            Status = PaymentStatus.PaymentRequested;
+
             return this;
         }
 

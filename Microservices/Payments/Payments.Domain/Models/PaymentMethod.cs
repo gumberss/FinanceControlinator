@@ -1,4 +1,5 @@
 using FinanceControlinator.Common.Entities;
+using Payments.Domain.Enums;
 using System;
 
 namespace Payments.Domain.Models
@@ -10,10 +11,12 @@ namespace Payments.Domain.Models
             Id = Guid.NewGuid().ToString();
         }
 
-        public int Method { get; set; }
-
         public String AmountSourceId { get; set; }
 
         public decimal Amount { get; set; }
+
+        public String Description { get; set; }
+
+        public PaymentStatus Status { get; set; }
     }
 }
