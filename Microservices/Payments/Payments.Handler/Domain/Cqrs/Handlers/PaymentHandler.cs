@@ -1,6 +1,8 @@
 using AutoMapper;
 using FinanceControlinator.Common.Exceptions;
+using FinanceControlinator.Common.Messaging;
 using FinanceControlinator.Common.Utils;
+using FinanceControlinator.Events.Payments;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Payments.Application.Interfaces.AppServices;
@@ -15,24 +17,27 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
 {
     public class PaymentHandler
           : IRequestHandler<RegisterPaymentItemCommand, Result<PaymentItem, BusinessException>>
-          , IRequestHandler<PayInvoiceCommand, Result<Payment, BusinessException>>
+          , IRequestHandler<PayItemCommand, Result<Payment, BusinessException>>
           , IRequestHandler<ClosedItemsQuery, Result<List<PaymentItem>, BusinessException>>
     {
         private readonly IPaymentAppService _paymentAppService;
         private readonly IAsyncDocumentSession _documentSession;
         private readonly ILogger<PaymentHandler> _logger;
         private readonly IMapper _mapper;
+        private readonly IMessageBus _bus;
 
         public PaymentHandler(
             IPaymentAppService paymentAppService
             , IAsyncDocumentSession documentSession
             , ILogger<PaymentHandler> logger
-            , IMapper mapper)
+            , IMapper mapper
+            , IMessageBus bus)
         {
             _paymentAppService = paymentAppService;
             _documentSession = documentSession;
             _logger = logger;
             _mapper = mapper;
+            _bus = bus;
         }
 
         public async Task<Result<PaymentItem, BusinessException>> Handle(RegisterPaymentItemCommand request, CancellationToken cancellationToken)
@@ -48,7 +53,7 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
             return registeredPaymentItem;
         }
 
-        public async Task<Result<Payment, BusinessException>> Handle(PayInvoiceCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Payment, BusinessException>> Handle(PayItemCommand request, CancellationToken cancellationToken)
         {
             var paymentMethods = _mapper.Map<List<PaymentMethod>>(request.PaymentMethods);
 
@@ -59,6 +64,10 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
             var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
 
             if (saveResult.IsFailure) return saveResult.Error;
+
+            var @event = _mapper.Map<Payment, PaymentRequestedEvent>(paymentCreated);
+
+            await _bus.Publish(@event);
 
             return paymentCreated;
         }

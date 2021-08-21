@@ -8,6 +8,6 @@ namespace Accounts.Application.Interfaces.AppServices
 {
     public interface IAccountAppService
     {
-    
+        Task<Result<List<AccountChange>, BusinessException>> Register(Payment paymentRequested);
     }
 }

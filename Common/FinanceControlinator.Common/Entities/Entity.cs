@@ -5,7 +5,7 @@ namespace FinanceControlinator.Common.Entities
 {
     public interface IEntity<T>
     {
-        [JsonProperty(PropertyName = "id")]
+       
         public T Id { get; set; }
 
         public DateTime CreatedDate { get; set; }
@@ -22,6 +22,7 @@ namespace FinanceControlinator.Common.Entities
             CreatedDate = DateTime.Now;
         }
 
+        [JsonProperty(PropertyName = "id")]
         public T Id { get; set; }
 
         public DateTime CreatedDate { get; set; }

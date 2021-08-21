@@ -39,7 +39,6 @@ namespace Accounts.API
 
             services.AddControllers();
 
-
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new OpenApiInfo { Title = "Accounts Microservice", Version = "v1" });
@@ -52,7 +51,7 @@ namespace Accounts.API
 
         private void RegisterServices(IServiceCollection services)
         {
-            services.RegisterServices(Configuration);
+            services.RegisterServices(Configuration.GetSection("DbConnection"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

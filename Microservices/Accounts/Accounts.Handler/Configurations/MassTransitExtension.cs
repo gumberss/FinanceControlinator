@@ -1,7 +1,8 @@
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
-using Accounts.Handler.Integration.Handlers;
 using System;
+using FinanceControlinator.Common.Messaging;
+using Accounts.Handler.Integration.Handlers;
 
 namespace Accounts.Handler.Configurations
 {
@@ -11,7 +12,7 @@ namespace Accounts.Handler.Configurations
         {
            services.AddMassTransit(x =>
            {
-               //x.AddConsumer<AccountIntegrationHandler>();
+               x.AddConsumer<PaymentIntegrationHandler>();
 
                x.SetKebabCaseEndpointNameFormatter();
 
@@ -28,6 +29,8 @@ namespace Accounts.Handler.Configurations
            });
 
             services.AddMassTransitHostedService();
+
+            services.AddScoped<IMessageBus, MassTransitMessageBus>();
         }
     }
 }

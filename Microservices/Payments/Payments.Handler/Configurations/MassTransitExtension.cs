@@ -1,3 +1,4 @@
+using FinanceControlinator.Common.Messaging;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Payments.Handler.Integration.Handlers;
@@ -28,6 +29,8 @@ namespace Payments.Handler.Configurations
            });
 
             services.AddMassTransitHostedService();
+
+            services.AddScoped<IMessageBus, MassTransitMessageBus>();
         }
     }
 }
