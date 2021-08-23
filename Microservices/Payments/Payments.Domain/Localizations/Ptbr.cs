@@ -9,5 +9,9 @@ namespace Payments.Domain.Localizations
         public string ITEM_ALREADY_WAS_PAID => "O Item já foi pago";
 
         public string ITEM_NOT_FOUND => "Item não encontrado";
+
+        public string PAYMENT_NOT_FOUND => "O registro de pagamento não foi encontrado";
+
+        public string PAYMENT_IS_NOT_WAITING_FOR_CONFIRMATION => "O registro de pagamento não está aguardando ser pago";
     }
 }

@@ -31,5 +31,11 @@ namespace FinanceControlinator.Common.Entities
 
         public int Version { get; private set; }
 
+        protected virtual Entity<T> Updated()
+        {
+            UpdatedDate = DateTime.Now;
+
+            return this;
+        }
     }
 }

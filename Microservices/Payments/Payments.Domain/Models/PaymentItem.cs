@@ -41,10 +41,25 @@ namespace Payments.Domain.Models
 
         public bool CanBePaid() => CloseDate < DateTime.Now;
 
-        public void AddPaymentRequest(Payment payment)
+        public bool Paid() => PaymentStatus == PaymentStatus.Paid;
+
+        public bool PaymentAlreadyRequested() => PaymentStatus == PaymentStatus.PaymentRequested;
+
+        public PaymentItem AddPaymentRequest(Payment payment)
         {
             PaymentStatus = payment.Status;
             PaymentIds.Add(payment.Id);
+
+            return this;
+        }
+
+        public PaymentItem Confirm()
+        {
+            PaymentStatus = PaymentStatus.Paid;
+            
+            Updated();
+
+            return this;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
           : IRequestHandler<RegisterPaymentItemCommand, Result<PaymentItem, BusinessException>>
           , IRequestHandler<PayItemCommand, Result<Payment, BusinessException>>
           , IRequestHandler<ClosedItemsQuery, Result<List<PaymentItem>, BusinessException>>
+          , IRequestHandler<ConfirmPaymentCommand, Result<Payment, BusinessException>>
     {
         private readonly IPaymentAppService _paymentAppService;
         private readonly IAsyncDocumentSession _documentSession;
@@ -70,6 +71,24 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
             await _bus.Publish(@event);
 
             return paymentCreated;
+        }
+
+        public async Task<Result<Payment, BusinessException>> Handle(ConfirmPaymentCommand request, CancellationToken cancellationToken)
+        {
+            var payment = await _paymentAppService.ConfirmPayment(request.Id);
+
+            if (payment.IsFailure) return payment.Error;
+
+            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            if (!saveResult.Value)
+            {
+                //create an error
+            }
+
+            return payment;
         }
 
         public async Task<Result<List<PaymentItem>, BusinessException>> Handle(ClosedItemsQuery request, CancellationToken cancellationToken)

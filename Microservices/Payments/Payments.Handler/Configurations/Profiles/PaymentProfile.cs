@@ -33,6 +33,8 @@ namespace Payments.Handler.Configurations.Profiles
             CreateMap<PaymentMethodCommandDTO, PaymentMethod>()
                 .ForMember(x => x.AmountSourceId, x => x.MapFrom(y => y.AmountSourceId.ToString()));
 
+            CreateMap<PaymentConfirmedEvent, ConfirmPaymentCommand>()
+                .ForMember(x => x.Id, x => x.MapFrom(y => y.Id.ToString()));
 
         }
     }

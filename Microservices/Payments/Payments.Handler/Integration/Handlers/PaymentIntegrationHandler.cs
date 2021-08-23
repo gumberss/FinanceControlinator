@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Payments.Handler.Integration.Handlers
 {
-    public class PaymentIntegrationHandler : IConsumer<RegisterItemToPayEvent>
+    public class PaymentIntegrationHandler 
+        : IConsumer<RegisterItemToPayEvent>
+        , IConsumer<PaymentConfirmedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
@@ -31,6 +33,21 @@ namespace Payments.Handler.Integration.Handlers
                 //log
                 throw result.Error;
             }
+        }
+
+        public async Task Consume(ConsumeContext<PaymentConfirmedEvent> context)
+        {
+            var command = _mapper.Map<PaymentConfirmedEvent, ConfirmPaymentCommand>(context.Message);
+
+            var result = await _mediator.Send(command);
+            
+            if (result.IsFailure)
+            {
+                //log
+                throw result.Error;
+            }
+
+            //publish payment performed
         }
     }
 }

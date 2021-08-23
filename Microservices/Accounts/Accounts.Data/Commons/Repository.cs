@@ -15,7 +15,7 @@ namespace Accounts.Data.Commons
     public class Repository<TEntity, TEntityId> : IRepository<TEntity, TEntityId>
            where TEntity : class, IEntity<TEntityId>
     {
-        private Container _container;
+        private readonly Container _container;
 
         public Repository(
           CosmosClient cosmosDbClient,
