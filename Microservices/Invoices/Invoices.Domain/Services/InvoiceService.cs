@@ -11,6 +11,8 @@ namespace Invoices.Domain.Services
     {
         DateTime GetCurrentInvoiceCloseDate();
 
+        (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount);
+
         List<Invoice> RegisterExpense(
             Expense expense
           , List<Invoice> existentInvoices
@@ -20,6 +22,33 @@ namespace Invoices.Domain.Services
 
     public class InvoiceService : IInvoiceService
     {
+        public DateTime GetCurrentInvoiceCloseDate()
+        {
+            var now = DateTime.Now;
+
+            var closeDay = DateTime.DaysInMonth(now.Year, now.Month);/*Todo: config - Close date*/
+
+            var currentInvoiceDate = new DateTime(now.Year, now.Month, closeDay);
+
+            if (currentInvoiceDate >= now)
+            {
+                currentInvoiceDate.AddMonths(1);
+            }
+
+            return currentInvoiceDate;
+        }
+
+        public (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount)
+        {
+            var currentInvoiceCloseDate = GetCurrentInvoiceCloseDate();
+
+            var endDate = currentInvoiceCloseDate.AddMonths(installmentsCount);
+
+            var startDate = new DateTime(currentInvoiceCloseDate.Year, currentInvoiceCloseDate.Month, DateTime.Now.Day);
+
+            return (startDate, endDate);
+        }
+
         public List<Invoice> RegisterExpense(
             Expense expense
           , List<Invoice> existentInvoices
@@ -56,22 +85,6 @@ namespace Invoices.Domain.Services
             }
 
             return changedInvoices;
-        }
-
-        public DateTime GetCurrentInvoiceCloseDate()
-        {
-            var now = DateTime.Now;
-
-            var closeDay = DateTime.DaysInMonth(now.Year, now.Month);/*Todo: config - Close date*/
-
-            var currentInvoiceDate = new DateTime(now.Year, now.Month, closeDay);
-
-            if (currentInvoiceDate >= now) 
-            {
-                currentInvoiceDate.AddMonths(1);
-            }
-
-            return currentInvoiceDate;
         }
 
         private InvoiceItem GetInvoceItemFrom(Expense expense, int installment)

@@ -2,6 +2,7 @@
 using FinanceControlinator.Events.Invoices;
 using FinanceControlinator.Events.Invoices.DTOs;
 using Invoices.Domain.Models;
+using Invoices.Handler.Domain.Cqrs.Events;
 using System;
 using System.Collections.Generic;
 
@@ -20,6 +21,10 @@ namespace Invoices.Handler.Configurations.Profiles
 
             CreateMap<List<Invoice>, InvoicesChangedEvent>()
                 .ForMember(x => x.Invoices, x => x.MapFrom(y => y));
+
+            CreateMap<GenerateInvoicesEvent, RegisterExpenseCommand>()
+                .ForMember(x => x.Expense, x => x.MapFrom(y=> y.InvoiceExpense));
+
         }
     }
 }
