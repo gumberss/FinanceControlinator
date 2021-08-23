@@ -1,6 +1,8 @@
 using Expenses.API.Commons;
 using Expenses.Data.Contexts;
+using Expenses.Data.Interfaces.Contexts;
 using Expenses.Handler.Configurations;
+using FinanceControlinator.Common.CustomLogs;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Expenses.API
@@ -39,9 +42,9 @@ namespace Expenses.API
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            services.AddDbContext<ExpenseDbContext>(options =>
+            services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
             {
-                  options.UseSqlServer(Configuration.GetConnectionString("ExpensesDbConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("ExpensesDbConnection"));
             });
 
             services.AddSwaggerGen(x =>
@@ -50,7 +53,7 @@ namespace Expenses.API
             });
 
             services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-            
+
             RegisterServices(services);
         }
 
@@ -60,8 +63,13 @@ namespace Expenses.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app
+          , IWebHostEnvironment env
+          , ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddProvider(new CustomLogProvider(new CustomLogConfig()));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

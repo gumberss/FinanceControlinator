@@ -16,7 +16,9 @@ namespace FinanceControlinator.Events.Expenses.DTOs
 
         public int Type { get; set; }
 
-        public bool IsRecurrent { get; set; }
+        public DateTime PurchaseDay { get; set; }
+
+        public int InstallmentsCount { get; set; }
 
         public String Location { get; set; }
 

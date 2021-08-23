@@ -17,7 +17,7 @@ namespace Expenses.Data.Commons
            where TContext : DbContext
     {
         private readonly TContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet;
 
         public Repository(TContext context)
         {
@@ -40,12 +40,19 @@ namespace Expenses.Data.Commons
             return entity;
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
+        public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            var result = await Result.Try(() => _dbSet.Remove(entity));
+
+            if (result.IsFailure)
+            {
+                return result.Error;
+            }
+
+            return true;
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntityId> ids)
         {
             throw new NotImplementedException();
         }
@@ -79,11 +86,22 @@ namespace Expenses.Data.Commons
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
             }
         }
-        public async Task<Result<List<TEntity>, BusinessException>> GetAllIncludeAsync(params Expression<Func<TEntity, bool>>[] where)
+
+        public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id, Expression<Func<TEntity, object>> include = null)
         {
             try
             {
-                return await _dbSet.ToListAsync();
+                IQueryable<TEntity> dbSet = _dbSet;
+
+                if (include is not null)
+                    dbSet = _dbSet.Include(include);
+
+                return await dbSet.FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -91,19 +109,16 @@ namespace Expenses.Data.Commons
             }
         }
 
-        public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
+        public async Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
-        }
+            var updateResult = await Result.Try(() => _dbSet.Update(entity));
 
-        public Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
-        {
-            throw new NotImplementedException();
-        }
+            if (updateResult.IsFailure)
+            {
+                return updateResult.Error;
+            }
 
-        public Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
-        {
-            throw new NotImplementedException();
+            return entity;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinanceControlinator.Common.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,16 +42,16 @@ namespace FinanceControlinator.Common.Utils
 
         public static implicit operator T(Result<T, E> result)
             => result.Value;
-
+        
         public static implicit operator E(Result<T, E> result)
             => result.Error;
     }
 
     public class Result
     {
-        public static async Task<Result<T, Exception>> Try<T>(Task<T> func)
+        public static async Task<Result<T, BusinessException>> Try<T>(Task<T> func)
         {
-            Func<Task<Result<T, Exception>>> tryFunction = async () =>
+            Func<Task<Result<T, BusinessException>>> tryFunction = async () =>
             {
                 try
                 {
@@ -58,16 +59,16 @@ namespace FinanceControlinator.Common.Utils
                 }
                 catch (Exception ex)
                 {
-                    return ex;
+                    return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
                 }
             };
 
             return await Task.Run(() => tryFunction.Invoke());
         }
 
-        public static async Task<Result<bool, Exception>> Try(Task func)
+        public static async Task<Result<bool, BusinessException>> Try(Task func)
         {
-            Func<Task<Result<bool, Exception>>> tryFunction = async () =>
+            Func<Task<Result<bool, BusinessException>>> tryFunction = async () =>
             {
                 try
                 {
@@ -76,16 +77,16 @@ namespace FinanceControlinator.Common.Utils
                 }
                 catch (Exception ex)
                 {
-                    return ex;
+                    return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
                 }
             };
 
             return  await Task.Run(() => tryFunction.Invoke());
         }
 
-        public static async Task<Result<T, Exception>> Try<T>(Func<T> func)
+        public static async Task<Result<T, BusinessException>> Try<T>(Func<T> func)
         {
-            Func<Result<T, Exception>> tryFunction = () =>
+            Func<Result<T, BusinessException>> tryFunction = () =>
             {
                 try
                 {
@@ -93,7 +94,7 @@ namespace FinanceControlinator.Common.Utils
                 }
                 catch (Exception ex)
                 {
-                    return ex;
+                    return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
                 }
             };
 

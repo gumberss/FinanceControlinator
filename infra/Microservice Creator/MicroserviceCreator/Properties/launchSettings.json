@@ -2,7 +2,7 @@
   "profiles": {
     "Cli": {
       "commandName": "Project",
-      "commandLineArgs": "build microservice --name=Invoice"
+      "commandLineArgs": "build microservice --name=Account --type=nosql "
     }
   }
 }

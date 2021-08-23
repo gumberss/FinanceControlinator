@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Models;
+﻿using Expenses.Domain.Models.Expenses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -20,14 +20,17 @@ namespace Expenses.Data.Configurations
                 .IsRequired();
 
             builder
-                .Property(x => x.Date)
+                .Property(x => x.PurchaseDay)
                 .IsRequired();
 
             builder
                 .Property(x => x.Description)
                 .HasMaxLength(250);
 
-            builder.Property(x => x.IsRecurrent);
+            builder
+                .Property(x => x.InstallmentsCount)
+                .IsRequired();
+
 
             builder
                 .Property(x => x.Location)
@@ -42,11 +45,11 @@ namespace Expenses.Data.Configurations
                 .Property(x => x.Type);
 
             builder
-                .Property(x => x.InsertDate)
+                .Property(x => x.CreatedDate)
                 .IsRequired();
 
             builder
-                .Property(x => x.UpdateDate);
+                .Property(x => x.UpdatedDate);
         }
     }
 }

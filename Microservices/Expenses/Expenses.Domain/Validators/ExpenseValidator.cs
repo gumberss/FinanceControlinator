@@ -1,6 +1,6 @@
 ﻿using Expenses.Domain.Interfaces.Validators;
-using Expenses.Domain.Models;
-using FinanceControlinator.Common.Localizations;
+using Expenses.Domain.Localizations;
+using Expenses.Domain.Models.Expenses;
 using FluentValidation;
 using System;
 
@@ -10,7 +10,7 @@ namespace Expenses.Domain.Validators
     {
         public ExpenseValidator(ILocalization localization)
         {
-            RuleFor(x => x.Date)
+            RuleFor(x => x.PurchaseDay)
                 .GreaterThan(DateTime.MinValue)
                 .WithMessage(localization.DATE_INCORRECT);
 

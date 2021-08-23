@@ -1,10 +1,12 @@
 ﻿using Expenses.Data.Interfaces.Contexts;
-using Expenses.Domain.Models;
+using Expenses.Domain.Models.Expenses;
+using Expenses.Domain.Models.Invoices;
 using FinanceControlinator.Common.Contexts;
 using FinanceControlinator.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
@@ -14,14 +16,17 @@ namespace Expenses.Data.Contexts
 {
     public class ExpenseDbContext : DbContext, IExpenseDbContext
     {
-        
+
         public ExpenseDbContext(DbContextOptions options) : base(options)
         {
             ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public DbSet<Expense> Expenses { get; set; }
-        public DbSet<ExpenseItem> Items { get; set; }
+        public DbSet<ExpenseItem> ExpenseItems { get; set; }
+
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,11 +46,21 @@ namespace Expenses.Data.Contexts
             //    modelBuilder.Configurations.Add(mappingClass);
             //}
         }
+
+        public static readonly ILoggerFactory MyLoggerFactory
+            = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLoggerFactory(MyLoggerFactory);
+            base.OnConfiguring(optionsBuilder);
+        }
+
         public override EntityEntry<TEntity> Add<TEntity>(TEntity entity)
         {
-            if(entity is IEntity<Guid> theEntity)
+            if (entity is IEntity<Guid> theEntity)
             {
-                theEntity.InsertDate = DateTime.Now;
+                theEntity.CreatedDate = DateTime.Now;
             }
 
             return base.Add(entity);
@@ -55,7 +70,7 @@ namespace Expenses.Data.Contexts
         {
             if (entity is IEntity<Guid> theEntity)
             {
-                theEntity.UpdateDate = DateTime.Now;
+                theEntity.UpdatedDate = DateTime.Now;
             }
 
             return base.Update(entity);
@@ -63,16 +78,16 @@ namespace Expenses.Data.Contexts
 
         public async Task<int> Commit()
         {
-            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("InsertDate") != null))
+            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("CreatedDate") != null))
             {
                 if (item.State == EntityState.Added)
                 {
-                    item.Property("InsertDate").CurrentValue = DateTime.Now;
+                    item.Property("CreatedDate").CurrentValue = DateTime.Now;
                 }
 
                 if (item.State == EntityState.Modified)
                 {
-                    item.Property("InsertDate").IsModified = false;
+                    item.Property("CreatedDate").IsModified = false;
                 }
             }
 
