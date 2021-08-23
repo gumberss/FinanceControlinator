@@ -23,7 +23,6 @@ namespace Payments.Application.AppServices
         private readonly IPaymentItemValidator _paymentItemValidator;
         private readonly ILocalization _localization;
         private readonly ILogger<IPaymentAppService> _logger;
-        private readonly IAsyncDocumentSession _documentSession;
         private readonly IPaymentItemRepository _paymentItemRepository;
 
         public PaymentAppService(
@@ -35,13 +34,39 @@ namespace Payments.Application.AppServices
                 , ILogger<IPaymentAppService> logger
             )
         {
-            _documentSession = documentSession;
             _paymentRepository = paymentRepository;
             _paymentItemRepository = paymentItemRepository;
             _paymentItemValidator = paymentItemValidator;
             _localization = localization;
             _logger = logger;
+        }
 
+        public async Task<Result<Payment, BusinessException>> ConfirmPayment(String paymentId)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(paymentId, p => p.ItemId);
+
+            if (payment.IsFailure) return payment.Error;
+
+            if (payment.Value is null)
+            {
+                var errorData = new ErrorData(_localization.PAYMENT_NOT_FOUND, nameof(paymentId), paymentId);
+                return new BusinessException(HttpStatusCode.BadRequest, errorData);
+            }
+
+            if (!payment.Value.WaitingForConfirmation())
+            {
+                var errorData = new ErrorData(_localization.PAYMENT_IS_NOT_WAITING_FOR_CONFIRMATION, nameof(paymentId), paymentId);
+                return new BusinessException(HttpStatusCode.BadRequest, errorData);
+            }
+
+            var itemPaid = await _paymentItemRepository.GetByIdAsync(payment.Value.ItemId);
+
+            if (itemPaid.IsFailure) return itemPaid.Error;
+
+            payment.Value.Confirm();
+            itemPaid.Value.Confirm();
+
+            return payment;
         }
 
         public async Task<Result<List<PaymentItem>, BusinessException>> GetClosedItems()
@@ -73,33 +98,26 @@ namespace Payments.Application.AppServices
                 return exception;
             }
 
-            var paymentsAlreadyRegistered = await _paymentRepository.GetAllAsync(null, x => x.Id.In(itemToPay.Value.PaymentIds));
-
-            if (paymentsAlreadyRegistered.IsFailure)
-            {
-                return paymentsAlreadyRegistered.Error;
-            }
-
-            if (paymentsAlreadyRegistered.Value.Any(x => x.InProcess()))
-            {
-                var errorData = new ErrorData(_localization.PAYMENT_ALREADY_IN_PROCESS);
-
-                return new BusinessException(HttpStatusCode.BadRequest, errorData);
-            }
-
-            if (paymentsAlreadyRegistered.Value.Any(x => x.Paid()))
+            if (itemToPay.Value.Paid())
             {
                 var errorData = new ErrorData(_localization.ITEM_ALREADY_WAS_PAID);
 
                 return new BusinessException(HttpStatusCode.BadRequest, errorData);
             }
 
+            if (itemToPay.Value.PaymentAlreadyRequested())
+            {
+                var errorData = new ErrorData(_localization.PAYMENT_ALREADY_IN_PROCESS);
+
+                return new BusinessException(HttpStatusCode.BadRequest, errorData);
+            }
+
             var payment =
                    new Payment(DateTime.Now)
-                   .For(itemToPay.Value)
                    .PaidWith(paymentMethods)
-                   .With(description)
-                   .AsRequested();
+                   .AsRequested()
+                   .For(itemToPay.Value)
+                   .With(description);
 
             return await _paymentRepository.AddAsync(payment);
         }

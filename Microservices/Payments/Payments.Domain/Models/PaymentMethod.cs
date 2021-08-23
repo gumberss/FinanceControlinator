@@ -18,5 +18,14 @@ namespace Payments.Domain.Models
         public String Description { get; set; }
 
         public PaymentStatus Status { get; set; }
+
+        public void ConfirmPayment() => Status = PaymentStatus.Paid;
+
+        public PaymentMethod AsRequested()
+        {
+            Status = PaymentStatus.PaymentRequested;
+
+            return this;
+        }
     }
 }

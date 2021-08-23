@@ -1,6 +1,4 @@
 using FinanceControlinator.Common.Entities;
-using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Utils;
 using Payments.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -45,6 +43,7 @@ namespace Payments.Domain.Models
         public Payment PaidWith(List<PaymentMethod> paymentMethods)
         {
             PaymentMethods = paymentMethods;
+
             return this;
         }
 
@@ -58,11 +57,26 @@ namespace Payments.Domain.Models
         {
             Status = PaymentStatus.PaymentRequested;
 
+            PaymentMethods.ForEach(pm => pm.AsRequested());
+
             return this;
         }
 
         public bool InProcess() => Status == PaymentStatus.PaymentRequested;
 
         public bool Paid() => Status == PaymentStatus.Paid;
+
+        public bool WaitingForConfirmation() => Status == PaymentStatus.PaymentRequested;
+
+        public Payment Confirm()
+        {
+            Status = PaymentStatus.Paid;
+
+            PaymentMethods.ForEach(pm => pm.ConfirmPayment());
+
+            Updated();
+
+            return this;
+        }
     }
 }
