@@ -25,6 +25,8 @@ namespace Invoices.Handler.Configurations.Profiles
             CreateMap<GenerateInvoicesEvent, RegisterExpenseCommand>()
                 .ForMember(x => x.Expense, x => x.MapFrom(y=> y.InvoiceExpense));
 
+            CreateMap<Invoice, InvoicePaidEvent>()
+                .ForMember(x => x.Invoice, x => x.MapFrom(y => y));
         }
     }
 }
