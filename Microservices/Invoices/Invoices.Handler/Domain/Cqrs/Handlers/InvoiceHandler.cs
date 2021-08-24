@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Raven.Client.Documents.Session;
 
 namespace Invoices.Handler.Domain.Cqrs.Handlers
 {
@@ -17,19 +18,23 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         : IRequestHandler<GetAllInvoicesQuery, Result<List<Invoice>, BusinessException>>
         , IRequestHandler<GetMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
         , IRequestHandler<GetLastMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
-        , IRequestHandler<PayInvoiceCommand, Result<Invoice, BusinessException>>
+        , IRequestHandler<RegisterInvoicePaymentCommand, Result<Invoice, BusinessException>>
+        , IRequestHandler<RegisterExpenseCommand, Result<List<Invoice>, BusinessException>>
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly ILogger<InvoiceHandler> _logger;
+        private readonly IAsyncDocumentSession _documentSession;
 
         public InvoiceHandler(
             IInvoiceAppService invoiceAppService
             , ILogger<InvoiceHandler> logger
             , IBus bus
+            , IAsyncDocumentSession documentSession
         )
         {
             _invoiceAppService = invoiceAppService;
             _logger = logger;
+            _documentSession = documentSession;
         }
 
         public async Task<Result<List<Invoice>, BusinessException>> Handle(GetAllInvoicesQuery request, CancellationToken cancellationToken)
@@ -47,9 +52,30 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
             return await _invoiceAppService.GetLastMonthInvoice();
         }
 
-        public async Task<Result<Invoice, BusinessException>> Handle(PayInvoiceCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Invoice, BusinessException>> Handle(RegisterInvoicePaymentCommand request, CancellationToken cancellationToken)
         {
-            return await _invoiceAppService.Pay(request.Invoice);
+            var result =  await _invoiceAppService.RegisterPayment(request.Payment);
+
+            if (result.IsFailure) return result.Error;
+
+            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return result;
+        }
+
+        public async Task<Result<List<Invoice>, BusinessException>> Handle(RegisterExpenseCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _invoiceAppService.RegisterInvoiceItems(request.Expense);
+
+            if (result.IsFailure) return result.Error;
+
+            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return result;
         }
     }
 }

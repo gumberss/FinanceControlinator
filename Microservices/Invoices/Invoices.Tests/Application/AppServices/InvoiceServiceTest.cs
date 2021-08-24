@@ -49,13 +49,12 @@ namespace Invoices.Tests.Application.AppServices
                 });
 
             var service = new InvoiceAppService(
-                    Substitute.For<IDocumentStore>(),
-                    Substitute.For<IAsyncDocumentSession>(),
                     invoiceServiceMock,
                     Substitute.For<IExpenseRepository>(),
                     Substitute.For<ILocalization>(),
                     Substitute.For<ILogger<IInvoiceAppService>>(),
-                    new InvoiceService() // maybe this is not right...
+                    new InvoiceService(), // maybe this is not right...
+                    Substitute.For<IPaymentRepository>()
                 );
 
             var result = await service.RegisterInvoiceItems(new Expense

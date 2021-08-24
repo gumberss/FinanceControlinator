@@ -1,4 +1,4 @@
-using Invoices.Handler.Integration.Handlers.Expenses;
+using Invoices.Handler.Integration.Handlers;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,6 +12,7 @@ namespace Invoices.Handler.Configurations
            services.AddMassTransit(x =>
            {
                x.AddConsumer<InvoiceIntegrationHandler>();
+               x.AddConsumer<PaymentIntegrationHandler>();
 
                x.SetKebabCaseEndpointNameFormatter();
 

@@ -30,6 +30,7 @@ namespace Invoices.API.Commons
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
             services.AddTransient<IInvoiceService, InvoiceService>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
         }
     }
 }

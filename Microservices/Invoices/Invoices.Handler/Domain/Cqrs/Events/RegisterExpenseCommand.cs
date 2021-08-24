@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 namespace Invoices.Handler.Domain.Cqrs.Events
 {
-    public class PayInvoiceCommand : IRequest<Result<Invoice, BusinessException>>
+    public class RegisterExpenseCommand : IRequest<Result<List<Invoice>, BusinessException>>
     {
-        public Invoice Invoice { get; set; }
+        public Expense Expense { get; set; }
     }
 }

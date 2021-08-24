@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Raven.Client.Documents.Session;
-using Raven.Client.Documents;
 using Invoices.Domain.Services;
 using System.Linq;
 using Invoices.Domain.Localizations;
@@ -18,32 +17,114 @@ namespace Invoices.Application.AppServices
 {
     public class InvoiceAppService : IInvoiceAppService
     {
-        private readonly IDocumentStore _documentStore;
-        private readonly IAsyncDocumentSession _documentSession;
-
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IExpenseRepository _expenseRepositorty;
         private readonly ILocalization _localization;
         private readonly ILogger<IInvoiceAppService> _logger;
         private readonly IInvoiceService _invoiceService;
+        private readonly IPaymentRepository _paymentRepository;
 
         public InvoiceAppService(
-                IDocumentStore documentStore
-                , IAsyncDocumentSession documentSession
-                , IInvoiceRepository invoiceRepository
+                IInvoiceRepository invoiceRepository
                 , IExpenseRepository expenseRepositorty
                 , ILocalization localization
                 , ILogger<IInvoiceAppService> logger
                 , IInvoiceService invoiceService
+                , IPaymentRepository paymentRepository
             )
         {
-            _documentStore = documentStore;
-            _documentSession = documentSession;
             _invoiceRepository = invoiceRepository;
             _expenseRepositorty = expenseRepositorty;
             _localization = localization;
             _logger = logger;
             _invoiceService = invoiceService;
+            _paymentRepository = paymentRepository;
+        }
+
+        public async Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(Expense expense)
+        {
+            var registerExpenseResult = await RegisterExpense(expense);
+
+            if (registerExpenseResult.IsFailure) return registerExpenseResult.Error;
+
+            var currentInvoiceCloseDate = _invoiceService.GetCurrentInvoiceCloseDate();
+
+            var (invoiceStartSearchDate, lastInvoiceCloseDate) = _invoiceService.GetInvoiceRangeByInstallments(expense.InstallmentsCount);
+
+            var registeredInvoices =
+                await _invoiceRepository.GetAllAsync(x => x.Items,
+                    x => x.CloseDate >= invoiceStartSearchDate
+                      && x.CloseDate <= lastInvoiceCloseDate
+                );
+
+            if (registeredInvoices.IsFailure) return registeredInvoices.Error;
+
+            var existentInvoices = registeredInvoices.Value;
+
+            var changedInvoices = _invoiceService.RegisterExpense(expense, existentInvoices, currentInvoiceCloseDate);
+
+            var newInvoicesResult = changedInvoices.Except(existentInvoices);
+
+            foreach (var newInvoice in newInvoicesResult)
+            {
+                var addResult = await _invoiceRepository.AddAsync(newInvoice);
+
+                if (addResult.IsFailure)
+                {
+                    return new BusinessException(HttpStatusCode.InternalServerError, new ErrorData(addResult.Error.Message));
+                }
+            }
+
+            return changedInvoices;
+        }
+
+        private async Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense)
+        {
+            var registeredExpense = await _expenseRepositorty.GetByIdAsync(expense.Id);
+
+            if (registeredExpense.IsFailure) return registeredExpense.Error;
+
+            if (registeredExpense.Value is not null)
+            {
+                //existent expense
+                //when we accept changes, this method will be refactored
+                return (Expense)null;
+            }
+            else
+            {
+                return await _expenseRepositorty.AddAsync(expense);
+            }
+        }
+
+        public async Task<Result<Invoice, BusinessException>> RegisterPayment(Payment payment)
+        {
+            var paymentRegistered = await _paymentRepository.GetByIdAsync(payment.Id);
+
+            if (paymentRegistered.IsFailure) return paymentRegistered.Error;
+
+            if(paymentRegistered.Value is not null)
+            {
+                var errorData = new ErrorData(_localization.PAYMENT_ALREADY_EXISTENT, "PaymentId", payment.Id);
+
+                return new BusinessException(HttpStatusCode.BadRequest, errorData);
+            }
+
+            var invoice = await _invoiceRepository.GetByIdAsync(payment.ItemId);
+
+            if (invoice.IsFailure) return invoice.Error;
+
+            if(invoice.Value is null)
+            {
+                _logger.LogInformation($"The item with id {payment.ItemId} from the payment {payment.Id} was not found. This payment will be skipped");
+
+                return invoice;
+            }
+
+            invoice.Value.WasPaidIn(payment.Date);
+
+            await _paymentRepository.AddAsync(payment);
+
+            return invoice;
         }
 
         public async Task<Result<List<Invoice>, BusinessException>> GetAllInvoices()
@@ -117,83 +198,6 @@ namespace Invoices.Application.AppServices
             }
 
             return invoices;
-        }
-
-        public async Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(Expense expense)
-        {
-            var registeredExpense = await _expenseRepositorty.GetByIdAsync(expense.Id);
-
-            if (registeredExpense.IsFailure)
-            {
-                return registeredExpense.Error;
-            }
-
-            if (registeredExpense.Value is not null)
-            {
-                //existent expense
-            }
-            else
-            {
-                var addExpenseResult = await _expenseRepositorty.AddAsync(expense);
-
-                if (addExpenseResult.IsFailure)
-                {
-                    return addExpenseResult.Error;
-                }
-            }
-
-            var firstInvoiceCloseDate = _invoiceService.GetCurrentInvoiceCloseDate();
-
-            var lastInvoiceCloseDate = firstInvoiceCloseDate.AddMonths(expense.InstallmentsCount);
-
-            var invoiceStartSearchDate = new DateTime(firstInvoiceCloseDate.Year, firstInvoiceCloseDate.Month, DateTime.Now.Day);
-
-            var registeredInvoices =
-                await _invoiceRepository.GetAllAsync(x => x.Items,
-                    x => x.CloseDate >= invoiceStartSearchDate
-                      && x.CloseDate <= lastInvoiceCloseDate
-                );
-
-            if (registeredInvoices.IsFailure)
-            {
-                return registeredInvoices.Error;
-                //log
-            }
-
-            var existentInvoices = registeredInvoices.Value;
-
-            var changedInvoices = _invoiceService.RegisterExpense(expense, existentInvoices, firstInvoiceCloseDate);
-
-            var newInvoicesResult = changedInvoices.Except(existentInvoices);
-
-            foreach (var newInvoice in newInvoicesResult)
-            {
-                var addResult = await _invoiceRepository.AddAsync(newInvoice);
-
-                if (addResult.IsFailure)
-                {
-                    //log
-                    return new BusinessException(HttpStatusCode.InternalServerError, new ErrorData(addResult.Error.Message));
-                }
-            }
-
-
-            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
-
-            if (saveResult.IsFailure)
-            {
-                return saveResult.Error;
-                //log
-            }
-
-            return changedInvoices;
-        }
-
-        public Task<Result<Invoice, BusinessException>> Pay(Invoice invoice)
-        {
-            //invoice.WasPaidIn();
-            //invoice.update
-            return null;
         }
     }
 }
