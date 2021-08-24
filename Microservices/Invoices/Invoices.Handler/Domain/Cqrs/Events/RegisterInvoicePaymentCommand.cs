@@ -7,6 +7,6 @@ namespace Invoices.Handler.Domain.Cqrs.Events
 {
     public class RegisterInvoicePaymentCommand : IRequest<Result<Invoice, BusinessException>>
     {
-        public Invoice Invoice { get; set; }
+        public Payment Payment { get; set; }
     }
 }

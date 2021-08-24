@@ -3,10 +3,6 @@ using Invoices.Data.Commons;
 using Invoices.Domain.Models;
 using Raven.Client.Documents.Session;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Invoices.Data.Repositories
 {

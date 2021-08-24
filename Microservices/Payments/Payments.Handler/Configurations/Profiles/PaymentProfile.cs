@@ -18,7 +18,8 @@ namespace Payments.Handler.Configurations.Profiles
 
             CreateMap<Payment, PaymentDTO>()
                 .ForMember(x => x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)))
-                .ForMember(x => x.ItemId, x => x.MapFrom(y => Guid.Parse(y.ItemId)));
+                .ForMember(x => x.ItemId, x => x.MapFrom(y => Guid.Parse(y.ItemId)))
+                .ForMember(x => x.DetailsPath, x => x.MapFrom(y => $"payments/{y.Id}"));
 
             CreateMap<PaymentMethod, PaymentMethodDTO>()
                 .ForMember(x => x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)))

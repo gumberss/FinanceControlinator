@@ -4,7 +4,7 @@ namespace Invoices.Domain.Localizations
 {
     public interface ILocalization
     {
-        public String DATE_INCORRECT { get; }
-      
+        String DATE_INCORRECT { get; }
+        string PAYMENT_ALREADY_EXISTENT { get; }
     }
 }

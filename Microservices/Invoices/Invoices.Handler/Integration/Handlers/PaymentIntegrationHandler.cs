@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FinanceControlinator.Events.Payments;
+using Invoices.Handler.Domain.Cqrs.Events;
 using MassTransit;
 using System;
 using System.Threading.Tasks;
@@ -12,17 +13,20 @@ namespace Invoices.Handler.Integration.Handlers
         private readonly IMapper _mapper;
 
         public PaymentIntegrationHandler(
-          //  IInvoiceAppService invoiceAppService,
+            //  IInvoiceAppService invoiceAppService,
             IMapper mapper
             )
         {
-          //  _invoiceAppService = invoiceAppService;
+            //  _invoiceAppService = invoiceAppService;
             _mapper = mapper;
         }
 
         public Task Consume(ConsumeContext<PaymentPerformedEvent> context)
         {
-            throw new NotImplementedException();
+            var command = _mapper.Map<PaymentPerformedEvent, RegisterInvoicePaymentCommand>(context.Message);
+
+          
+
         }
     }
 }
