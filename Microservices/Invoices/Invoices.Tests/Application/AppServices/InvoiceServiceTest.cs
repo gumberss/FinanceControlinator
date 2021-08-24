@@ -53,7 +53,8 @@ namespace Invoices.Tests.Application.AppServices
                     Substitute.For<IExpenseRepository>(),
                     Substitute.For<ILocalization>(),
                     Substitute.For<ILogger<IInvoiceAppService>>(),
-                    new InvoiceService() // maybe this is not right...
+                    new InvoiceService(), // maybe this is not right...
+                    Substitute.For<IPaymentRepository>()
                 );
 
             var result = await service.RegisterInvoiceItems(new Expense

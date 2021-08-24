@@ -104,7 +104,9 @@ namespace Invoices.Application.AppServices
 
             if(paymentRegistered.Value is not null)
             {
-                return new BusinessException(HttpStatusCode.BadRequest, _localization.PAYMENT_ALREADY_EXISTENT); 
+                var errorData = new ErrorData(_localization.PAYMENT_ALREADY_EXISTENT, "PaymentId", payment.Id);
+
+                return new BusinessException(HttpStatusCode.BadRequest, errorData);
             }
 
             var invoice = await _invoiceRepository.GetByIdAsync(payment.ItemId);
@@ -114,6 +116,8 @@ namespace Invoices.Application.AppServices
             if(invoice.Value is null)
             {
                 _logger.LogInformation($"The item with id {payment.ItemId} from the payment {payment.Id} was not found. This payment will be skipped");
+
+                return invoice;
             }
 
             invoice.Value.WasPaidIn(payment.Date);

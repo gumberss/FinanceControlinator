@@ -54,7 +54,15 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<Invoice, BusinessException>> Handle(RegisterInvoicePaymentCommand request, CancellationToken cancellationToken)
         {
-            return await _invoiceAppService.RegisterPayment(request.Payment);
+            var result =  await _invoiceAppService.RegisterPayment(request.Payment);
+
+            if (result.IsFailure) return result.Error;
+
+            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return result;
         }
 
         public async Task<Result<List<Invoice>, BusinessException>> Handle(RegisterExpenseCommand request, CancellationToken cancellationToken)

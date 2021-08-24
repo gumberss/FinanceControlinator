@@ -35,7 +35,6 @@ namespace Invoices.Handler.Integration.Handlers
 
             var result = await _mediator.Send(registerExpenseCommand);
 
-
             if (result.IsFailure)
             {
                 //log
