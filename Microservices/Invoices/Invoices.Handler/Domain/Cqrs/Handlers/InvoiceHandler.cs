@@ -18,7 +18,7 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         : IRequestHandler<GetAllInvoicesQuery, Result<List<Invoice>, BusinessException>>
         , IRequestHandler<GetMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
         , IRequestHandler<GetLastMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
-        , IRequestHandler<PayInvoiceCommand, Result<Invoice, BusinessException>>
+        , IRequestHandler<RegisterInvoicePaymentCommand, Result<Invoice, BusinessException>>
         , IRequestHandler<RegisterExpenseCommand, Result<List<Invoice>, BusinessException>>
     {
         private readonly IInvoiceAppService _invoiceAppService;
@@ -52,7 +52,7 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
             return await _invoiceAppService.GetLastMonthInvoice();
         }
 
-        public async Task<Result<Invoice, BusinessException>> Handle(PayInvoiceCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Invoice, BusinessException>> Handle(RegisterInvoicePaymentCommand request, CancellationToken cancellationToken)
         {
             return await _invoiceAppService.RegisterPayment(request.Invoice);
         }

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Invoices.Handler.Domain.Cqrs.Events
 {
-    public class PayInvoiceCommand : IRequest<Result<Invoice, BusinessException>>
+    public class RegisterInvoicePaymentCommand : IRequest<Result<Invoice, BusinessException>>
     {
         public Invoice Invoice { get; set; }
     }

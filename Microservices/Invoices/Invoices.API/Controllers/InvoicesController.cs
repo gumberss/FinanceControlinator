@@ -24,7 +24,7 @@ namespace Invoices.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Invoice invoice)
         {
-            return From(await _mediator.Send(new PayInvoiceCommand { Invoice = invoice }));
+            return From(await _mediator.Send(new RegisterInvoicePaymentCommand { Invoice = invoice }));
         }
 
     }
