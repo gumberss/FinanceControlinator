@@ -34,6 +34,11 @@ namespace Accounts.Data.Commons
                 : entity;
         }
 
+        public Task<Result<IEnumerable<TEntity>, BusinessException>> AddAsync(IEnumerable<TEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
         {
             try
@@ -81,6 +86,11 @@ namespace Accounts.Data.Commons
             {
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
             }
+        }
+
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntity> entities)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Result<List<TEntity>, BusinessException>> GetAllAsync(Expression<Func<TEntity, object>> include = null, params Expression<Func<TEntity, bool>>[] where)

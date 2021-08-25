@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Invoices.Domain.Services;
 using FinanceControlinator.Common.LogsBehaviors;
+using FinanceControlinator.Common.Messaging;
 
 namespace Invoices.API.Commons
 {
@@ -31,6 +32,8 @@ namespace Invoices.API.Commons
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
             services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
+            services.AddTransient<IMessageBus, MassTransitMessageBus>();
+            
         }
     }
 }

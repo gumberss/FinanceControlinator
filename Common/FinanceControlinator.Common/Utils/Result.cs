@@ -42,7 +42,7 @@ namespace FinanceControlinator.Common.Utils
 
         public static implicit operator T(Result<T, E> result)
             => result.Value;
-        
+
         public static implicit operator E(Result<T, E> result)
             => result.Error;
     }
@@ -56,6 +56,23 @@ namespace FinanceControlinator.Common.Utils
                 try
                 {
                     return await func;
+                }
+                catch (Exception ex)
+                {
+                    return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+                }
+            };
+
+            return await Task.Run(() => tryFunction.Invoke());
+        }
+
+        public static async Task<Result<T, BusinessException>> Try<T>(Func<T> func)
+        {
+            Func<Result<T, BusinessException>> tryFunction = () =>
+            {
+                try
+                {
+                    return func();
                 }
                 catch (Exception ex)
                 {
@@ -81,24 +98,21 @@ namespace FinanceControlinator.Common.Utils
                 }
             };
 
-            return  await Task.Run(() => tryFunction.Invoke());
+            return await Task.Run(() => tryFunction.Invoke());
         }
 
-        public static async Task<Result<T, BusinessException>> Try<T>(Func<T> func)
+        public static async Task<Result<bool, BusinessException>> Try(Action act)
         {
-            Func<Result<T, BusinessException>> tryFunction = () =>
+            return await Try(() =>
             {
-                try
-                {
-                    return func();
-                }
-                catch (Exception ex)
-                {
-                    return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
-                }
-            };
+                act();
+                return true;
+            });
+        }
 
-            return await Task.Run(() => tryFunction.Invoke());
+        public static Result<T, BusinessException> From<T> (T data)
+        {
+            return new Result<T, BusinessException>(data);
         }
     }
 }

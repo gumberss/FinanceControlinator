@@ -7,9 +7,14 @@ namespace Expenses.Domain.Models.Invoices
 {
     public class Invoice : Entity<Guid>
     {
-        public DateTime DueDate { get; set; }
+        public Invoice()
+        {
+            Items = new List<InvoiceItem>();
+        }
 
-        public virtual List<InvoiceItem> Items { get; set; }
+        public DateTime DueDate { get; private set; }
+
+        public virtual List<InvoiceItem> Items { get; private set; }
 
         public Invoice ChangeDueDate(DateTime dueDate)
         {
@@ -23,6 +28,8 @@ namespace Expenses.Domain.Models.Invoices
             Items.Clear();
             Items.AddRange(newItems);
             newItems.ForEach(x => x.LinkTo(this));
+
+            Updated();
 
             return this;
         }

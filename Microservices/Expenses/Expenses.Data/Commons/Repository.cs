@@ -40,6 +40,15 @@ namespace Expenses.Data.Commons
             return entity;
         }
 
+        public async Task<Result<IEnumerable<TEntity>, BusinessException>> AddAsync(IEnumerable<TEntity> entities)
+        {
+            var result = await Result.Try(_dbSet.AddRangeAsync(entities));
+
+            if (result.IsFailure) return result.Error;
+
+            return Result.From(entities);
+        }
+
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
         {
             var result = await Result.Try(() => _dbSet.Remove(entity));
@@ -50,6 +59,11 @@ namespace Expenses.Data.Commons
             }
 
             return true;
+        }
+
+        public async Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntity> entities)
+        {
+            return await Result.Try(() => _dbSet.RemoveRange(entities));
         }
 
         public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntityId> ids)

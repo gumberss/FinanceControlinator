@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace Invoices.Handler.Integration.Handlers
 {
-    public class InvoiceIntegrationHandler : IConsumer<GenerateInvoicesEvent>
+    public class InvoicesIntegrationHandler : IConsumer<GenerateInvoicesEvent>
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
-        public InvoiceIntegrationHandler(
+        public InvoicesIntegrationHandler(
             IInvoiceAppService invoiceAppService,
             IMapper mapper,
             IMediator mediator

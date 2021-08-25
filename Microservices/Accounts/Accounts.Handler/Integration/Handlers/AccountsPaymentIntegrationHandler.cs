@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace Accounts.Handler.Integration.Handlers
 {
-    public class AccountPaymentIntegrationHandler
+    public class AccountsPaymentIntegrationHandler
         : IConsumer<PaymentRequestedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly IMessageBus _bus;
 
-        public AccountPaymentIntegrationHandler(
+        public AccountsPaymentIntegrationHandler(
             IMapper mapper,
             IMediator mediator,
             IMessageBus bus)

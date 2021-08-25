@@ -6,18 +6,17 @@ using Invoices.Domain.Models;
 using Invoices.Handler.Domain.Cqrs.Events;
 using MassTransit;
 using MediatR;
-using System;
 using System.Threading.Tasks;
 
 namespace Invoices.Handler.Integration.Handlers
 {
-    public class PaymentIntegrationHandler : IConsumer<PaymentPerformedEvent>
+    public class InvoicesPaymentIntegrationHandler : IConsumer<PaymentPerformedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly IMessageBus _bus;
 
-        public PaymentIntegrationHandler(
+        public InvoicesPaymentIntegrationHandler(
             IMapper mapper,
             IMediator mediator,
             IMessageBus bus
