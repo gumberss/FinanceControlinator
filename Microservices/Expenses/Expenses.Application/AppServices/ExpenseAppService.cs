@@ -20,6 +20,8 @@ namespace Expenses.Application.AppServices
     {
         private readonly IExpenseDbContext _expenseDbContext;
         private readonly IExpenseRepository _expenseRepository;
+        private readonly IInvoiceRepository _invoiceRepository;
+        private readonly IExpenseItemRepository _expenseItemRepository;
         private readonly IExpenseValidator _expenseValidator;
         private readonly ILocalization _localization;
         private readonly ILogger<IExpenseAppService> _logger;
@@ -27,13 +29,17 @@ namespace Expenses.Application.AppServices
         public ExpenseAppService(
                 IExpenseDbContext expenseDbContext
                 , IExpenseRepository expenseRepository
+                , IInvoiceRepository invoiceRepository
                 , IExpenseValidator expenseValidator
+                , IExpenseItemRepository expenseItemRepository
                 , ILocalization localization
                 , ILogger<IExpenseAppService> logger
             )
         {
             _expenseDbContext = expenseDbContext;
             _expenseRepository = expenseRepository;
+            _invoiceRepository = invoiceRepository;
+            _expenseItemRepository = expenseItemRepository;
             _expenseValidator = expenseValidator;
             _localization = localization;
             _logger = logger;
@@ -58,7 +64,7 @@ namespace Expenses.Application.AppServices
 
             return expenses;
         }
-        
+
         public async Task<Result<List<Expense>, BusinessException>> GetMonthExpenses()
         {
             var month = DateTime.Now.Month;
@@ -177,9 +183,23 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
-            if (!expense.TotalCostIsValid())
+            //if (!expense.TotalCostIsValid())
+            //{
+            //    var errorData = new ErrorData(_localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS, "TotalCost");
+            //    var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
+
+            //    _logger.LogInformation(exception.Log());
+
+            //    return exception;
+            //}
+
+            var registeredExpense = await _expenseRepository.GetByIdAsync(expense.Id, exp => exp.Items);
+
+            if (registeredExpense.IsFailure) return registeredExpense.Error;
+
+            if (registeredExpense.Value is null)
             {
-                var errorData = new ErrorData(_localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS, "TotalCost");
+                var errorData = new ErrorData(_localization.EXPENSE_NOT_FOUND, "ExpenseId", expense.Id.ToString());
                 var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
 
                 _logger.LogInformation(exception.Log());
@@ -187,29 +207,46 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
-            //var addResult = await _expenseRepository.AddAsync(expense);
+            var invoicesWithExpenseCosts = await _invoiceRepository.GetAllAsync(
+                    where: inv => inv.Items.Any(i => i.ExpenseId == expense.Id),
+                    include: inv => inv.Items
+                );
 
-            //if (addResult.IsFailure)
-            //{
-            //    var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
-            //    var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
+            if (invoicesWithExpenseCosts.IsFailure) return invoicesWithExpenseCosts.Error;
 
-            //    _logger.LogError(exception.Log());
+            var totalExpensePaid = invoicesWithExpenseCosts.Value
+                .SelectMany(inv => inv.Items)
+                .Where(item => item.ExpenseId == expense.Id)
+                .Sum(item => item.InstallmentCost);
 
-            //    return exception;
-            //}
+            var totalCostIsValid = expense.TotalCost >= totalExpensePaid;
 
-            //var saveResult = await Result.Try(_expenseDbContext.Commit());
+            if (!totalCostIsValid)
+            {
+                var errorData = new ErrorData(_localization.EXPENSE_COST_IS_LESS_THAN_WHAT_WAS_PAID, "ExpenseId", expense.Id.ToString());
+                var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
 
-            //if (saveResult.IsFailure)
-            //{
-            //    var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
-            //    var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
+                _logger.LogInformation(exception.Log());
 
-            //    _logger.LogError(exception.Log());
+                return exception;
+            }
 
-            //    return exception;
-            //}
+            if (invoicesWithExpenseCosts.Value.Count < expense.InstallmentsCount)
+            {
+                //error
+            }
+            var expenseItemComparer = new ExpenseItemComparer();
+
+            var toDelete = registeredExpense.Value. Items.Except(expense.Items, expenseItemComparer).ToList();
+            var toAdd = expense.Items.Except(registeredExpense.Value.Items, expenseItemComparer).ToList();
+            var toUpdate = registeredExpense.Value.Items.Intersect(expense.Items).ToList();
+
+            registeredExpense.Value
+                .ChangeTotalCost(expense.TotalCost)
+                .UpdateItems(toUpdate)
+                .AddItems(toAdd)
+                .RemoveItems(toDelete);
+
 
             return new List<Expense>();
         }

@@ -1,5 +1,7 @@
 ﻿using FinanceControlinator.Common.Entities;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Expenses.Domain.Models.Expenses
 {
@@ -16,5 +18,22 @@ namespace Expenses.Domain.Models.Expenses
         public Guid ExpenseId { get; set; }
 
         public Expense Expense { get; set; }
+
+        internal ExpenseItem UpdateFrom(ExpenseItem itemFounded)
+        {
+            Cost = itemFounded.Cost;
+            Amount = itemFounded.Amount;
+            Name = itemFounded.Name;
+            Description = itemFounded.Description;
+
+            return this;
+        }
+    }
+
+    public class ExpenseItemComparer : IEqualityComparer<ExpenseItem>
+    {
+        public bool Equals(ExpenseItem x, ExpenseItem y) => x.Id == y.Id;
+
+        public int GetHashCode([DisallowNull] ExpenseItem obj) => obj.GetHashCode();
     }
 }

@@ -15,5 +15,7 @@ namespace Expenses.Domain.Localizations
         string TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS { get; }
         string AN_ERROR_OCCURRED_ON_THE_SERVER { get; }
         string EXPENSES_NOT_FOUND { get; }
+        string EXPENSE_NOT_FOUND { get; }
+        string EXPENSE_COST_IS_LESS_THAN_WHAT_WAS_PAID { get; }
     }
 }

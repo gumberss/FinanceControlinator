@@ -26,6 +26,11 @@ namespace Expenses.Domain.Validators
                 .IsInEnum()
                 .WithMessage(localization.EXPENSE_TYPE_MUST_BE_VALID);
 
+            RuleFor(x => x.TotalCostIsValid())
+                .Equal(true)
+                .WithMessage(localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS)
+                .WithName("TotalCost");
+
             RuleFor(x => x.Items)
                 .ForEach(x => x.SetValidator(new ExpenseItemValidator(localization)));
         }
