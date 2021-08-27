@@ -5,6 +5,7 @@ using Expenses.Data.Repositories;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;
 using Expenses.Domain.Models.Expenses;
+using Expenses.Domain.Models.Invoices;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Extensions.Logging;
@@ -183,16 +184,6 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
-            //if (!expense.TotalCostIsValid())
-            //{
-            //    var errorData = new ErrorData(_localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS, "TotalCost");
-            //    var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
-
-            //    _logger.LogInformation(exception.Log());
-
-            //    return exception;
-            //}
-
             var registeredExpense = await _expenseRepository.GetByIdAsync(expense.Id, exp => exp.Items);
 
             if (registeredExpense.IsFailure) return registeredExpense.Error;
@@ -214,14 +205,9 @@ namespace Expenses.Application.AppServices
 
             if (invoicesWithExpenseCosts.IsFailure) return invoicesWithExpenseCosts.Error;
 
-            var totalExpensePaid = invoicesWithExpenseCosts.Value
-                .SelectMany(inv => inv.Items)
-                .Where(item => item.ExpenseId == expense.Id)
-                .Sum(item => item.InstallmentCost);
+            bool newTotalCostIsValid = NewTotalCostIsValid(expense, invoicesWithExpenseCosts);
 
-            var totalCostIsValid = expense.TotalCost >= totalExpensePaid;
-
-            if (!totalCostIsValid)
+            if (!newTotalCostIsValid)
             {
                 var errorData = new ErrorData(_localization.EXPENSE_COST_IS_LESS_THAN_WHAT_WAS_PAID, "ExpenseId", expense.Id.ToString());
                 var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
@@ -231,15 +217,12 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
-            if (invoicesWithExpenseCosts.Value.Count < expense.InstallmentsCount)
+            if (NewInstallmentsCountIsValid(expense, invoicesWithExpenseCosts))
             {
                 //error
             }
-            var expenseItemComparer = new ExpenseItemComparer();
 
-            var toDelete = registeredExpense.Value. Items.Except(expense.Items, expenseItemComparer).ToList();
-            var toAdd = expense.Items.Except(registeredExpense.Value.Items, expenseItemComparer).ToList();
-            var toUpdate = registeredExpense.Value.Items.Intersect(expense.Items).ToList();
+            var (toAdd, toUpdate, toDelete) = SegregateItems(expense, registeredExpense);
 
             registeredExpense.Value
                 .ChangeTotalCost(expense.TotalCost)
@@ -247,8 +230,34 @@ namespace Expenses.Application.AppServices
                 .AddItems(toAdd)
                 .RemoveItems(toDelete);
 
-
             return new List<Expense>();
+        }
+
+        //Domain Service
+        private static (List<ExpenseItem> toDelete, List<ExpenseItem> toAdd, List<ExpenseItem> toUpdate) SegregateItems(Expense expense, Expense registeredExpense)
+        {
+            var expenseItemComparer = new ExpenseItemComparer();
+
+            var toDelete = registeredExpense.Items.Except(expense.Items, expenseItemComparer).ToList();
+            var toAdd = expense.Items.Except(registeredExpense.Items, expenseItemComparer).ToList();
+            var toUpdate = registeredExpense.Items.Intersect(expense.Items).ToList();
+
+            return (toAdd, toUpdate, toDelete);
+        }
+
+        private static bool NewInstallmentsCountIsValid(Expense expense, Result<List<Invoice>, BusinessException> invoicesWithExpenseCosts)
+        {
+            return invoicesWithExpenseCosts.Value.Count < expense.InstallmentsCount;
+        }
+
+        private static bool NewTotalCostIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts)
+        {
+            var totalExpensePaid = invoicesWithExpenseCosts
+                            .SelectMany(inv => inv.Items)
+                            .Where(item => item.ExpenseId == expense.Id)
+                            .Sum(item => item.InstallmentCost);
+
+            return expense.TotalCost >= totalExpensePaid;
         }
     }
 }
