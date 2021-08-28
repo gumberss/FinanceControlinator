@@ -240,7 +240,7 @@ namespace Expenses.Application.AppServices
 
             var toDelete = registeredExpense.Items.Except(expense.Items, expenseItemComparer).ToList();
             var toAdd = expense.Items.Except(registeredExpense.Items, expenseItemComparer).ToList();
-            var toUpdate = registeredExpense.Items.Intersect(expense.Items).ToList();
+            var toUpdate = registeredExpense.Items.Intersect(expense.Items, expenseItemComparer).ToList();
 
             return (toAdd, toUpdate, toDelete);
         }
