@@ -234,7 +234,7 @@ namespace Expenses.Application.AppServices
         }
 
         //Domain Service
-        private static (List<ExpenseItem> toDelete, List<ExpenseItem> toAdd, List<ExpenseItem> toUpdate) SegregateItems(Expense expense, Expense registeredExpense)
+        private (List<ExpenseItem> toDelete, List<ExpenseItem> toAdd, List<ExpenseItem> toUpdate) SegregateItems(Expense expense, Expense registeredExpense)
         {
             var expenseItemComparer = new ExpenseItemComparer();
 
@@ -245,12 +245,12 @@ namespace Expenses.Application.AppServices
             return (toAdd, toUpdate, toDelete);
         }
 
-        private static bool NewInstallmentsCountIsValid(Expense expense, Result<List<Invoice>, BusinessException> invoicesWithExpenseCosts)
+        private bool NewInstallmentsCountIsValid(Expense expense, Result<List<Invoice>, BusinessException> invoicesWithExpenseCosts)
         {
             return invoicesWithExpenseCosts.Value.Count < expense.InstallmentsCount;
         }
 
-        private static bool NewTotalCostIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts)
+        private bool NewTotalCostIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts)
         {
             var totalExpensePaid = invoicesWithExpenseCosts
                             .SelectMany(inv => inv.Items)
