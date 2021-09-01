@@ -1,7 +1,7 @@
 microserviceName: expenses
 replicaCount: 1
 dbUser: sa
-dbPassword: P@ssw0rd!
+dbPassword: InvisiblePassword
 image: gumberss/financecontrolinator-expenses:latest
 rabbit:
   host: amqp://finance-controlinator-rabbitmq/

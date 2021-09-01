@@ -51,5 +51,5 @@ services:
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "YouF@undMe!"
+      SA_PASSWORD: "HereWeGoAgain"
       ACCEPT_EULA: "Y"
