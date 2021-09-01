@@ -22,5 +22,13 @@ namespace Expenses.Domain.Localizations
         public string AN_ERROR_OCCURRED_ON_THE_SERVER => "Ocorreu um erro no servidor";
 
         public string EXPENSES_NOT_FOUND => "Nenhuma despesa foi encontrada";
+
+        public string EXPENSE_NOT_FOUND => "Despesa não encontrada";
+
+        public string EXPENSE_COST_IS_LESS_THAN_WHAT_WAS_PAID => "O valor da despesa está menor que o valor dela já pago";
+
+        public string EXPENSE_INSTALLMENTS_IS_LESS_THAN_TIMES_PAID => "A quantidade de parcelas da despesa é inferior a quantidade de parcelas já pagas";
+
+        public string INSTALLMENTS_QUANTITY_IS_NOT_VALID => "A quantidade de parcelas não é válida";
     }
 }

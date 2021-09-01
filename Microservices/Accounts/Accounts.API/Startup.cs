@@ -9,10 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Logging;
 using FinanceControlinator.Common.CustomLogs;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents;
-using System.Security;
-using System;
 
 namespace Accounts.API
 {

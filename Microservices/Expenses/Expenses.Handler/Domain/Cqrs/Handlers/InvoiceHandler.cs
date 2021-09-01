@@ -32,11 +32,7 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
 
             var saveResult = await Result.Try(_expenseDbContext.Commit());
 
-            if (saveResult.IsFailure)
-            {
-                //log
-                return saveResult.Error;
-            }
+            if (saveResult.IsFailure) return saveResult.Error;
 
             return changedInvoices;
         }

@@ -15,6 +15,8 @@ using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using FinanceControlinator.Common.Messaging;
+using Expenses.Domain.Services;
+using Expenses.Domain.Interfaces.Services;
 
 namespace Expenses.API.Commons
 {
@@ -35,12 +37,16 @@ namespace Expenses.API.Commons
 
             services.AddFluentValidation();
 
+            services.AddTransient<IExpenseService, ExpenseService>();
+
             services.AddTransient<IExpenseAppService, ExpenseAppService>();
             services.AddTransient<IInvoiceAppService, InvoiceAppService>();
 
+            services.AddTransient<IExpenseItemRepository, ExpenseItemRepository>();
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
             services.AddTransient<IInvoiceItemRepository, InvoiceItemRepository>();
+
             services.AddTransient<IExpenseValidator, ExpenseValidator>();
         }
     }

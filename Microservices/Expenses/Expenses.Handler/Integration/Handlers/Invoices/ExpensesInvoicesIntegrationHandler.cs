@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Expenses.Handler.Integration.Handlers.Invoices
 {
-    public class InvoicesIntegrationHandler : IConsumer<InvoicePaidEvent>
+    public class ExpensesInvoicesIntegrationHandler : IConsumer<InvoicePaidEvent>
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
-        public InvoicesIntegrationHandler(
+        public ExpensesInvoicesIntegrationHandler(
             IMapper mapper,
             IMediator mediator
             )

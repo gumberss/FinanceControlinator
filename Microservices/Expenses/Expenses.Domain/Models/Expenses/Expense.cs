@@ -28,5 +28,47 @@ namespace Expenses.Domain.Models.Expenses
 
         public bool TotalCostIsValid()
             => TotalCost == Items.Sum(x => x.Cost * x.Amount);
+
+        public Expense ChangeTotalCost(decimal totalCost)
+        {
+            TotalCost = totalCost;
+
+            return this;
+        }
+
+        public Expense ChangeTotalCost(int installmentsCount)
+        {
+            InstallmentsCount = installmentsCount;
+
+            return this;
+        }
+
+        public Expense UpdateItems(List<ExpenseItem> updatedItems)
+        {
+            foreach (var item in updatedItems)
+            {
+                var expenseItem = Items.Find(x => x.Id == item.Id);
+
+                if (expenseItem is null) continue;
+
+                expenseItem.UpdateFrom(item);
+            }
+
+            return this;
+        }
+
+        public Expense RemoveItems(List<ExpenseItem> itemsToRemove)
+        {
+            Items = Items.Except(itemsToRemove).ToList();
+
+            return this;
+        }
+
+        public Expense AddItems(List<ExpenseItem> updatedItems)
+        {
+            Items.AddRange(updatedItems);
+
+            return this;
+        }
     }
 }

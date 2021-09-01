@@ -8,13 +8,14 @@ namespace Expenses.Application.Interfaces.AppServices
 {
     public interface IExpenseAppService
     {
-        public Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense);
+        Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense);
+
+        Task<Result<Expense, BusinessException>> UpdateExpense(Expense expense);
 
         Task<Result<List<Expense>, BusinessException>> GetAllExpenses();
 
         Task<Result<List<Expense>, BusinessException>> GetMonthExpenses();
 
         Task<Result<List<Expense>, BusinessException>> GetLastMonthExpenses();
-        Task<Result<List<Expense>, BusinessException>> UpdateExpense(Expense expense);
     }
 }

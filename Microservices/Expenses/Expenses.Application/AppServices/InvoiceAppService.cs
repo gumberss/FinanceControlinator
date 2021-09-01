@@ -34,16 +34,23 @@ namespace Expenses.Application.AppServices
         {
             var registeredInvoice = await _invoiceRepository.GetByIdAsync(paidInvoice.Id);
 
-            if (registeredInvoice.IsFailure)
-            {
-                //log
-                return registeredInvoice.Error;
-            }
+            if (registeredInvoice.IsFailure) return registeredInvoice.Error;
 
             if (registeredInvoice.Value is not null)
             {
-                //log
-                return registeredInvoice.Value;
+                var deleteItemsResult = await _invoiceItemRepository.DeleteAsync(registeredInvoice.Value.Items);
+
+                if (deleteItemsResult.IsFailure) return deleteItemsResult.Error;
+
+                var addNewItemsResult = await _invoiceItemRepository.AddAsync(paidInvoice.Items);
+
+                if (addNewItemsResult.IsFailure) return addNewItemsResult.Error;
+
+                registeredInvoice.Value
+                    .ChangeDueDate(paidInvoice.DueDate)
+                    .ReplaceItems(paidInvoice.Items);
+
+                return await _invoiceRepository.UpdateAsync(registeredInvoice.Value);
             }
 
             return await _invoiceRepository.AddAsync(paidInvoice);

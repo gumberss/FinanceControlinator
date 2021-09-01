@@ -78,27 +78,6 @@ namespace Expenses.Data.Contexts
 
         public async Task<int> Commit()
         {
-            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("CreatedDate") != null))
-            {
-                if (item.State == EntityState.Added)
-                {
-                    item.Property("CreatedDate").CurrentValue = DateTime.Now;
-                }
-
-                if (item.State == EntityState.Modified)
-                {
-                    item.Property("CreatedDate").IsModified = false;
-                }
-            }
-
-            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("UpdateDate") != null))
-            {
-                if (item.State == EntityState.Modified)
-                {
-                    item.Property("UpdateDate").CurrentValue = DateTime.Now;
-                }
-            }
-
             return await base.SaveChangesAsync();
         }
     }

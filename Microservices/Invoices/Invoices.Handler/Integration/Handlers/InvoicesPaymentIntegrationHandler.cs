@@ -1,25 +1,30 @@
 ﻿using AutoMapper;
+using FinanceControlinator.Common.Messaging;
+using FinanceControlinator.Events.Invoices;
 using FinanceControlinator.Events.Payments;
+using Invoices.Domain.Models;
 using Invoices.Handler.Domain.Cqrs.Events;
 using MassTransit;
 using MediatR;
-using System;
 using System.Threading.Tasks;
 
 namespace Invoices.Handler.Integration.Handlers
 {
-    public class PaymentIntegrationHandler : IConsumer<PaymentPerformedEvent>
+    public class InvoicesPaymentIntegrationHandler : IConsumer<PaymentPerformedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
+        private readonly IMessageBus _bus;
 
-        public PaymentIntegrationHandler(
+        public InvoicesPaymentIntegrationHandler(
             IMapper mapper,
-            IMediator mediator
+            IMediator mediator,
+            IMessageBus bus
             )
         {
             _mapper = mapper;
             _mediator = mediator;
+            _bus = bus;
         }
 
         public async Task Consume(ConsumeContext<PaymentPerformedEvent> context)
@@ -30,9 +35,9 @@ namespace Invoices.Handler.Integration.Handlers
 
             if (result.IsFailure) throw result.Error;
 
-            // create a InvoicePaidEvent and publish it :)
+            var @event = _mapper.Map<Invoice, InvoicePaidEvent>(result.Value);
 
-
+            await _bus.Publish(@event);
         }
     }
 }

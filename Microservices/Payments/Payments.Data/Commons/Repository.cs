@@ -31,6 +31,11 @@ namespace Payments.Data.Commons
                 : entity;
         }
 
+        public Task<Result<IEnumerable<TEntity>, BusinessException>> AddAsync(IEnumerable<TEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
         {
             try
@@ -79,6 +84,11 @@ namespace Payments.Data.Commons
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
         {
             return await DeleteAsync(new List<TEntityId> { id });
+        }
+
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntity> entities)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Result<List<TEntity>, BusinessException>> GetAllAsync(Expression<Func<TEntity, object>> include = null, params Expression<Func<TEntity, bool>>[] where)

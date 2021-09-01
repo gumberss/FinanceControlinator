@@ -1,5 +1,6 @@
 ﻿using Expenses.Domain.Models.Expenses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,8 @@ namespace Expenses.Data.Configurations
 
             builder
                 .Property(x => x.CreatedDate)
-                .IsRequired();
+                .IsRequired()
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             builder
                 .Property(x => x.UpdatedDate);
