@@ -31,6 +31,11 @@ namespace Expenses.Domain.Validators
                 .WithMessage(localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS)
                 .WithName("TotalCost");
 
+            RuleFor(x => x.InstallmentsCount)
+                .GreaterThan(0)
+                .WithMessage(localization.INSTALLMENTS_QUANTITY_IS_NOT_VALID)
+                .WithName("InstallmentsCount");
+
             RuleFor(x => x.Items)
                 .ForEach(x => x.SetValidator(new ExpenseItemValidator(localization)));
         }

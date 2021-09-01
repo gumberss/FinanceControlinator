@@ -2,6 +2,7 @@
 using Expenses.Data.Contexts;
 using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Repositories;
+using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;
 using Expenses.Domain.Models.Expenses;
@@ -19,31 +20,31 @@ namespace Expenses.Application.AppServices
 {
     public class ExpenseAppService : IExpenseAppService
     {
-        private readonly IExpenseDbContext _expenseDbContext;
         private readonly IExpenseRepository _expenseRepository;
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IExpenseItemRepository _expenseItemRepository;
         private readonly IExpenseValidator _expenseValidator;
         private readonly ILocalization _localization;
         private readonly ILogger<IExpenseAppService> _logger;
+        private readonly IExpenseService _expenseService;
 
         public ExpenseAppService(
-                IExpenseDbContext expenseDbContext
-                , IExpenseRepository expenseRepository
+                IExpenseRepository expenseRepository
                 , IInvoiceRepository invoiceRepository
                 , IExpenseValidator expenseValidator
                 , IExpenseItemRepository expenseItemRepository
                 , ILocalization localization
                 , ILogger<IExpenseAppService> logger
+                , IExpenseService expenseService
             )
         {
-            _expenseDbContext = expenseDbContext;
             _expenseRepository = expenseRepository;
             _invoiceRepository = invoiceRepository;
             _expenseItemRepository = expenseItemRepository;
             _expenseValidator = expenseValidator;
             _localization = localization;
             _logger = logger;
+            _expenseService = expenseService;
         }
 
         public async Task<Result<List<Expense>, BusinessException>> GetAllExpenses()
@@ -155,22 +156,10 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
-            var saveResult = await Result.Try(_expenseDbContext.Commit());
-
-            if (saveResult.IsFailure)
-            {
-                var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
-                var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
-
-                _logger.LogError(saveResult.Error, exception.Log());
-
-                return exception;
-            }
-
             return addResult;
         }
 
-        public async Task<Result<List<Expense>, BusinessException>> UpdateExpense(Expense expense)
+        public async Task<Result<Expense, BusinessException>> UpdateExpense(Expense expense)
         {
             var validationResult = await _expenseValidator.ValidateAsync(expense);
 
@@ -178,9 +167,7 @@ namespace Expenses.Application.AppServices
             {
                 var errorDatas = validationResult.Errors.Select(x => new ErrorData(x.ErrorMessage, x.PropertyName));
                 var exception = new BusinessException(HttpStatusCode.BadRequest, errorDatas);
-
                 _logger.LogInformation(exception.Log());
-
                 return exception;
             }
 
@@ -192,9 +179,7 @@ namespace Expenses.Application.AppServices
             {
                 var errorData = new ErrorData(_localization.EXPENSE_NOT_FOUND, "ExpenseId", expense.Id.ToString());
                 var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
-
                 _logger.LogInformation(exception.Log());
-
                 return exception;
             }
 
@@ -205,7 +190,7 @@ namespace Expenses.Application.AppServices
 
             if (invoicesWithExpenseCosts.IsFailure) return invoicesWithExpenseCosts.Error;
 
-            bool newTotalCostIsValid = NewTotalCostIsValid(expense, invoicesWithExpenseCosts);
+            bool newTotalCostIsValid = _expenseService.TotalCostIsValid(expense, invoicesWithExpenseCosts);
 
             if (!newTotalCostIsValid)
             {
@@ -217,47 +202,25 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
-            if (NewInstallmentsCountIsValid(expense, invoicesWithExpenseCosts))
+            if (!_expenseService.InstallmentsCountIsValid(expense, invoicesWithExpenseCosts))
             {
-                //error
+                var errorData = new ErrorData(_localization.EXPENSE_INSTALLMENTS_IS_LESS_THAN_TIMES_PAID, "ExpenseId", expense.Id.ToString());
+                var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
+
+                _logger.LogInformation(exception.Log());
+
+                return exception;
             }
 
-            var (toAdd, toUpdate, toDelete) = SegregateItems(expense, registeredExpense);
-
+            var (toAdd, toUpdate, toDelete) = _expenseService.SegregateItems(expense, registeredExpense);
+                
             registeredExpense.Value
                 .ChangeTotalCost(expense.TotalCost)
                 .UpdateItems(toUpdate)
                 .AddItems(toAdd)
                 .RemoveItems(toDelete);
 
-            return new List<Expense>();
-        }
-
-        //Domain Service
-        private (List<ExpenseItem> toDelete, List<ExpenseItem> toAdd, List<ExpenseItem> toUpdate) SegregateItems(Expense expense, Expense registeredExpense)
-        {
-            var expenseItemComparer = new ExpenseItemComparer();
-
-            var toDelete = registeredExpense.Items.Except(expense.Items, expenseItemComparer).ToList();
-            var toAdd = expense.Items.Except(registeredExpense.Items, expenseItemComparer).ToList();
-            var toUpdate = registeredExpense.Items.Intersect(expense.Items, expenseItemComparer).ToList();
-
-            return (toAdd, toUpdate, toDelete);
-        }
-
-        private bool NewInstallmentsCountIsValid(Expense expense, Result<List<Invoice>, BusinessException> invoicesWithExpenseCosts)
-        {
-            return invoicesWithExpenseCosts.Value.Count < expense.InstallmentsCount;
-        }
-
-        private bool NewTotalCostIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts)
-        {
-            var totalExpensePaid = invoicesWithExpenseCosts
-                            .SelectMany(inv => inv.Items)
-                            .Where(item => item.ExpenseId == expense.Id)
-                            .Sum(item => item.InstallmentCost);
-
-            return expense.TotalCost >= totalExpensePaid;
+            return registeredExpense;
         }
     }
 }

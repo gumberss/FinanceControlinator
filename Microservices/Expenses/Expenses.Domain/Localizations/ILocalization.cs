@@ -17,5 +17,7 @@ namespace Expenses.Domain.Localizations
         string EXPENSES_NOT_FOUND { get; }
         string EXPENSE_NOT_FOUND { get; }
         string EXPENSE_COST_IS_LESS_THAN_WHAT_WAS_PAID { get; }
+        string EXPENSE_INSTALLMENTS_IS_LESS_THAN_TIMES_PAID { get; }
+        string INSTALLMENTS_QUANTITY_IS_NOT_VALID { get; }
     }
 }

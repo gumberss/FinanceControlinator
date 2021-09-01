@@ -8,23 +8,23 @@ namespace Expenses.Domain.Models.Expenses
 {
     public class Expense : Entity<Guid>
     {
-        public String Title { get; private set; }
+        public String Title { get; set; }
 
-        public String Description { get; private set; }
+        public String Description { get; set; }
 
-        public DateTime PurchaseDay { get; private set; }
+        public DateTime PurchaseDay { get; set; }
 
-        public ExpenseType Type { get; private set; }
+        public ExpenseType Type { get; set; }
 
-        public int InstallmentsCount { get; private set; }
+        public int InstallmentsCount { get; set; }
 
-        public String Location { get; private set; }
+        public String Location { get; set; }
 
-        public String Observation { get; private set; }
+        public String Observation { get; set; }
 
-        public decimal TotalCost { get; private set; }
+        public decimal TotalCost { get; set; }
 
-        public List<ExpenseItem> Items { get; private set; }
+        public List<ExpenseItem> Items { get; set; }
 
         public bool TotalCostIsValid()
             => TotalCost == Items.Sum(x => x.Cost * x.Amount);
@@ -36,9 +36,9 @@ namespace Expenses.Domain.Models.Expenses
             return this;
         }
 
-        public Expense ChangeTotalCost(int isntallmentsCoint)
+        public Expense ChangeTotalCost(int installmentsCount)
         {
-            InstallmentsCount = isntallmentsCoint;
+            InstallmentsCount = installmentsCount;
 
             return this;
         }
@@ -53,7 +53,7 @@ namespace Expenses.Domain.Models.Expenses
 
                 expenseItem.UpdateFrom(item);
             }
-            
+
             return this;
         }
 
