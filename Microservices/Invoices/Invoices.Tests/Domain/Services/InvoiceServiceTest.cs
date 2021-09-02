@@ -5,6 +5,7 @@ using Invoices.Domain.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Invoices.Tests.Domain.Services
@@ -215,9 +216,13 @@ namespace Invoices.Tests.Domain.Services
         public void Should_return_the_correct_range_date_when_a_base_date_and_a_installment_count_are_provided(
         string baseDateString, string startDateString, string endDateString, int installmentsCount)
         {
-            DateTime.TryParse(baseDateString, out DateTime baseDate);
-            DateTime.TryParse(startDateString, out DateTime startDate);
-            DateTime.TryParse(endDateString, out DateTime endDate);
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var startDate = DateTime.ParseExact(startDateString, dateFormat, ptbr);
+            var endDate = DateTime.ParseExact(endDateString, dateFormat, ptbr);
 
             var (invoiceStartDate, invoiceEndDate) = _invoiceService.GetInvoiceRangeByInstallments(installmentsCount, baseDate);
 
