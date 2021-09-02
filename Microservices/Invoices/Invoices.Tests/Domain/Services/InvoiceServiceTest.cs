@@ -105,7 +105,7 @@ namespace Invoices.Tests.Domain.Services
             {
                 Id = Guid.NewGuid().ToString(),
             };
-            
+
             existentInvoice.AddNew(new InvoiceItem(1, 100));
 
             var existentInvoices = new List<Invoice>() { existentInvoice };
@@ -178,12 +178,51 @@ namespace Invoices.Tests.Domain.Services
 
             invoices.First().TotalCost.Should().Be(33.33m);
             invoices.First().Items.First().InstallmentCost.Should().Be(33.33m);
-            
+
             invoices[1].TotalCost.Should().Be(33.33m);
             invoices[1].Items.First().InstallmentCost.Should().Be(33.33m);
 
             invoices.Last().TotalCost.Should().Be(33.34m, because: "Adding the rest of the expense cost");
             invoices.Last().Items.First().InstallmentCost.Should().Be(33.34m, because: "Adding the rest of the expense cost");
+        }
+
+        [TestMethod]
+        [DataRow(2021, 9, 1, 2021, 9, 30)]
+        [DataRow(2021, 9, 15, 2021, 9, 30)]
+        [DataRow(2021, 9, 30, 2021, 9, 30)]
+        [DataRow(2021, 10, 30, 2021, 10, 31)]
+        public void Should_find_the_correct_close_date_by_a_base_date(
+            int baseYear, int baseMonth, int baseDay
+          , int closeYear, int closeMonth, int closeDay)
+        {
+            var baseDate = new DateTime(baseYear, baseMonth, baseDay);
+
+            _expense.InstallmentsCount = 3;
+            _expense.TotalCost = 100;
+
+            var invoiceCloseDate = _invoiceService.GetInvoiceCloseDateBy(baseDate);
+
+            invoiceCloseDate.Year.Should().Be(closeYear);
+            invoiceCloseDate.Month.Should().Be(closeMonth);
+            invoiceCloseDate.Day.Should().Be(closeDay);
+        }
+
+        [TestMethod]
+        [DataRow("01/09/2021", "01/09/2021", "31/10/2021", 1)]
+        [DataRow("15/09/2021", "15/09/2021", "30/11/2021", 2)]
+        [DataRow("30/09/2021", "30/09/2021", "31/12/2021", 3)]
+        [DataRow("15/10/2021", "15/10/2021", "28/02/2022", 4)]
+        public void Should_return_the_correct_range_date_when_a_base_date_and_a_installment_count_are_provided(
+        string baseDateString, string startDateString, string endDateString, int installmentsCount)
+        {
+            DateTime.TryParse(baseDateString, out DateTime baseDate);
+            DateTime.TryParse(startDateString, out DateTime startDate);
+            DateTime.TryParse(endDateString, out DateTime endDate);
+
+            var (invoiceStartDate, invoiceEndDate) = _invoiceService.GetInvoiceRangeByInstallments(installmentsCount, baseDate);
+
+            invoiceStartDate.Should().BeSameDateAs(startDate);
+            invoiceEndDate.Should().BeSameDateAs(endDate);
         }
     }
 }

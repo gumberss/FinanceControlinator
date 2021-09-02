@@ -47,9 +47,11 @@ namespace Invoices.Application.AppServices
 
             if (registerExpenseResult.IsFailure) return registerExpenseResult.Error;
 
-            var currentInvoiceCloseDate = _invoiceService.GetCurrentInvoiceCloseDate();
+            var now = DateTime.Now;
 
-            var (invoiceStartSearchDate, lastInvoiceCloseDate) = _invoiceService.GetInvoiceRangeByInstallments(expense.InstallmentsCount);
+            var currentInvoiceCloseDate = _invoiceService.GetInvoiceCloseDateBy(now);
+
+            var (invoiceStartSearchDate, lastInvoiceCloseDate) = _invoiceService.GetInvoiceRangeByInstallments(expense.InstallmentsCount, now);
 
             var registeredInvoices =
                 await _invoiceRepository.GetAllAsync(x => x.Items,
