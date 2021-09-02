@@ -1,17 +1,14 @@
 ﻿using Invoices.Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Invoices.Domain.Services
 {
     public interface IInvoiceService
     {
-        DateTime GetCurrentInvoiceCloseDate();
+        DateTime GetInvoiceCloseDateBy(DateTime baseDate);
 
-        (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount);
+        (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount, DateTime baseDate);
 
         List<Invoice> RegisterExpense(
             Expense expense
@@ -22,29 +19,22 @@ namespace Invoices.Domain.Services
 
     public class InvoiceService : IInvoiceService
     {
-        public DateTime GetCurrentInvoiceCloseDate()
+        public DateTime GetInvoiceCloseDateBy(DateTime baseDate)
         {
-            var now = DateTime.Now;
+            var closeDay = DateTime.DaysInMonth(baseDate.Year, baseDate.Month);/*Todo: config - Close date*/
 
-            var closeDay = DateTime.DaysInMonth(now.Year, now.Month);/*Todo: config - Close date*/
+            var invoiceDate = new DateTime(baseDate.Year, baseDate.Month, closeDay);
 
-            var currentInvoiceDate = new DateTime(now.Year, now.Month, closeDay);
-
-            if (currentInvoiceDate >= now)
-            {
-                currentInvoiceDate.AddMonths(1);
-            }
-
-            return currentInvoiceDate;
+            return invoiceDate;
         }
 
-        public (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount)
+        public (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount, DateTime baseDate)
         {
-            var currentInvoiceCloseDate = GetCurrentInvoiceCloseDate();
+            var invoiceCloseDate = GetInvoiceCloseDateBy(baseDate);
 
-            var endDate = currentInvoiceCloseDate.AddMonths(installmentsCount);
+            var endDate = GetInvoiceCloseDateBy(invoiceCloseDate.AddMonths(installmentsCount));
 
-            var startDate = new DateTime(currentInvoiceCloseDate.Year, currentInvoiceCloseDate.Month, DateTime.Now.Day);
+            var startDate = new DateTime(invoiceCloseDate.Year, invoiceCloseDate.Month, baseDate.Day);
 
             return (startDate, endDate);
         }
