@@ -4,7 +4,10 @@ namespace FinanceControlinator.Tests.Categories.Enums
 {
     public enum TestMicroserviceEnum
     {
-        [Description("Invoice")]
-        Invoice
+        [Description("Invoices")]
+        Invoices,
+
+        [Description("Expenses")]
+        Expenses
     }
 }

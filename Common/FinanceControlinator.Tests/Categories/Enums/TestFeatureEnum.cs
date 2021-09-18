@@ -5,6 +5,9 @@ namespace FinanceControlinator.Tests.Categories.Enums
     public enum TestFeatureEnum
     {
         [Description("Invoice Generation")]
-        InvoiceGeneration
+        InvoiceGeneration,
+
+        [Description("Expense Generation")]
+        ExpenseGeneration
     }
 }

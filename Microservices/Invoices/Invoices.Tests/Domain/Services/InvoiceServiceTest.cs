@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using FinanceControlinator.Tests.Categories;
+using FinanceControlinator.Tests.Categories.Enums;
+using FluentAssertions;
 using Invoices.Domain.Enums;
 using Invoices.Domain.Models;
 using Invoices.Domain.Services;
@@ -40,6 +42,8 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_create_a_new_invoice_when_a_new_expense_was_informed()
         {
             _expense.InstallmentsCount = 1;
@@ -61,6 +65,8 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_create_two_new_invoices_when_the_informed_expense_was_buy_in_two_installments()
         {
             var existentInvoices = new List<Invoice>();
@@ -96,6 +102,8 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_add_the_expense_in_an_invoice_when_that_month_invoice_already_exists()
         {
             var purchaseDay = new DateTime(2021, 08, 05);
@@ -142,6 +150,8 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_create_a_new_invoice_when_the_month_invoice_already_exist_but_of_the_other_year()
         {
             var existentInvoiceDate = new DateTime(2004, 08, 05);
@@ -164,6 +174,8 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_put_the_rest_of_the_expense_cost_on_the_last_invoice()
         {
             _expense.InstallmentsCount = 3;
@@ -188,6 +200,8 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         [DataRow(2021, 9, 1, 2021, 9, 30)]
         [DataRow(2021, 9, 15, 2021, 9, 30)]
         [DataRow(2021, 9, 30, 2021, 9, 30)]
@@ -209,6 +223,8 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         [DataRow("01/09/2021", "01/09/2021", "31/10/2021", 1)]
         [DataRow("15/09/2021", "15/09/2021", "30/11/2021", 2)]
         [DataRow("30/09/2021", "30/09/2021", "31/12/2021", 3)]
