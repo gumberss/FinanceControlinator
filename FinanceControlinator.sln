@@ -73,6 +73,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accounts.Handler", "Microse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accounts.Tests", "Microservices\Accounts\Accounts.Tests\Accounts.Tests.csproj", "{E591E208-95DF-4E56-A946-9611DCB4FC82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceControlinator.Tests", "Common\FinanceControlinator.Tests\FinanceControlinator.Tests.csproj", "{366A474D-4B62-4399-A8B5-8709E204F2B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +197,10 @@ Global
 		{E591E208-95DF-4E56-A946-9611DCB4FC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E591E208-95DF-4E56-A946-9611DCB4FC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E591E208-95DF-4E56-A946-9611DCB4FC82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{366A474D-4B62-4399-A8B5-8709E204F2B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{366A474D-4B62-4399-A8B5-8709E204F2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{366A474D-4B62-4399-A8B5-8709E204F2B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{366A474D-4B62-4399-A8B5-8709E204F2B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,6 +239,7 @@ Global
 		{4B38D347-01A1-44A1-808D-2EF85B418C61} = {7E3AEDE1-2DF1-42C6-8DB3-BD85F8C85F20}
 		{4494DDF2-752F-4B60-A359-B1BBC893727B} = {7E3AEDE1-2DF1-42C6-8DB3-BD85F8C85F20}
 		{E591E208-95DF-4E56-A946-9611DCB4FC82} = {7E3AEDE1-2DF1-42C6-8DB3-BD85F8C85F20}
+		{366A474D-4B62-4399-A8B5-8709E204F2B5} = {7900280F-9520-44D5-B441-98146CDBEBC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB162E36-E524-4A3F-AD2D-FE4E554E814C}

@@ -1,4 +1,6 @@
 ﻿using FinanceControlinator.Common.Utils;
+using FinanceControlinator.Tests.Categories;
+using FinanceControlinator.Tests.Categories.Enums;
 using FluentAssertions;
 using Invoices.Application.AppServices;
 using Invoices.Application.Interfaces.AppServices;
@@ -26,7 +28,8 @@ namespace Invoices.Tests.Application.AppServices
         private IInvoiceRepository invoiceServiceMock;
 
         [TestMethod]
-        [TestCategory("Integration")]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [IntegrationTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.ExpenseGeneration)]
         public async Task Should_found_registered_invoices_when_first_invoice_date_is_in_current_year_and_last_invoice_date_is_in_the_next()
         {
             var closeDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
