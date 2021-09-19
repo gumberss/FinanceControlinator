@@ -30,6 +30,8 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
         {
             var changedInvoices = await _invoiceAppService.RegisterPaid(request.Invoice);
 
+            if (changedInvoices.IsFailure) return changedInvoices.Error;
+
             var saveResult = await Result.Try(_expenseDbContext.Commit());
 
             if (saveResult.IsFailure) return saveResult.Error;

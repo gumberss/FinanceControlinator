@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PiggyBanks.Data\PiggyBanks.Data.csproj" />
+    <ProjectReference Include="..\PiggyBanks.Domain\PiggyBanks.Domain.csproj" />
+    <ProjectReference Include="..\PiggyBanks.Domain\PiggyBanks.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

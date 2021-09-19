@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Expenses.Domain.Models
 {
-    public class Expense : Entity
+    public class Expense : Entity<Guid>
     {
         public String Title { get; set; }
 

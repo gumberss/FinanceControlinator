@@ -1,5 +1,5 @@
-﻿
-namespace Expenses.Domain.Localizations
+
+namespace PiggyBanks.Domain.Localizations
 {
     public class Ptbr : ILocalization
     {

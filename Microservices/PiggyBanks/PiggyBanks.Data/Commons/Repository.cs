@@ -1,4 +1,4 @@
-﻿using FinanceControlinator.Common.Entities;
+using FinanceControlinator.Common.Entities;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Repositories;
 using FinanceControlinator.Common.Utils;
@@ -10,11 +10,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Expenses.Data.Commons
+namespace PiggyBanks.Data.Commons
 {
     public class Repository<TEntity, TContext, TEntityId> : IRepository<TEntity, TEntityId>
-         where TEntity : class, IEntity<TEntityId>
-         where TContext : DbContext
+          where TEntity : class, IEntity<TEntityId>
+          where TContext : DbContext
     {
         private readonly TContext _context;
         protected readonly DbSet<TEntity> _dbSet;
