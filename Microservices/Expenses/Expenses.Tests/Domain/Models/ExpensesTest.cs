@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace Expenses.Tests.Domain
+namespace Expenses.Tests.Domain.Models
 {
     [TestClass]
     public class ExpensesTest

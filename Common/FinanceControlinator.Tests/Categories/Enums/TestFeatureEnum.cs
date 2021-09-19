@@ -8,6 +8,9 @@ namespace FinanceControlinator.Tests.Categories.Enums
         InvoiceGeneration,
 
         [Description("Expense Generation")]
-        ExpenseGeneration
+        ExpenseGeneration,
+
+        [Description("Expense Update")]
+        ExpenseUpdate
     }
 }
