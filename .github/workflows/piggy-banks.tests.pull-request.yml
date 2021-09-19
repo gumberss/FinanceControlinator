@@ -1,0 +1,25 @@
+name: Run PiggyBanks Tests
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+    - 'Microservices/PiggyBanks/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:expenses.tests.pull-request.yml
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore Microservices/PiggyBanks/PiggyBanks.Tests/PiggyBanks.Tests.csproj
+    - name: Build
+      run: dotnet build Microservices/PiggyBanks/PiggyBanks.Tests/PiggyBanks.Tests.csproj --no-restore
+    - name: Test
+      run: dotnet test Microservices/PiggyBanks/PiggyBanks.Tests/PiggyBanks.Tests.csproj --no-build --verbosity normal
