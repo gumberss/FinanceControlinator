@@ -1,5 +1,4 @@
-﻿using FinanceControlinator.Common.Localizations;
-
+﻿
 namespace Expenses.Domain.Localizations
 {
     public class Ptbr : ILocalization

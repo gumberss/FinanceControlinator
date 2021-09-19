@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Expenses.Data.Commons
 {
-    public class Repository<TEntity, TContext> : IRepository<TEntity>
-           where TEntity : class, IEntity
-           where TContext : DbContext
+    public class Repository<TEntity, TContext, TEntityId> : IRepository<TEntity, TEntityId>
+         where TEntity : class, IEntity<TEntityId>
+         where TContext : DbContext
     {
         private readonly TContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet;
 
         public Repository(TContext context)
         {
@@ -40,17 +40,38 @@ namespace Expenses.Data.Commons
             return entity;
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
+        public async Task<Result<IEnumerable<TEntity>, BusinessException>> AddAsync(IEnumerable<TEntity> entities)
+        {
+            var result = await Result.Try(_dbSet.AddRangeAsync(entities));
+
+            if (result.IsFailure) return result.Error;
+
+            return Result.From(entities);
+        }
+
+        public async Task<Result<bool, BusinessException>> DeleteAsync(TEntity entity)
+        {
+            var result = await Result.Try(() => _dbSet.Remove(entity));
+
+            if (result.IsFailure)
+            {
+                return result.Error;
+            }
+
+            return true;
+        }
+
+        public async Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntity> entities)
+        {
+            return await Result.Try(() => _dbSet.RemoveRange(entities));
+        }
+
+        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntityId> ids)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<bool, BusinessException>> DeleteAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<Guid> ids)
+        public Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
         {
             throw new NotImplementedException();
         }
@@ -79,11 +100,22 @@ namespace Expenses.Data.Commons
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
             }
         }
-        public async Task<Result<List<TEntity>, BusinessException>> GetAllIncludeAsync(params Expression<Func<TEntity, bool>>[] where)
+
+        public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id, Expression<Func<TEntity, object>> include = null)
         {
             try
             {
-                return await _dbSet.ToListAsync();
+                IQueryable<TEntity> dbSet = _dbSet;
+
+                if (include is not null)
+                    dbSet = _dbSet.Include(include);
+
+                return await dbSet.FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -91,20 +123,16 @@ namespace Expenses.Data.Commons
             }
         }
 
-
-        public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
+        public async Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
-        }
+            var updateResult = await Result.Try(() => _dbSet.Update(entity));
 
-        public Task<Result<TEntity, BusinessException>> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+            if (updateResult.IsFailure)
+            {
+                return updateResult.Error;
+            }
 
-        public Task<Result<TEntity, BusinessException>> UpdateAsync(TEntity entity)
-        {
-            throw new NotImplementedException();
+            return entity;
         }
     }
 }
