@@ -51,5 +51,14 @@ services:
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "HereWeGoAgain"
+      SA_PASSWORD: "HereWeG0Again!"
+      ACCEPT_EULA: "Y"
+
+  piggybanksdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: piggybanks-db
+    ports:
+      - "1434:1433"
+    environment:
+      SA_PASSWORD: "LeaveMe@l0ne!"
       ACCEPT_EULA: "Y"
