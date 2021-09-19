@@ -1,7 +1,6 @@
 using PiggyBanks.Application.AppServices;
 using PiggyBanks.Application.Interfaces.AppServices;
 using PiggyBanks.Data.Repositories;
-using PiggyBanks.Domain.Interfaces.Validators;
 using PiggyBanks.Domain.Localizations;
 using PiggyBanks.Handler.Configurations;
 using PiggyBanks.Handler.Domain.Cqrs.Handlers;

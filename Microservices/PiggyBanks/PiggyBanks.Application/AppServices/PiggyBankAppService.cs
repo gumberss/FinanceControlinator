@@ -2,7 +2,6 @@ using PiggyBanks.Application.Interfaces.AppServices;
 using PiggyBanks.Data.Contexts;
 using PiggyBanks.Data.Interfaces.Contexts;
 using PiggyBanks.Data.Repositories;
-using PiggyBanks.Domain.Interfaces.Validators;
 using PiggyBanks.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
@@ -20,21 +19,18 @@ namespace PiggyBanks.Application.AppServices
     {
         private readonly IPiggyBankDbContext _piggyBankDbContext;
         private readonly IPiggyBankRepository _piggyBankRepository;
-        private readonly IPiggyBankValidator _piggyBankValidator;
         private readonly ILocalization _localization;
         private readonly ILogger<IPiggyBankAppService> _logger;
 
         public PiggyBankAppService(
                 PiggyBankDbContext piggyBankDbContext
                 , IPiggyBankRepository piggyBankRepository
-                , IPiggyBankValidator piggyBankValidator
                 , ILocalization localization
                 , ILogger<IPiggyBankAppService> logger
             )
         {
             _piggyBankDbContext = piggyBankDbContext;
             _piggyBankRepository = piggyBankRepository;
-            _piggyBankValidator = piggyBankValidator;
             _localization = localization;
             _logger = logger;
         }
