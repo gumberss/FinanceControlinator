@@ -14,29 +14,31 @@ namespace PiggyBanks.Data.Configurations
         public void Configure(EntityTypeBuilder<PiggyBank> builder)
         {
             builder.HasKey(b => b.Id);
+
             builder
                 .Property(x => x.Title)
                 .HasMaxLength(50)
                 .IsRequired();
 
             builder
-                .Property(x => x.Date)
+                .Property(x => x.GoalDate)
                 .IsRequired();
 
             builder
                 .Property(x => x.Description)
-                .HasMaxLength(250);
-
-            builder.Property(x => x.IsRecurrent);
-
-            builder
-                .Property(x => x.Location)
-                .HasMaxLength(50)
-                .IsRequired();
-
-            builder
-                .Property(x => x.Observation)
                 .HasMaxLength(500);
+
+            builder
+                .Property(x => x.GoalDate);
+
+            builder
+                .Property(x => x.GoalValue);
+
+            builder
+                .Property(x => x.SavedValue);
+
+            builder
+                .Property(x => x.StartDate);
 
             builder
                 .Property(x => x.Type);
