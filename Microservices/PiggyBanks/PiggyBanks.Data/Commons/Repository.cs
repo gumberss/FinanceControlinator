@@ -78,7 +78,7 @@ namespace PiggyBanks.Data.Commons
 
         public async Task<Result<List<TEntity>, BusinessException>> GetAllAsync(Expression<Func<TEntity, object>> include = null, params Expression<Func<TEntity, bool>>[] where)
         {
-            try
+            return await Result.Try(async () =>
             {
                 IQueryable<TEntity> dbSet = _dbSet;
 
@@ -94,11 +94,7 @@ namespace PiggyBanks.Data.Commons
                     dbSet = dbSet.Include(include);
 
                 return await dbSet.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
-            }
+            });
         }
 
         public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)

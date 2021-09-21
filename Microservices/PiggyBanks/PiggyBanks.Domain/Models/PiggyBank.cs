@@ -10,17 +10,14 @@ namespace PiggyBanks.Domain.Models
 
         public String Description { get; set; }
 
-        public DateTime Date { get; set; }
-
         public PiggyBankType Type { get; set; }
 
-        public bool IsRecurrent { get; set; } 
+        public DateTime GoalDate { get; set; }
+        
+        public decimal GoalValue { get; set; }
 
-        public String Location { get; set; }
+        public decimal SavedValue { get; set; }
 
-        public String Observation { get; set; }
-
-        public decimal TotalCost { get; set; }
-
+        public DateTime StartDate { get; set; }
     }
 }

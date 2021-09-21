@@ -30,19 +30,8 @@ namespace PiggyBanks.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return From(await _mediator.Send(new GetAllPiggyBanksQuery ()));
+            return From(await _mediator.Send(new GetAllPiggyBanksQuery()));
         }
 
-        [HttpGet("Month")]
-        public async Task<IActionResult> GetMonth()
-        {
-            return From(await _mediator.Send(new GetMonthPiggyBanksQuery()));
-        }
-
-        [HttpGet("LastMonth")]
-        public async Task<IActionResult> GetLastMonth()
-        {
-            return From(await _mediator.Send(new GetLastMonthPiggyBanksQuery()));
-        }
     }
 }

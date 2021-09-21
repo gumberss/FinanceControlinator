@@ -16,8 +16,6 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
     public class PiggyBankHandler
         : IRequestHandler<RegisterPiggyBankCommand, Result<PiggyBank, BusinessException>>
         , IRequestHandler<GetAllPiggyBanksQuery, Result<List<PiggyBank>, BusinessException>>
-        , IRequestHandler<GetMonthPiggyBanksQuery, Result<List<PiggyBank>, BusinessException>>
-        , IRequestHandler<GetLastMonthPiggyBanksQuery, Result<List<PiggyBank>, BusinessException>>
     {
         private readonly IPiggyBankAppService _piggyBankAppService;
         private readonly ILogger<PiggyBankHandler> _logger;
@@ -49,16 +47,6 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
         public async Task<Result<List<PiggyBank>, BusinessException>> Handle(GetAllPiggyBanksQuery request, CancellationToken cancellationToken)
         {
             return await _piggyBankAppService.GetAllPiggyBanks();
-        }
-
-        public async Task<Result<List<PiggyBank>, BusinessException>> Handle(GetMonthPiggyBanksQuery request, CancellationToken cancellationToken)
-        {
-            return await _piggyBankAppService.GetMonthPiggyBanks();
-        }
-
-        public async Task<Result<List<PiggyBank>, BusinessException>> Handle(GetLastMonthPiggyBanksQuery request, CancellationToken cancellationToken)
-        {
-            return await _piggyBankAppService.GetLastMonthPiggyBanks();
         }
     }
 }
