@@ -66,6 +66,23 @@ namespace FinanceControlinator.Common.Utils
             return await Task.Run(() => tryFunction.Invoke());
         }
 
+        public static async Task<Result<T, BusinessException>> Try<T>(Func<Task<T>> func)
+        {
+            Func<Task<Result<T, BusinessException>>> tryFunction = async () =>
+            {
+                try
+                {
+                    return await func();
+                }
+                catch (Exception ex)
+                {
+                    return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
+                }
+            };
+
+            return await Task.Run(() => tryFunction.Invoke());
+        }
+
         public static async Task<Result<T, BusinessException>> Try<T>(Func<T> func)
         {
             Func<Result<T, BusinessException>> tryFunction = () =>

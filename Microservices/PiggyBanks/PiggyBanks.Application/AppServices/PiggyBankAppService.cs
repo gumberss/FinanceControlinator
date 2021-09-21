@@ -36,17 +36,7 @@ namespace PiggyBanks.Application.AppServices
 
         public async Task<Result<List<PiggyBank>, BusinessException>> GetAllPiggyBanks()
         {
-            return Result.From(null as List<PiggyBank>);
-        }
-        
-        public async Task<Result<List<PiggyBank>, BusinessException>> GetMonthPiggyBanks()
-        {
-            return Result.From(null as List<PiggyBank>);
-        }
-
-        public async Task<Result<List<PiggyBank>, BusinessException>> GetLastMonthPiggyBanks()
-        {
-            return Result.From(null as List<PiggyBank>);
+            return await _piggyBankRepository.GetAllAsync();
         }
 
         public async Task<Result<PiggyBank, BusinessException>> RegisterPiggyBank(PiggyBank piggyBank)
