@@ -7,6 +7,7 @@ using System.Linq;
 using FinanceControlinator.Common.Utils;
 using FinanceControlinator.Common.Exceptions;
 using System.Threading.Tasks;
+using PiggyBanks.Data.Interfaces.Contexts;
 
 namespace PiggyBanks.Data.Repositories
 {
@@ -17,7 +18,7 @@ namespace PiggyBanks.Data.Repositories
 
     public class PiggyBankRepository : Repository<PiggyBank, PiggyBankDbContext, Guid>, IPiggyBankRepository
     {
-        public PiggyBankRepository(PiggyBankDbContext context) : base(context)
+        public PiggyBankRepository(IPiggyBankDbContext context) : base(context as PiggyBankDbContext)
         {
             
         }
