@@ -60,11 +60,7 @@ namespace PiggyBanks.Application.AppServices
             if (existsByTitle)
                 return new BusinessException(HttpStatusCode.BadRequest, _localization.PIGGY_BANK_ALREADY_EXISTS_BY_TITLE);
 
-            var addResult = await _piggyBankRepository.AddAsync(piggyBank);
-
-            if (addResult.IsFailure) return addResult.Error;
-
-            return addResult;
+            return  await _piggyBankRepository.AddAsync(piggyBank);
         }
     }
 }
