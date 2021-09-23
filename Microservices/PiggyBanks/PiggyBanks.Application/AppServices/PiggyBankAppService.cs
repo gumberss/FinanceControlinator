@@ -11,27 +11,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PiggyBanks.Domain.Localizations;
+using System.Net;
+using PiggyBanks.Domain.Interfaces.Validators;
 
 namespace PiggyBanks.Application.AppServices
 {
     public class PiggyBankAppService : IPiggyBankAppService
     {
-        private readonly IPiggyBankDbContext _piggyBankDbContext;
         private readonly IPiggyBankRepository _piggyBankRepository;
         private readonly ILocalization _localization;
         private readonly ILogger<IPiggyBankAppService> _logger;
+        private readonly IPiggyBankValidator _piggyBankValidator;
 
         public PiggyBankAppService(
-                PiggyBankDbContext piggyBankDbContext
-                , IPiggyBankRepository piggyBankRepository
+                IPiggyBankRepository piggyBankRepository
                 , ILocalization localization
                 , ILogger<IPiggyBankAppService> logger
+                , IPiggyBankValidator piggyBankValidator
             )
         {
-            _piggyBankDbContext = piggyBankDbContext;
             _piggyBankRepository = piggyBankRepository;
             _localization = localization;
             _logger = logger;
+            _piggyBankValidator = piggyBankValidator;
         }
 
         public async Task<Result<List<PiggyBank>, BusinessException>> GetAllPiggyBanks()
@@ -41,7 +43,28 @@ namespace PiggyBanks.Application.AppServices
 
         public async Task<Result<PiggyBank, BusinessException>> RegisterPiggyBank(PiggyBank piggyBank)
         {
-            return Result.From(null as PiggyBank);
+            var validationResult = await _piggyBankValidator.ValidateAsync(piggyBank);
+
+            if (!validationResult.IsValid)
+            {
+                var errorDatas = validationResult.Errors.Select(x => new ErrorData(x.ErrorMessage, x.PropertyName));
+                var exception = new BusinessException(HttpStatusCode.BadRequest, errorDatas);
+                _logger.LogInformation(exception.Log());
+                return exception;
+            }
+
+            var existsByTitle = await _piggyBankRepository.ExistsPiggyBankByTitle(piggyBank.Title);
+
+            if (existsByTitle.IsFailure) return existsByTitle.Error;
+
+            if (existsByTitle)
+                return new BusinessException(HttpStatusCode.BadRequest, _localization.PIGGY_BANK_ALREADY_EXISTS_BY_TITLE);
+
+            var addResult = await _piggyBankRepository.AddAsync(piggyBank);
+
+            if (addResult.IsFailure) return addResult.Error;
+
+            return addResult;
         }
     }
 }

@@ -9,12 +9,14 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FinanceControlinator.Common.Utils;
+using FinanceControlinator.Common.Exceptions;
 
 namespace PiggyBanks.Data.Contexts
 {
     public class PiggyBankDbContext : DbContext, IPiggyBankDbContext
     {
-        
+
         public PiggyBankDbContext(DbContextOptions options) : base(options)
         {
             ChangeTracker.LazyLoadingEnabled = false;
@@ -42,7 +44,7 @@ namespace PiggyBanks.Data.Contexts
         }
         public override EntityEntry<TEntity> Add<TEntity>(TEntity entity)
         {
-            if(entity is IEntity<Guid> theEntity)
+            if (entity is IEntity<Guid> theEntity)
             {
                 theEntity.CreatedDate = DateTime.Now;
             }
@@ -60,30 +62,33 @@ namespace PiggyBanks.Data.Contexts
             return base.Update(entity);
         }
 
-        public async Task<int> Commit()
+        public async Task<Result<int, BusinessException>> Commit()
         {
-            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("InsertDate") != null))
+            return await Result.Try(async () =>
             {
-                if (item.State == EntityState.Added)
+                foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("InsertDate") != null))
                 {
-                    item.Property("InsertDate").CurrentValue = DateTime.Now;
+                    if (item.State == EntityState.Added)
+                    {
+                        item.Property("InsertDate").CurrentValue = DateTime.Now;
+                    }
+
+                    if (item.State == EntityState.Modified)
+                    {
+                        item.Property("InsertDate").IsModified = false;
+                    }
                 }
 
-                if (item.State == EntityState.Modified)
+                foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("UpdateDate") != null))
                 {
-                    item.Property("InsertDate").IsModified = false;
+                    if (item.State == EntityState.Modified)
+                    {
+                        item.Property("UpdateDate").CurrentValue = DateTime.Now;
+                    }
                 }
-            }
 
-            foreach (var item in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("UpdateDate") != null))
-            {
-                if (item.State == EntityState.Modified)
-                {
-                    item.Property("UpdateDate").CurrentValue = DateTime.Now;
-                }
-            }
-
-            return await base.SaveChangesAsync();
+                return await base.SaveChangesAsync();
+            });
         }
     }
 }

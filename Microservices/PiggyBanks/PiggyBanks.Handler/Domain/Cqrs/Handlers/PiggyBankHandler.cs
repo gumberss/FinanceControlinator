@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PiggyBanks.Data.Interfaces.Contexts;
 
 namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
 {
@@ -18,30 +19,28 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
         , IRequestHandler<GetAllPiggyBanksQuery, Result<List<PiggyBank>, BusinessException>>
     {
         private readonly IPiggyBankAppService _piggyBankAppService;
-        private readonly ILogger<PiggyBankHandler> _logger;
-        private readonly IBus _bus;
-        private readonly IMapper _mapper;
+        private readonly IPiggyBankDbContext _piggyBankDbContext;
 
         public PiggyBankHandler(
             IPiggyBankAppService piggyBankAppService
             , ILogger<PiggyBankHandler> logger
-            , IBus bus,
-            IMapper mapper)
+            , IPiggyBankDbContext piggyBankDbContext)
         {
             _piggyBankAppService = piggyBankAppService;
-            _logger = logger;
-            _bus = bus;
-            _mapper = mapper;
+            _piggyBankDbContext = piggyBankDbContext;
         }
 
         public async Task<Result<PiggyBank, BusinessException>> Handle(RegisterPiggyBankCommand request, CancellationToken cancellationToken)
         {
-            using (_logger.BeginScope(this.GetType().Name))
-            {
-                var result = await _piggyBankAppService.RegisterPiggyBank(request.PiggyBank);
+            var registerResult = await _piggyBankAppService.RegisterPiggyBank(request.PiggyBank);
 
-                return result;
-            }
+            if (registerResult.IsFailure) return registerResult.Error;
+
+            var saveResult = await _piggyBankDbContext.Commit();
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return registerResult;
         }
 
         public async Task<Result<List<PiggyBank>, BusinessException>> Handle(GetAllPiggyBanksQuery request, CancellationToken cancellationToken)

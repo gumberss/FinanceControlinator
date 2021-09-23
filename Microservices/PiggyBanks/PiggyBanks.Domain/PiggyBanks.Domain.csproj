@@ -12,9 +12,4 @@
     <ProjectReference Include="..\..\..\Common\FinanceControlinator.Common\FinanceControlinator.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\Validators\" />
-    <Folder Include="Validators\" />
-  </ItemGroup>
-
 </Project>
