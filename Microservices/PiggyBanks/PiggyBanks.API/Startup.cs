@@ -79,6 +79,9 @@ namespace PiggyBanks.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<TransactionMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
