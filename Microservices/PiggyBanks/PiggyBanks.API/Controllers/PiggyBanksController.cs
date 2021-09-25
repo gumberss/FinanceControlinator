@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using MassTransit;
+using AutoMapper;
+using FinanceControlinator.Events.PiggyBanks;
 
 namespace PiggyBanks.API.Controllers
 {
@@ -16,16 +18,19 @@ namespace PiggyBanks.API.Controllers
         private readonly ILogger<PiggyBanksController> _logger;
         private readonly IMediator _mediator;
         private readonly IBus _bus;
+        private readonly IMapper _mapper;
 
         public PiggyBanksController(
             ILogger<PiggyBanksController> logger, 
             IMediator mediator,
-            IBus bus
+            IBus bus,
+            IMapper mapper
             )
         {
             _logger = logger;
             _mediator = mediator;
             _bus = bus;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -36,7 +41,9 @@ namespace PiggyBanks.API.Controllers
             if (registerCommand.IsFailure)  
                 return From(registerCommand);
 
-            //_bus.Publish(new PiggyBankCreatedEvent);
+            var @event = _mapper.Map<PiggyBank, PiggyBankCreatedEvent>(registerCommand.Value);
+
+            await _bus.Publish(@event);
 
             return From(registerCommand);
         }

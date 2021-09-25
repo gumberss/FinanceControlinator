@@ -5,9 +5,9 @@ using PiggyBanks.Handler.Domain.Cqrs.Events;
 
 namespace PiggyBanks.Handler.Configurations.Profiles
 {
-    public class PiggyBankProfile : Profile
+    public class PiggyBankHandlerProfile : Profile
     {
-        public PiggyBankProfile()
+        public PiggyBankHandlerProfile()
         {
             CreateMap<SaveMoneyEvent, SaveMoneyCommand>();
 
