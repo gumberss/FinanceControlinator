@@ -73,16 +73,17 @@ namespace PiggyBanks.Application.AppServices
 
             if (defaultPiggyBank is null)
             {
-                defaultPiggyBank = new PiggyBank().AsDefault();
+                defaultPiggyBank = new PiggyBank()
+                    .AsDefault()
+                    .AddMoney(value);
 
-                var addResult = await _piggyBankRepository.AddAsync(defaultPiggyBank);
-
-                if (addResult.IsFailure) return addResult.Error;
+                return await _piggyBankRepository.AddAsync(defaultPiggyBank);
             }
-
-            defaultPiggyBank.AddMoney(value);
-
-            return await _piggyBankRepository.UpdateAsync(defaultPiggyBank);
+            else
+            {
+                defaultPiggyBank.AddMoney(value);
+                return await _piggyBankRepository.UpdateAsync(defaultPiggyBank);
+            }
         }
     }
 }

@@ -51,11 +51,15 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<PiggyBank, BusinessException>> Handle(SaveMoneyCommand request, CancellationToken cancellationToken)
         {
-            var result = await _piggyBankAppService.Save(request.Value);
-            
-            return result
-                .Then(async () => await _piggyBankDbContext.Commit())
-                .Otherwise(() => result.Error);
+            var result = await _piggyBankAppService.Save(request.Amount);
+
+            if (result.IsFailure) return result.Error;
+
+            var saveResult = await _piggyBankDbContext.Commit();
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return result;
         }
     }
 }

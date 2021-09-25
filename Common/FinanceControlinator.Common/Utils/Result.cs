@@ -34,34 +34,6 @@ namespace FinanceControlinator.Common.Utils
             _error = error;
         }
 
-        public Result<T, E> Then(Action action)
-        {
-            if (IsSuccess) action();
-
-            return this;
-        }
-
-        public Result<T, E> Then(Func<Result<T,E>> function)
-        {
-            if (IsSuccess) return function();
-
-            return this;
-        }
-
-        public Result<T, E> Otherwise(Func<Result<T, E>> function)
-        {
-            if (IsFailure) return function();
-
-            return this;
-        }
-
-        public Result<T, E> Otherwise(Action action)
-        {
-            if (IsFailure) action();
-
-            return this;
-        }
-
         public static implicit operator Result<T, E>(T value)
             => new Result<T, E>(value);
 
