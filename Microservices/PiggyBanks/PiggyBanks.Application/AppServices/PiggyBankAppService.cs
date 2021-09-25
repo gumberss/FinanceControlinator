@@ -62,5 +62,27 @@ namespace PiggyBanks.Application.AppServices
 
             return  await _piggyBankRepository.AddAsync(piggyBank);
         }
+
+        public async Task<Result<PiggyBank, BusinessException>> Save(decimal value)
+        {
+            var defaultPiggyBankResult =await _piggyBankRepository.GetAsync(where: x => x.Default);
+
+            if (defaultPiggyBankResult.IsFailure) return defaultPiggyBankResult.Error;
+
+            var defaultPiggyBank= defaultPiggyBankResult.Value;
+
+            if (defaultPiggyBank is null)
+            {
+                defaultPiggyBank = new PiggyBank().AsDefault();
+
+                var addResult = await _piggyBankRepository.AddAsync(defaultPiggyBank);
+
+                if (addResult.IsFailure) return addResult.Error;
+            }
+
+            defaultPiggyBank.AddMoney(value);
+
+            return await _piggyBankRepository.UpdateAsync(defaultPiggyBank);
+        }
     }
 }

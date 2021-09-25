@@ -15,8 +15,9 @@ using PiggyBanks.Data.Interfaces.Contexts;
 namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
 {
     public class PiggyBankHandler
-        : IRequestHandler<RegisterPiggyBankCommand, Result<PiggyBank, BusinessException>>
-        , IRequestHandler<GetAllPiggyBanksQuery, Result<List<PiggyBank>, BusinessException>>
+        : IRequestHandler<GetAllPiggyBanksQuery, Result<List<PiggyBank>, BusinessException>>
+        , IRequestHandler<RegisterPiggyBankCommand, Result<PiggyBank, BusinessException>>
+        , IRequestHandler<SaveMoneyCommand, Result<PiggyBank, BusinessException>>
     {
         private readonly IPiggyBankAppService _piggyBankAppService;
         private readonly IPiggyBankDbContext _piggyBankDbContext;
@@ -46,6 +47,15 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
         public async Task<Result<List<PiggyBank>, BusinessException>> Handle(GetAllPiggyBanksQuery request, CancellationToken cancellationToken)
         {
             return await _piggyBankAppService.GetAllPiggyBanks();
+        }
+
+        public async Task<Result<PiggyBank, BusinessException>> Handle(SaveMoneyCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _piggyBankAppService.Save(request.Value);
+            
+            return result
+                .Then(async () => await _piggyBankDbContext.Commit())
+                .Otherwise(() => result.Error);
         }
     }
 }

@@ -21,5 +21,21 @@ namespace PiggyBanks.Domain.Models
         public DateTime StartDate { get; set; }
 
         public bool Default { get; set; }
+
+        public PiggyBank AsDefault()
+        {
+            Default = true;
+            Title = "Default";
+            Type = PiggyBankType.Other;
+
+            return this;
+        }
+
+        public PiggyBank AddMoney(decimal value)
+        {
+            SavedValue += value;
+
+            return this;
+        }
     }
 }

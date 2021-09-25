@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PiggyBanks.Data.Interfaces.Contexts;
 
 namespace PiggyBanks.API.Commons
 {
@@ -17,7 +18,7 @@ namespace PiggyBanks.API.Commons
 
             using (var scope = serviceScopeFactory.CreateScope())
             {
-                using (var context = (PiggyBankDbContext)scope.ServiceProvider.GetService(typeof(PiggyBankDbContext)))
+                using (var context = (PiggyBankDbContext)scope.ServiceProvider.GetService(typeof(IPiggyBankDbContext)))
                 {
                     var needMigration = (await context.Database.GetPendingMigrationsAsync()).Any();
 
