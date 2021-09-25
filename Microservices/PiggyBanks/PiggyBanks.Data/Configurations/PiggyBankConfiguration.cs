@@ -49,6 +49,9 @@ namespace PiggyBanks.Data.Configurations
 
             builder
                 .Property(x => x.UpdatedDate);
+
+            builder
+                .Property(x => x.Default);
         }
     }
 }

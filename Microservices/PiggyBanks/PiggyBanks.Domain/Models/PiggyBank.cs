@@ -19,5 +19,7 @@ namespace PiggyBanks.Domain.Models
         public decimal SavedValue { get; set; }
 
         public DateTime StartDate { get; set; }
+
+        public bool Default { get; set; }
     }
 }
