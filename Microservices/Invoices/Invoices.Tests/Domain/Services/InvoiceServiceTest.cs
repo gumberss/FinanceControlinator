@@ -240,10 +240,103 @@ namespace Invoices.Tests.Domain.Services
             var startDate = DateTime.ParseExact(startDateString, dateFormat, ptbr);
             var endDate = DateTime.ParseExact(endDateString, dateFormat, ptbr);
 
-            var (invoiceStartDate, invoiceEndDate) = _invoiceService.GetInvoiceRangeByInstallments(installmentsCount, baseDate);
+            var (invoiceStartDate, invoiceEndDate) = _invoiceService.GetInvoiceDateRangeByInstallments(installmentsCount, baseDate);
 
             invoiceStartDate.Should().BeSameDateAs(startDate);
             invoiceEndDate.Should().BeSameDateAs(endDate);
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_maior_que_o_dia_da_data_inicial_de_meses_diferente()
+        {
+            var startDate = new DateTime(2021, 09, 10);
+            var endDate = new DateTime(2021, 12, 20);
+
+            var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
+
+            installments.Should().Be(3);
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_maior_que_o_dia_da_data_inicial_do_mesmo_mes()
+        {
+            var startDate = new DateTime(2021, 09, 20);
+            var endDate = new DateTime(2021, 09, 30);
+
+            var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
+
+            installments.Should().Be(1);
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_menor_que_o_dia_da_data_inicial_de_meses_diferente()
+        {
+            var startDate = new DateTime(2021, 09, 20);
+            var endDate = new DateTime(2021, 12, 10);
+
+            var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
+
+            installments.Should().Be(3);
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_menor_que_o_dia_da_data_inicial_do_mesmo_mes()
+        {
+            var startDate = new DateTime(2021, 09, 10);
+            var endDate = new DateTime(2021, 09, 20);
+
+            var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
+
+            installments.Should().Be(0);
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        [DataRow("10/09/2021", "09/09/2021")]
+        [DataRow("10/10/2021", "11/09/2021")]
+        [DataRow("10/10/2021", "11/11/2020")]
+        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_a_data_final_for_menor_que_a_data_inicial
+            (String startDateString, String endDateString)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var startDate = DateTime.ParseExact(startDateString, dateFormat, ptbr);
+            var endDate = DateTime.ParseExact(endDateString, dateFormat, ptbr);
+
+            var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
+
+            installments.Should().Be(0);
+        }
+
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        [DataRow("10/10/2020", "11/11/2021")]
+        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_a_data_final_for_menor_que_a_data_inicial22222222
+          (String startDateString, String endDateString)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var startDate = DateTime.ParseExact(startDateString, dateFormat, ptbr);
+            var endDate = DateTime.ParseExact(endDateString, dateFormat, ptbr);
+
+            var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
+
+            installments.Should().Be(13);
         }
     }
 }

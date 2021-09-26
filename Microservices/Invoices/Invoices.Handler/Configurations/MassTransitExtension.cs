@@ -13,6 +13,7 @@ namespace Invoices.Handler.Configurations
            {
                x.AddConsumer<InvoicesIntegrationHandler>();
                x.AddConsumer<InvoicesPaymentIntegrationHandler>();
+               x.AddConsumer<InvoicesPiggyBankIntegrationHandler>();
 
                x.SetKebabCaseEndpointNameFormatter();
 

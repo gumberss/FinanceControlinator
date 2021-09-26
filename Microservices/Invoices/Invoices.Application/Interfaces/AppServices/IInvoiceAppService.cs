@@ -3,12 +3,14 @@ using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Invoices.Domain.DTOs;
 
 namespace Invoices.Application.Interfaces.AppServices
 {
     public interface IInvoiceAppService
     {
         Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(Expense expense);
+        Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(InvoicePiggyBankDTO expense);
 
         Task<Result<List<Invoice>, BusinessException>> GetAllInvoices();
 
