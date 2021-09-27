@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using System.Threading.Tasks;
+using System;
+using System.Net;
 
 namespace Accounts.Application.AppServices
 {
@@ -20,9 +22,9 @@ namespace Accounts.Application.AppServices
         private readonly IAccountService _accountService;
 
         public AccountAppService(
-            IAccountRepository accountRepository, 
-            ILocalization localization, 
-            ILogger<IAccountAppService> logger, 
+            IAccountRepository accountRepository,
+            ILocalization localization,
+            ILogger<IAccountAppService> logger,
             IAccountService accountService)
         {
             _accountRepository = accountRepository;
@@ -54,6 +56,26 @@ namespace Accounts.Application.AppServices
 
             return new BusinessException(System.Net.HttpStatusCode.BadRequest
                 , new ErrorData(_localization.SOME_ACCOUNT_IS_NOT_ABLE_TO_PAY_THE_REQUESTED_AMOUNT));
+        }
+
+        public async Task<Result<Account, BusinessException>> Withdraw(Guid? accountId, decimal amount)
+        {
+            if (amount <= 0)
+                return new BusinessException(HttpStatusCode.BadRequest, "");
+
+            if (!accountId.HasValue)
+                return new BusinessException(HttpStatusCode.BadRequest, "");
+
+            var account = await _accountRepository.GetByIdAsync(accountId.Value.ToString());
+
+            if (account.IsFailure) return account.Error;
+
+            if (!account.Value.AbleToPay(amount))
+                return new BusinessException(HttpStatusCode.BadRequest, "");
+
+            account.Value.Withdraw(amount);
+
+            return account;
         }
     }
 }

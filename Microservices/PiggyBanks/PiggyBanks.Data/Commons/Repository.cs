@@ -97,9 +97,22 @@ namespace PiggyBanks.Data.Commons
             });
         }
 
-        public Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
+        public async Task<Result<TEntity, BusinessException>> GetAsync(params Expression<Func<TEntity, bool>>[] where)
         {
-            throw new NotImplementedException();
+            return await Result.Try(async () =>
+            {
+                IQueryable<TEntity> dbSet = _dbSet;
+
+                if (where is not null)
+                {
+                    foreach (var item in where)
+                    {
+                        dbSet = dbSet.Where(item);
+                    }
+                }
+
+                return await dbSet.FirstOrDefaultAsync();
+            });
         }
 
         public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id, Expression<Func<TEntity, object>> include = null)

@@ -8,6 +8,8 @@ using FinanceControlinator.Common.LogsBehaviors;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using PiggyBanks.Domain.Validators;
+using PiggyBanks.Domain.Interfaces.Validators;
 
 namespace PiggyBanks.API.Commons
 {
@@ -27,7 +29,8 @@ namespace PiggyBanks.API.Commons
 
             services.AddScoped<IPiggyBankAppService, PiggyBankAppService>();
             services.AddScoped<IPiggyBankRepository, PiggyBankRepository>();
-            services.AddTransient<IPiggyBankRepository, PiggyBankRepository>();
+            services.AddScoped<IPiggyBankValidator, PiggyBankValidator>();
+            
         }
     }
 }

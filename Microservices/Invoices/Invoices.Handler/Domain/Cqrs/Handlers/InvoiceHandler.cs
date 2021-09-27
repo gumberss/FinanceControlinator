@@ -20,6 +20,7 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         , IRequestHandler<GetLastMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
         , IRequestHandler<RegisterInvoicePaymentCommand, Result<Invoice, BusinessException>>
         , IRequestHandler<RegisterExpenseCommand, Result<List<Invoice>, BusinessException>>
+        
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly ILogger<InvoiceHandler> _logger;

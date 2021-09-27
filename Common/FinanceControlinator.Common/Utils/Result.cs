@@ -127,7 +127,7 @@ namespace FinanceControlinator.Common.Utils
             });
         }
 
-        public static Result<T, BusinessException> From<T> (T data)
+        public static Result<T, BusinessException> From<T>(T data)
         {
             return new Result<T, BusinessException>(data);
         }

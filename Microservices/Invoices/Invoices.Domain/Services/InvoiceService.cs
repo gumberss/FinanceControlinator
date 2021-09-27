@@ -8,13 +8,15 @@ namespace Invoices.Domain.Services
     {
         DateTime GetInvoiceCloseDateBy(DateTime baseDate);
 
-        (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount, DateTime baseDate);
+        (DateTime startDate, DateTime endDate) GetInvoiceDateRangeByInstallments(int installmentsCount, DateTime baseDate);
 
         List<Invoice> RegisterExpense(
             Expense expense
           , List<Invoice> existentInvoices
           , DateTime currentInvoiceDate
         );
+
+        int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate);
     }
 
     public class InvoiceService : IInvoiceService
@@ -28,7 +30,35 @@ namespace Invoices.Domain.Services
             return invoiceDate;
         }
 
-        public (DateTime startDate, DateTime endDate) GetInvoiceRangeByInstallments(int installmentsCount, DateTime baseDate)
+
+        public int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate)
+        {
+            return GetInvoiceInstallmentsByDateRange(startDate, endDate, 0);
+        }
+
+        private int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate, int monthCount)
+        {
+            if ((endDate - startDate).Days < 0) return 0;
+
+            var firstInvoiceCloseDate = startDate.AddMonths(monthCount);
+
+            var lastInvoiceCloseDate = GetInvoiceCloseDateBy(endDate);
+            
+            if(lastInvoiceCloseDate.Year > firstInvoiceCloseDate.Year
+                || lastInvoiceCloseDate.Month > firstInvoiceCloseDate.Month
+                )
+            {
+                return GetInvoiceInstallmentsByDateRange(startDate, endDate, monthCount + 1);
+            }
+
+            return
+                endDate.Day >= lastInvoiceCloseDate.Day 
+             && lastInvoiceCloseDate.Day > firstInvoiceCloseDate.Day 
+                ? monthCount + 1
+                : monthCount;
+        }
+
+        public (DateTime startDate, DateTime endDate) GetInvoiceDateRangeByInstallments(int installmentsCount, DateTime baseDate)
         {
             var invoiceCloseDate = GetInvoiceCloseDateBy(baseDate);
 

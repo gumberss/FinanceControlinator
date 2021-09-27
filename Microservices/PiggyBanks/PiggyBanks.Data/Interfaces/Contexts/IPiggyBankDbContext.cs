@@ -1,10 +1,11 @@
-using System.Threading;
+using FinanceControlinator.Common.Exceptions;
+using FinanceControlinator.Common.Utils;
 using System.Threading.Tasks;
 
 namespace PiggyBanks.Data.Interfaces.Contexts
 {
     public interface IPiggyBankDbContext
     {
-        Task<int> Commit();
+        Task<Result<int, BusinessException>> Commit();
     }
 }

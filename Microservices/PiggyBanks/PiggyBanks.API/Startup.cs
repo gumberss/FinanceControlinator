@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using PiggyBanks.Data.Interfaces.Contexts;
 
 namespace PiggyBanks.API
 {
@@ -39,7 +40,7 @@ namespace PiggyBanks.API
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
 
-            services.AddDbContext<PiggyBankDbContext>(options =>
+            services.AddDbContext<IPiggyBankDbContext, PiggyBankDbContext>(options =>
             {
                   options.UseSqlServer(Configuration.GetConnectionString("PiggyBanksDbConnection"));
             });
@@ -78,6 +79,9 @@ namespace PiggyBanks.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<TransactionMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

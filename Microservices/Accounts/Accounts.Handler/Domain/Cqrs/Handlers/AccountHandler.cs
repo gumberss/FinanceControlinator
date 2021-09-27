@@ -11,30 +11,33 @@ using System.Threading.Tasks;
 using System.Threading;
 using Accounts.Data.Repositories;
 using System.Collections.Generic;
+using System.Net;
+using System;
+using FinanceControlinator.Common.Messaging;
+using FinanceControlinator.Events.PiggyBanks;
 
 namespace Accounts.Handler.Domain.Cqrs.Handlers
 {
     public class AccountHandler
-         : IRequestHandler<AccountReceiveMoneyCommand, Result<Account, BusinessException>>
-          , IRequestHandler<AccountWithdrawMoneyCommand, Result<Account, BusinessException>>
-          , IRequestHandler<AccountDataQuery, Result<List<Account>, BusinessException>>
-    { 
+         : IRequestHandler<AccountDataQuery, Result<List<Account>, BusinessException>>
+         , IRequestHandler<AccountReceiveMoneyCommand, Result<Account, BusinessException>>
+         , IRequestHandler<AccountWithdrawMoneyCommand, Result<Account, BusinessException>>
+         , IRequestHandler<AccountWithdrawForSaveMoneyCommand, Result<Account, BusinessException>>
+    {
         private readonly IAccountAppService _accountAppService;
         private readonly IAccountRepository _accountRepository;
         private readonly ILogger<AccountHandler> _logger;
-        private readonly IMapper _mapper;
 
         public AccountHandler(
             IAccountAppService accountAppService
             , IAccountRepository accountRepository
             , ILogger<AccountHandler> logger
-            , IMapper mapper
+
             )
         {
             _accountAppService = accountAppService;
             _accountRepository = accountRepository;
             _logger = logger;
-            _mapper = mapper;
         }
 
         public async Task<Result<List<Account>, BusinessException>> Handle(AccountDataQuery request, CancellationToken cancellationToken)
@@ -65,7 +68,7 @@ namespace Accounts.Handler.Domain.Cqrs.Handlers
 
             Result<Account, BusinessException> processResult;
 
-            if(existentAcount is null)
+            if (existentAcount is null)
             {
                 var account = new Account(request.AccountId).Receive(request.Amount);
 
@@ -79,6 +82,11 @@ namespace Accounts.Handler.Domain.Cqrs.Handlers
             }
 
             return processResult;
+        }
+
+        public async Task<Result<Account, BusinessException>> Handle(AccountWithdrawForSaveMoneyCommand request, CancellationToken cancellationToken)
+        {
+            return await _accountAppService.Withdraw(request.AccountId, request.Amount);
         }
     }
 }

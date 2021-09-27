@@ -7,6 +7,8 @@ using System;
 using FinanceControlinator.Events.Accounts;
 using System.Collections.Generic;
 using FinanceControlinator.Events.Accounts.DTOs;
+using Accounts.Handler.Domain.Cqrs.Events.Commands;
+using FinanceControlinator.Events.PiggyBanks;
 
 namespace Accounts.Handler.Configurations.Profiles
 {
@@ -33,6 +35,9 @@ namespace Accounts.Handler.Configurations.Profiles
             CreateMap<AccountChange, AccountChangeDTO>()
                 .ForMember(x => x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)))
                 .ForMember(x => x.PaymentId, x => x.MapFrom(y => Guid.Parse(y.PaymentId)));
+
+
+            CreateMap<AccountWithdrawForSaveMoneyCommand, SaveMoneyEvent>();
         }
     }
 }

@@ -34,6 +34,11 @@ namespace Accounts.Domain.Models
             };
         }
 
+        public void Withdraw(decimal amount)
+        {
+            TotalAmount -= amount;
+        }
+
         public AccountChange RejectWithDraw(decimal amount)
         {
             return new AccountChange(this.Id)
