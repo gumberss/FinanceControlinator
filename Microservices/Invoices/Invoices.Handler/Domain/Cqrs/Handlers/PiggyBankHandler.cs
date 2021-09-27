@@ -2,6 +2,7 @@
 using FinanceControlinator.Common.Utils;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Domain.Models;
+using Invoices.Domain.Services;
 using Invoices.Handler.Domain.Cqrs.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -19,32 +20,34 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
          IRequestHandler<RegisterPiggyBankExpenseCommand, Result<List<Invoice>, BusinessException>>
     {
         private readonly IInvoiceAppService _invoiceAppService;
+        private readonly IInvoiceService _invoiceService;
         private readonly ILogger<InvoiceHandler> _logger;
         private readonly IAsyncDocumentSession _documentSession;
 
         public PiggyBankHandler(
-            IInvoiceAppService invoiceAppService
+            IInvoiceAppService invoiceAppService,
+            IInvoiceService invoiceService
             , ILogger<InvoiceHandler> logger
             , IAsyncDocumentSession documentSession
         )
         {
             _invoiceAppService = invoiceAppService;
+            _invoiceService = invoiceService;
             _logger = logger;
             _documentSession = documentSession;
         }
 
-        public Task<Result<List<Invoice>, BusinessException>> Handle(RegisterPiggyBankExpenseCommand request, CancellationToken cancellationToken)
+        public async Task<Result<List<Invoice>, BusinessException>> Handle(RegisterPiggyBankExpenseCommand request, CancellationToken cancellationToken)
         {
-            return default;
-            //var result = await _invoiceAppService.RegisterInvoiceItems(request.Expense);
+            var piggyBank = request.Expense;
 
-            //if (result.IsFailure) return result.Error;
+            var installmentCount = _invoiceService.GetInvoiceInstallmentsByDateRange(piggyBank.StartDate, piggyBank.GoalDate);
 
-            //var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
+            var expense = new Expense()
+                .From(piggyBank)
+                .WithInstallmentCount(installmentCount);
 
-            //if (saveResult.IsFailure) return saveResult.Error;
-
-            //return result;
+            return await _invoiceAppService.RegisterInvoiceItems(expense);
         }
     }
 }

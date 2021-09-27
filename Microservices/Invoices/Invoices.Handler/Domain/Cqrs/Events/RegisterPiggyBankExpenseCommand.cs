@@ -9,6 +9,6 @@ namespace Invoices.Handler.Domain.Cqrs.Events
 {
     public class RegisterPiggyBankExpenseCommand : IRequest<Result<List<Invoice>, BusinessException>>
     {
-        public InvoicePiggyBankDTO Expense { get; set; }
+        public InvoicePiggyBank Expense { get; set; }
     }
 }

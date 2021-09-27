@@ -3,7 +3,7 @@ using System;
 
 namespace Invoices.Domain.DTOs
 {
-    public class InvoicePiggyBankDTO
+    public class InvoicePiggyBank
     {
         public Guid Id { get; set; }
 

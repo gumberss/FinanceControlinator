@@ -10,7 +10,6 @@ namespace Invoices.Application.Interfaces.AppServices
     public interface IInvoiceAppService
     {
         Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(Expense expense);
-        Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(InvoicePiggyBankDTO expense);
 
         Task<Result<List<Invoice>, BusinessException>> GetAllInvoices();
 

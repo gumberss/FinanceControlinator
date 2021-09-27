@@ -14,7 +14,7 @@ namespace Invoices.Handler.Configurations.Profiles
             CreateMap<PiggyBankCreatedEvent, RegisterPiggyBankExpenseCommand>()
                 .ForMember(x => x.Expense, x => x.MapFrom(y => y.PiggyBank));
 
-            CreateMap<PiggyBankDTO, InvoicePiggyBankDTO>()
+            CreateMap<PiggyBankDTO, InvoicePiggyBank>()
                 .ForMember(x => x.Type, x => x.MapFrom(y => (InvoiceItemType)y.Type));
 
         }

@@ -13,6 +13,7 @@ using Invoices.Domain.Services;
 using System.Linq;
 using Invoices.Domain.Localizations;
 using Invoices.Domain.DTOs;
+using Invoices.Domain.Enums;
 
 namespace Invoices.Application.AppServices
 {
@@ -79,58 +80,6 @@ namespace Invoices.Application.AppServices
             }
 
             return changedInvoices;
-        }
-
-        public async Task<Result<List<Invoice>, BusinessException>> RegisterInvoiceItems(InvoicePiggyBankDTO expense)
-        {
-            //   var registerExpenseResult = await RegisterExpense(expense);
-
-            // if (registerExpenseResult.IsFailure) return registerExpenseResult.Error;
-
-            var now = DateTime.Now;
-
-            var currentInvoiceCloseDate = _invoiceService.GetInvoiceCloseDateBy(now);
-
-            DateTime goalDate = now.AddMonths(4);
-
-            var goalCloseDate = _invoiceService.GetInvoiceCloseDateBy(goalDate);
-
-           
-
-            DateTime nextInvoiceCloseDate = now;
-
-
-
-
-            return default;
-
-            //var (invoiceStartSearchDate, lastInvoiceCloseDate) = _invoiceService.GetInvoiceRangeByInstallments(expense.InstallmentsCount, now);
-
-            //var registeredInvoices =
-            //    await _invoiceRepository.GetAllAsync(x => x.Items,
-            //        x => x.CloseDate >= invoiceStartSearchDate
-            //          && x.CloseDate <= lastInvoiceCloseDate
-            //    );
-
-            //if (registeredInvoices.IsFailure) return registeredInvoices.Error;
-
-            //var existentInvoices = registeredInvoices.Value;
-
-            //var changedInvoices = _invoiceService.RegisterExpense(expense, existentInvoices, currentInvoiceCloseDate);
-
-            //var newInvoicesResult = changedInvoices.Except(existentInvoices);
-
-            //foreach (var newInvoice in newInvoicesResult)
-            //{
-            //    var addResult = await _invoiceRepository.AddAsync(newInvoice);
-
-            //    if (addResult.IsFailure)
-            //    {
-            //        return new BusinessException(HttpStatusCode.InternalServerError, new ErrorData(addResult.Error.Message));
-            //    }
-            //}
-
-            //return changedInvoices;
         }
 
         private async Task<Result<Expense, BusinessException>> RegisterExpense(Expense expense)
