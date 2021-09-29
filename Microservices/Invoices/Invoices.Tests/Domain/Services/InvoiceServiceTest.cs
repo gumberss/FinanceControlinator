@@ -319,7 +319,6 @@ namespace Invoices.Tests.Domain.Services
             installments.Should().Be(0);
         }
 
-
         [TestMethod]
         [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
         [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]

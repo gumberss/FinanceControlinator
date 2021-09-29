@@ -29,7 +29,6 @@ namespace Invoices.Handler.Integration.Handlers
 
         public async Task Consume(ConsumeContext<PiggyBankCreatedEvent> context)
         {
-
             var registerExpenseCommand = _mapper.Map<PiggyBankCreatedEvent, RegisterPiggyBankExpenseCommand>(context.Message);
 
             var result = await _mediator.Send(registerExpenseCommand);
@@ -41,14 +40,6 @@ namespace Invoices.Handler.Integration.Handlers
             var invoicesChangedEvent = _mapper.Map<InvoicesChangedEvent>(invoices);
 
             await _bus.Publish(invoicesChangedEvent);
-            
-            // Salvo na base o PiggyBank? Não
-
-            // Converter dto para Objeto de negocio
-            // postar command com o objeto de negocio
-            // Montar fatura com base no objeto de negocio
-            // Salvar novas faturas / Atualizar faturas existentes
-
         }
     }
 }
