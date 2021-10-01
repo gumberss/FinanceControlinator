@@ -6,5 +6,8 @@ namespace FinanceControlinator.Tests.Categories.Enums
     {
         [Description("Recording Expenses")]
         RecordingExpenses,
+
+        [Description("Invoice Payment")]
+        InvoicePayment,
     }
 }

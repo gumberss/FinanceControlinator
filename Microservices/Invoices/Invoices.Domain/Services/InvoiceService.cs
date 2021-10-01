@@ -30,7 +30,6 @@ namespace Invoices.Domain.Services
             return invoiceDate;
         }
 
-
         public int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate)
         {
             return GetInvoiceInstallmentsByDateRange(startDate, endDate, 0);

@@ -11,6 +11,9 @@ namespace FinanceControlinator.Tests.Categories.Enums
         ExpenseGeneration,
 
         [Description("Expense Update")]
-        ExpenseUpdate
+        ExpenseUpdate,
+
+        [Description("Payment")]
+        Payment
     }
 }
