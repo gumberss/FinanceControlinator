@@ -1,5 +1,4 @@
-﻿using FinanceControlinator.Common.Utils;
-using FinanceControlinator.Tests.Categories;
+﻿using FinanceControlinator.Tests.Categories;
 using FinanceControlinator.Tests.Categories.Enums;
 using FluentAssertions;
 using Invoices.Application.AppServices;
@@ -12,12 +11,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Invoices.Tests.Application.AppServices
