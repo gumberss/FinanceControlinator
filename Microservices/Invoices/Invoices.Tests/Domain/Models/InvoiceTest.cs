@@ -45,5 +45,40 @@ namespace Invoices.Tests.Domain.Models
             invoice.Items.First().Should().Be(item);
         }
 
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [IntegrationTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        public void Should_change_invoice_total_cost_when_a_item_is_added()
+        {
+            var invoice = new Invoice(DateTime.Now);
+            var itemCost = 100;
+
+            var item = new InvoiceItem(10, itemCost);
+
+            invoice.AddNew(item);
+
+            invoice.TotalCost.Should().Be(itemCost);
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+        [IntegrationTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        public void Should_return_the_sum_of_item_costs_as_invoice_total_cost()
+        {
+            var invoice = new Invoice(DateTime.Now);
+
+            var item1Cost = 50;
+            var item2Cost = 100;
+            var totalCost = item1Cost + item2Cost;
+
+            var item1 = new InvoiceItem(10, item1Cost);
+            var item2 = new InvoiceItem(10, item2Cost);
+
+            invoice
+                .AddNew(item1)
+                .AddNew(item2);
+
+            invoice.TotalCost.Should().Be(totalCost);
+        }
     }
 }
