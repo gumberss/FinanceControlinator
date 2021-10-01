@@ -68,6 +68,5 @@ namespace Invoices.Tests.Application.AppServices
 
             result.Value.Except(invoices).Should().HaveCount(0);
         }
-
     }
 }
