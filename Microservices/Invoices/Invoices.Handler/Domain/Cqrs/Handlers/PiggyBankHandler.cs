@@ -47,7 +47,15 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
                 .From(piggyBank)
                 .WithInstallmentCount(installmentCount);
 
-            return await _invoiceAppService.RegisterInvoiceItems(expense);
+            var result = await _invoiceAppService.RegisterInvoiceItems(expense);
+
+            if (result.IsFailure) return result.Error;
+
+            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return result;
         }
     }
 }
