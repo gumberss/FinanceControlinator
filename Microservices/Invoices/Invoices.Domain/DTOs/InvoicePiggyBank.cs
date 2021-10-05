@@ -17,8 +17,6 @@ namespace Invoices.Domain.DTOs
 
         public String Description { get; set; }
 
-        public InvoiceItemType Type { get; set; }
-
         public DateTime GoalDate { get; set; }
 
         public decimal GoalValue { get; set; }
