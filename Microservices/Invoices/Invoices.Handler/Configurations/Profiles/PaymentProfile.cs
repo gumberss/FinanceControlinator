@@ -15,6 +15,9 @@ namespace Invoices.Handler.Configurations.Profiles
             CreateMap<PaymentDTO, Payment>()
                 .ForMember(x => x.Id, x => x.MapFrom(y => y.Id.ToString()))
                 .ForMember(x => x.ItemId, x => x.MapFrom(y => y.ItemId.ToString()));
+
+
+            CreateMap<Invoice, RegisterItemToPayEvent>();
         }
     }
 }
