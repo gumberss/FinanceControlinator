@@ -15,6 +15,7 @@ namespace PiggyBanks.Handler.Configurations
            services.AddMassTransit(x =>
            {
                x.AddConsumer<PiggyBanksIntegrationHandler>();
+               x.AddConsumer<PiggyBanksInvoiceIntegrationHandler>();
 
                x.SetKebabCaseEndpointNameFormatter();
 
