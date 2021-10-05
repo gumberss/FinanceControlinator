@@ -25,11 +25,11 @@ namespace Invoices.Domain.Models
         {
             Id = piggyBank.Id.ToString();
             Title = piggyBank.Title;
-            CreatedDate = piggyBank.CreatedDate;
+            CreatedDate = DateTime.Now;
             DetailsPath = $"piggybanks/{piggyBank.Id}";
             Location = "Piggy Bank";
             PurchaseDay = piggyBank.CreatedDate;
-            Type = piggyBank.Type;
+            Type = InvoiceItemType.PiggyBank;
             TotalCost = piggyBank.GoalValue - piggyBank.SavedValue;
 
             return this;

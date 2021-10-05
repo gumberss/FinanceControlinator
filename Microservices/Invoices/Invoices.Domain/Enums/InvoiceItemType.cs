@@ -12,6 +12,8 @@
 
         Health = 40,
 
-        Other = 900
+        PiggyBank = 800,
+
+        Other = 900,
     }
 }
