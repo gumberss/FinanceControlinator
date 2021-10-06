@@ -46,6 +46,43 @@ namespace PiggyBanks.Tests.Application.AppServices
             );
         }
 
+        #region Register PiggyBank
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingPiggyBanks)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
+        public async Task Should_return_an_error_when_exists_a_piggy_bank_registered_with_the_same_title()
+        {
+          
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingPiggyBanks)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
+        public async Task Should_return_an_error_when_piggy_bank_has_invalid_properties()
+        {
+
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingPiggyBanks)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
+        public async Task Should_register_a_new_piggy_bank_when_received_piggy_bank_is_valid_to_register()
+        {
+
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.RecordingPiggyBanks)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
+        public async Task Should_return_an_error_when_an_exception_occurs_retrieving_piggybanks_by_title_from_repository()
+        {
+
+        }
+
+
+        #endregion Register PiggyBank
+
         #region register paid invoice
 
         [TestMethod]
@@ -113,6 +150,14 @@ namespace PiggyBanks.Tests.Application.AppServices
             changedPiggyBanks.Value.Should().HaveCount(0);
 
             piggyBanksDb.First().SavedValue.Should().Be(0);
+        }
+
+        [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.Payment)]
+        [TestMethod]
+        public async Task Should_return_an_error_when_an_exception_occurs_retrieving_piggybanks_from_repository()
+        {
+          
         }
 
         #endregion register paid invoice
