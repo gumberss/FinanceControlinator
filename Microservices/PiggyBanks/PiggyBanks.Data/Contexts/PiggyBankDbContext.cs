@@ -1,13 +1,10 @@
 using PiggyBanks.Data.Interfaces.Contexts;
 using PiggyBanks.Domain.Models;
-using FinanceControlinator.Common.Contexts;
 using FinanceControlinator.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using FinanceControlinator.Common.Utils;
 using FinanceControlinator.Common.Exceptions;
@@ -24,24 +21,17 @@ namespace PiggyBanks.Data.Contexts
 
         public DbSet<PiggyBank> PiggyBanks { get; set; }
 
+        public DbSet<Invoice> Invoices { get; set; }
+
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("piggyBanks");
 
             base.OnModelCreating(modelBuilder);
-
-            //var typesToMapping = (from x in Assembly.GetExecutingAssembly().GetTypes()
-            //                      where x.IsClass && typeof(IMapping).IsAssignableFrom(x)
-            //                      select x).ToList();
-            //// Varrendo todos os tipos que são mapeamento 
-            //// Com ajuda do Reflection criamos as instancias 
-            //// e adicionamos no Entity Framework
-            //foreach (var mapping in typesToMapping)
-            //{
-            //    dynamic mappingClass = Activator.CreateInstance(mapping);
-            //    modelBuilder.Configurations.Add(mappingClass);
-            //}
         }
+
         public override EntityEntry<TEntity> Add<TEntity>(TEntity entity)
         {
             if (entity is IEntity<Guid> theEntity)

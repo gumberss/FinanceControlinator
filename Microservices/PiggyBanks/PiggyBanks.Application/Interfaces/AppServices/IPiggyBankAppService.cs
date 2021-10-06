@@ -12,5 +12,6 @@ namespace PiggyBanks.Application.Interfaces.AppServices
 
         Task<Result<List<PiggyBank>, BusinessException>> GetAllPiggyBanks();
         Task<Result<PiggyBank, BusinessException>> Save(decimal value);
+        Task<Result<List<PiggyBank>, BusinessException>> RegisterPayment(Invoice invoice);
     }
 }

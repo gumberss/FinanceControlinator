@@ -124,7 +124,7 @@ namespace PiggyBanks.Data.Commons
                 if (include is not null)
                     dbSet = _dbSet.Include(include);
 
-                return await dbSet.FirstOrDefaultAsync();
+                return await dbSet.FirstOrDefaultAsync(x => x.Id.Equals(id));
             }
             catch (Exception ex)
             {

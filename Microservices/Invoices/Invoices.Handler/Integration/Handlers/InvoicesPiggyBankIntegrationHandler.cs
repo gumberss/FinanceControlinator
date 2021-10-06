@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FinanceControlinator.Common.Messaging;
 using FinanceControlinator.Events.Invoices;
+using FinanceControlinator.Events.Payments;
 using FinanceControlinator.Events.PiggyBanks;
 using Invoices.Handler.Domain.Cqrs.Events;
 using MassTransit;
@@ -38,6 +39,12 @@ namespace Invoices.Handler.Integration.Handlers
             var invoices = result.Value;
 
             var invoicesChangedEvent = _mapper.Map<InvoicesChangedEvent>(invoices);
+
+            foreach (var invoice in invoices)
+            {
+                var paymentEvent = _mapper.Map<RegisterItemToPayEvent>(invoice);
+                await context.Publish(paymentEvent);
+            }
 
             await _bus.Publish(invoicesChangedEvent);
         }

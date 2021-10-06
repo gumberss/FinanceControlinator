@@ -22,7 +22,7 @@ namespace PiggyBanks.API.Commons
 
             services.AddMediatR(typeof(Startup));
             services.AddMediatR(typeof(PiggyBankHandler));
-            
+
             services.AddTransient<ILocalization, Ptbr>();
 
             services.AddFluentValidation();
@@ -30,7 +30,10 @@ namespace PiggyBanks.API.Commons
             services.AddScoped<IPiggyBankAppService, PiggyBankAppService>();
             services.AddScoped<IPiggyBankRepository, PiggyBankRepository>();
             services.AddScoped<IPiggyBankValidator, PiggyBankValidator>();
-            
+
+            services.AddScoped<IInvoiceAppService, InvoiceAppService>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<IInvoiceItemRepository, InvoiceItemRepository>();
         }
     }
 }
