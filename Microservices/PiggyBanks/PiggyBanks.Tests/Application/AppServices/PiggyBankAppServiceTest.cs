@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,7 +54,7 @@ namespace PiggyBanks.Tests.Application.AppServices
         [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
         public async Task Should_return_an_error_when_exists_a_piggy_bank_registered_with_the_same_title()
         {
-          
+
         }
 
         [TestMethod]
@@ -118,9 +119,9 @@ namespace PiggyBanks.Tests.Application.AppServices
             changedPiggyBanks.Value.First().SavedValue.Should().Be(100);
         }
 
+        [TestMethod]
         [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
         [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.Payment)]
-        [TestMethod]
         public async Task Should_not_add_installment_cost_to_the_piggybank_when_the_paid_invoice_not_containts_a_item_regarding_the_piggybank()
         {
             var piggyBankId = Guid.NewGuid();
@@ -152,12 +153,22 @@ namespace PiggyBanks.Tests.Application.AppServices
             piggyBanksDb.First().SavedValue.Should().Be(0);
         }
 
+        [TestMethod]
         [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
         [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.Payment)]
-        [TestMethod]
         public async Task Should_return_an_error_when_an_exception_occurs_retrieving_piggybanks_from_repository()
         {
-          
+            var exception = new BusinessException(HttpStatusCode.InternalServerError, "Oh no!");
+
+            _PiggyBankRepositoryMock
+                .Setup(x => x.GetAllAsync(null, It.IsAny<Expression<Func<PiggyBank, bool>>>()))
+                .Returns(Task.FromResult(new Result<List<PiggyBank>, BusinessException>(exception)));
+
+            var changedPiggyBanks = await _appService.RegisterPayment(new Invoice());
+
+            changedPiggyBanks.IsFailure.Should().BeTrue();
+
+            changedPiggyBanks.Error.Should().Be(exception);
         }
 
         #endregion register paid invoice
