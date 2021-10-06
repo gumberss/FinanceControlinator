@@ -1,5 +1,7 @@
 ﻿using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
+using FinanceControlinator.Tests.Categories;
+using FinanceControlinator.Tests.Categories.Enums;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,7 +46,11 @@ namespace PiggyBanks.Tests.Application.AppServices
             );
         }
 
+        #region register paid invoice
+
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.Payment)]
         public async Task Should_add_installment_cost_to_the_piggybank_when_the_paid_invoice_containts_a_item_regarding_the_piggybank()
         {
             var piggyBankId = Guid.NewGuid();
@@ -75,6 +81,8 @@ namespace PiggyBanks.Tests.Application.AppServices
             changedPiggyBanks.Value.First().SavedValue.Should().Be(100);
         }
 
+        [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.Payment)]
         [TestMethod]
         public async Task Should_not_add_installment_cost_to_the_piggybank_when_the_paid_invoice_not_containts_a_item_regarding_the_piggybank()
         {
@@ -106,5 +114,7 @@ namespace PiggyBanks.Tests.Application.AppServices
 
             piggyBanksDb.First().SavedValue.Should().Be(0);
         }
+
+        #endregion register paid invoice
     }
 }

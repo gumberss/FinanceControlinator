@@ -8,6 +8,9 @@ namespace FinanceControlinator.Tests.Categories.Enums
         Invoices,
 
         [Description("Expenses")]
-        Expenses
+        Expenses,
+
+        [Description("PiggyBanks")]
+        PiggyBanks
     }
 }
