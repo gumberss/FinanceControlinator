@@ -41,6 +41,26 @@ namespace PiggyBanks.Application.AppServices
             return await _piggyBankRepository.GetAllAsync();
         }
 
+        public async Task<Result<List<PiggyBank>, BusinessException>> RegisterPayment(Invoice invoice)
+        {
+            var invoiceItemIds = invoice.Items.Select(x => x.ExpenseId).ToList();
+
+            var piggyBanks = await _piggyBankRepository.GetAllAsync(where: x => invoiceItemIds.Contains(x.Id));
+
+            if (piggyBanks.IsFailure) return piggyBanks.Error;
+
+            foreach (var item in invoice.Items)
+            {
+                var piggyBankPaid = piggyBanks.Value.Find(x => x.Id == item.ExpenseId);
+
+                if (piggyBankPaid is null) continue;
+
+                piggyBankPaid.InstallmentPaid(item.InstallmentCost);
+            }
+
+            return piggyBanks;
+        }
+
         public async Task<Result<PiggyBank, BusinessException>> RegisterPiggyBank(PiggyBank piggyBank)
         {
             var validationResult = await _piggyBankValidator.ValidateAsync(piggyBank);

@@ -18,6 +18,8 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
         : IRequestHandler<GetAllPiggyBanksQuery, Result<List<PiggyBank>, BusinessException>>
         , IRequestHandler<RegisterPiggyBankCommand, Result<PiggyBank, BusinessException>>
         , IRequestHandler<SaveMoneyCommand, Result<PiggyBank, BusinessException>>
+        , IRequestHandler<RegisterPiggyBanksPaymentCommand, Result<List<PiggyBank>, BusinessException>>
+        
     {
         private readonly IPiggyBankAppService _piggyBankAppService;
         private readonly IPiggyBankDbContext _piggyBankDbContext;
@@ -52,6 +54,19 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
         public async Task<Result<PiggyBank, BusinessException>> Handle(SaveMoneyCommand request, CancellationToken cancellationToken)
         {
             var result = await _piggyBankAppService.Save(request.Amount);
+
+            if (result.IsFailure) return result.Error;
+
+            var saveResult = await _piggyBankDbContext.Commit();
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return result;
+        }
+
+        public async Task<Result<List<PiggyBank>, BusinessException>> Handle(RegisterPiggyBanksPaymentCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _piggyBankAppService.RegisterPayment(request.Invoice);
 
             if (result.IsFailure) return result.Error;
 

@@ -3,6 +3,7 @@ using FinanceControlinator.Events.Invoices;
 using MassTransit;
 using MediatR;
 using PiggyBanks.Domain.Models;
+using PiggyBanks.Handler.Domain.Cqrs.Events;
 using PiggyBanks.Handler.Domain.Cqrs.Events.Invoices;
 using PiggyBanks.Handler.Integration.Events.Invoices;
 using System.Threading.Tasks;
@@ -10,7 +11,8 @@ using System.Threading.Tasks;
 namespace PiggyBanks.Handler.Integration.Handlers
 {
     public class PiggyBanksInvoiceIntegrationHandler :
-        IConsumer<InvoicePaidEvent>
+        IConsumer<InvoicePaidEvent>,
+        IConsumer<PiggyBankPaidInvoiceRegisteredEvent>
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
@@ -38,6 +40,17 @@ namespace PiggyBanks.Handler.Integration.Handlers
             var paidInvoiceRegisteredEvent = _mapper.Map<Invoice, PiggyBankPaidInvoiceRegisteredEvent>(invoice.Value);
 
             await _bus.Publish(paidInvoiceRegisteredEvent);
+        }
+
+        public async Task Consume(ConsumeContext<PiggyBankPaidInvoiceRegisteredEvent> context)
+        {
+            var command = _mapper.Map<PiggyBankPaidInvoiceRegisteredEvent, RegisterPiggyBanksPaymentCommand>(context.Message);
+
+            var invoice = await _mediator.Send(command);
+
+            if (invoice.IsFailure) throw invoice.Error;
+
+            // PiggyBanks Instlalment Paid
         }
     }
 }

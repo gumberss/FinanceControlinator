@@ -1,6 +1,5 @@
 using AutoMapper;
 using FinanceControlinator.Events.PiggyBanks;
-using PiggyBanks.Domain.Models;
 using PiggyBanks.Handler.Domain.Cqrs.Events;
 
 namespace PiggyBanks.Handler.Configurations.Profiles
@@ -10,7 +9,6 @@ namespace PiggyBanks.Handler.Configurations.Profiles
         public PiggyBankHandlerProfile()
         {
             CreateMap<SaveMoneyEvent, SaveMoneyCommand>();
-
         }
     }
 }

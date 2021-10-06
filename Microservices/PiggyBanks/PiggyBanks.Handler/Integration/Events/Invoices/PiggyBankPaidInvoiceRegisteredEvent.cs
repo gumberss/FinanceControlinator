@@ -1,9 +1,9 @@
-﻿using PiggyBanks.Domain.Models;
+﻿using PiggyBanks.Handler.Integration.Events.Invoices.DTOs;
 
 namespace PiggyBanks.Handler.Integration.Events.Invoices
 {
     public class PiggyBankPaidInvoiceRegisteredEvent
     {
-        public Invoice Invoice { get; set; }
+        public PiggyBankInvoiceDTO Invoice { get; set; }
     }
 }

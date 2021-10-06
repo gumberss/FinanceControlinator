@@ -35,7 +35,14 @@ namespace PiggyBanks.Domain.Models
         {
             SavedValue += value;
 
+            Updated();
+
             return this;
+        }
+
+        public PiggyBank InstallmentPaid(decimal value)
+        {
+            return AddMoney(value);
         }
     }
 }

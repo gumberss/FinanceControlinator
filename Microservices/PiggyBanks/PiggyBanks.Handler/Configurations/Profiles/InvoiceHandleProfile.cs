@@ -2,9 +2,10 @@
 using FinanceControlinator.Events.Invoices;
 using FinanceControlinator.Events.Invoices.DTOs;
 using PiggyBanks.Domain.Models;
+using PiggyBanks.Handler.Domain.Cqrs.Events;
 using PiggyBanks.Handler.Domain.Cqrs.Events.Invoices;
-using PiggyBanks.Handler.Integration;
 using PiggyBanks.Handler.Integration.Events.Invoices;
+using PiggyBanks.Handler.Integration.Events.Invoices.DTOs;
 
 namespace PiggyBanks.Handler.Configurations.Profiles
 {
@@ -20,6 +21,14 @@ namespace PiggyBanks.Handler.Configurations.Profiles
 
             CreateMap<Invoice, PiggyBankPaidInvoiceRegisteredEvent>()
                 .ForMember(x => x.Invoice, x => x.MapFrom(y => y));
+
+            CreateMap<PiggyBankInvoiceDTO, Invoice>().ReverseMap();
+            CreateMap<PiggyBankInvoiceItemDTO, InvoiceItem>().ReverseMap();
+
+            CreateMap<Invoice, PiggyBankPaidInvoiceRegisteredEvent>()
+                .ForMember(x => x.Invoice, x => x.MapFrom(y => y));
+
+            CreateMap<PiggyBankPaidInvoiceRegisteredEvent, RegisterPiggyBanksPaymentCommand>();
         }
     }
 }
