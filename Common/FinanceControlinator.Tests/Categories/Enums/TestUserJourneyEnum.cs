@@ -9,5 +9,8 @@ namespace FinanceControlinator.Tests.Categories.Enums
 
         [Description("Invoice Payment")]
         InvoicePayment,
+
+        [Description("Recording Piggy Banks")]
+        RecordingPiggyBanks,
     }
 }
