@@ -52,7 +52,7 @@ namespace Invoices.Tests.Application.AppServices
                     Substitute.For<IExpenseRepository>(),
                     Substitute.For<ILocalization>(),
                     Substitute.For<ILogger<IInvoiceAppService>>(),
-                    new InvoiceService(), // maybe this is not right...
+                    new InvoiceService(),
                     Substitute.For<IPaymentRepository>()
                 );
 

@@ -14,7 +14,7 @@ namespace Invoices.Tests.Domain.Models
     {
         [TestMethod]
         [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
-        [IntegrationTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.Payment)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.Payment)]
         public void Should_set_an_invoice_as_paid_when_was_informed_that_it_was_paid()
         {
             var invoice = new Invoice(DateTime.Now);
@@ -30,7 +30,7 @@ namespace Invoices.Tests.Domain.Models
 
         [TestMethod]
         [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [IntegrationTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_add_an_item_to_invoce()
         {
             var invoice = new Invoice(DateTime.Now);
@@ -44,7 +44,7 @@ namespace Invoices.Tests.Domain.Models
 
         [TestMethod]
         [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [IntegrationTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_change_invoice_total_cost_when_a_item_is_added()
         {
             var invoice = new Invoice(DateTime.Now);
@@ -59,7 +59,7 @@ namespace Invoices.Tests.Domain.Models
 
         [TestMethod]
         [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [IntegrationTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
+        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_return_the_sum_of_item_costs_as_invoice_total_cost()
         {
             var invoice = new Invoice(DateTime.Now);
