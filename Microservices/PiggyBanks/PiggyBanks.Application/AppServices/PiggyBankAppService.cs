@@ -80,16 +80,16 @@ namespace PiggyBanks.Application.AppServices
             if (existsByTitle)
                 return new BusinessException(HttpStatusCode.BadRequest, _localization.PIGGY_BANK_ALREADY_EXISTS_BY_TITLE);
 
-            return  await _piggyBankRepository.AddAsync(piggyBank);
+            return await _piggyBankRepository.AddAsync(piggyBank);
         }
 
         public async Task<Result<PiggyBank, BusinessException>> Save(decimal value)
         {
-            var defaultPiggyBankResult =await _piggyBankRepository.GetAsync(where: x => x.Default);
+            var defaultPiggyBankResult = await _piggyBankRepository.GetAsync(where: x => x.Default);
 
             if (defaultPiggyBankResult.IsFailure) return defaultPiggyBankResult.Error;
 
-            var defaultPiggyBank= defaultPiggyBankResult.Value;
+            var defaultPiggyBank = defaultPiggyBankResult.Value;
 
             if (defaultPiggyBank is null)
             {
