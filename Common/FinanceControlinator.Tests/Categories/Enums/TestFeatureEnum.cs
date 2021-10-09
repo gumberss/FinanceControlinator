@@ -17,6 +17,9 @@ namespace FinanceControlinator.Tests.Categories.Enums
         Payment,
 
         [Description("PiggyBank Generation")]
-        PiggyBankGeneration
+        PiggyBankGeneration,
+
+        [Description("Saving Money")]
+        SavingMoney
     }
 }

@@ -245,5 +245,77 @@ namespace PiggyBanks.Tests.Application.AppServices
         }
 
         #endregion register paid invoice
+
+        #region save
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.SavingMoney)]
+        public async Task Should_add_value_to_the_default_piggy_bank_when_money_is_saved()
+        {
+            var savedValue = 100;
+
+            var defaultPiggyBank = new PiggyBank()
+            {
+                SavedValue = 10
+            };
+
+            _PiggyBankRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Expression<Func<PiggyBank, bool>>>()))
+                .ReturnsAsync(defaultPiggyBank);
+
+            _PiggyBankRepositoryMock.Setup(x => x.UpdateAsync(defaultPiggyBank))
+                .ReturnsAsync(defaultPiggyBank);
+
+            var result = await _appService.Save(savedValue);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.SavedValue.Should().Be(110, because: "100 saved now and 10 already saved");
+
+            _PiggyBankRepositoryMock.Verify(x => x.UpdateAsync(defaultPiggyBank), Times.Once);
+            _PiggyBankRepositoryMock.Verify(x => x.AddAsync(It.IsAny<PiggyBank>()), Times.Never);
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.SavingMoney)]
+        public async Task Should_create_a_new_default_piggybank_and_add_the_value_to_it_when_the_default_piggy_bank_does_not_exist()
+        {
+            var savedValue = 100;
+
+            _PiggyBankRepositoryMock.Setup(x => x.GetAsync(It.IsAny<Expression<Func<PiggyBank, bool>>>()))
+                .ReturnsAsync((PiggyBank)null);
+
+            _PiggyBankRepositoryMock.Setup(x => x.AddAsync(It.IsAny<PiggyBank>()))
+                .ReturnsAsync((PiggyBank piggyBank) => piggyBank);
+
+            var result = await _appService.Save(savedValue);
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.SavedValue.Should().Be(100);
+
+            _PiggyBankRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<PiggyBank>()), Times.Never);
+            _PiggyBankRepositoryMock.Verify(x => x.AddAsync(It.IsAny<PiggyBank>()), Times.Once);
+        }
+
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.InvoicePayment)]
+        [UnitTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.SavingMoney)]
+        public async Task Should_return_an_erro_when_an_exception_occurs_retrieving_piggy_bank_from_repository()
+        {
+            var exception = new BusinessException(HttpStatusCode.InternalServerError, "Oh no!");
+
+            _PiggyBankRepositoryMock
+                .Setup(x => x.GetAsync(It.IsAny<Expression<Func<PiggyBank, bool>>>()))
+                .ReturnsAsync(exception);
+
+            var changedPiggyBanks = await _appService.Save(10000);
+
+            changedPiggyBanks.IsFailure.Should().BeTrue();
+
+            changedPiggyBanks.Error.Should().Be(exception);
+        }
+
+        #endregion save
     }
 }
