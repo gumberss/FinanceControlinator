@@ -26,7 +26,7 @@ namespace Payments.Domain.Models
 
         public List<String> PaymentIds { get; private set; }
 
-        public bool CanUpdate() => CloseDate < DateTime.Now;
+        public bool CanUpdate() => CloseDate > DateTime.Now;
 
         public PaymentItem UpdateFrom(PaymentItem paymentItem)
         {
@@ -35,6 +35,8 @@ namespace Payments.Domain.Models
             DueDate = paymentItem.DueDate;
             CloseDate = paymentItem.CloseDate;
             DetailsPath = paymentItem.DetailsPath;
+
+            UpdatedDate = DateTime.Now;
 
             return this;
         }
