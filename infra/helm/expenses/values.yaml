@@ -5,5 +5,5 @@ dbPassword: InvisiblePassword
 image: gumberss/financecontrolinator-expenses:latest
 rabbit:
   host: amqp://finance-controlinator-rabbitmq/
-  password: 96xuOJMKYf
+  password: qPWFKcAX7u
   username: user
