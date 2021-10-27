@@ -1,0 +1,25 @@
+name: Run Payment Tests
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+    - 'Microservices/Payments/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore Microservices/Payments/Payments.Tests/Payments.Tests.csproj
+    - name: Build
+      run: dotnet build Microservices/Payments/Payments.Tests/Payments.Tests.csproj --no-restore
+    - name: Test
+      run: dotnet test Microservices/Payments/Payments.Tests/Payments.Tests.csproj --no-build --verbosity normal
