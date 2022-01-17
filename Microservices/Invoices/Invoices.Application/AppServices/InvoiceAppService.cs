@@ -1,19 +1,16 @@
-using Invoices.Application.Interfaces.AppServices;
-using Invoices.Data.Repositories;
-using Invoices.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
+using Invoices.Application.Interfaces.AppServices;
+using Invoices.Data.Repositories;
+using Invoices.Domain.Localizations;
+using Invoices.Domain.Models;
+using Invoices.Domain.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Raven.Client.Documents.Session;
-using Invoices.Domain.Services;
-using System.Linq;
-using Invoices.Domain.Localizations;
-using Invoices.Domain.DTOs;
-using Invoices.Domain.Enums;
 
 namespace Invoices.Application.AppServices
 {

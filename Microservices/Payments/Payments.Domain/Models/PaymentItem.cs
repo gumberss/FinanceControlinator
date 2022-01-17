@@ -58,7 +58,7 @@ namespace Payments.Domain.Models
         public PaymentItem Confirm()
         {
             PaymentStatus = PaymentStatus.Paid;
-            
+
             Updated();
 
             return this;

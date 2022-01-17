@@ -25,8 +25,8 @@ namespace Expenses.Data.Configurations
 
             builder
                 .HasOne(x => x.Invoice)
-                .WithMany(x=> x.Items)
-                .HasForeignKey(x=> x.InvoiceId);
+                .WithMany(x => x.Items)
+                .HasForeignKey(x => x.InvoiceId);
         }
     }
 }

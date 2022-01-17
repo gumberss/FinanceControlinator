@@ -1,16 +1,14 @@
-using AutoMapper;
-using PiggyBanks.Application.Interfaces.AppServices;
-using PiggyBanks.Domain.Models;
-using PiggyBanks.Handler.Domain.Cqrs.Events;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using PiggyBanks.Application.Interfaces.AppServices;
+using PiggyBanks.Data.Interfaces.Contexts;
+using PiggyBanks.Domain.Models;
+using PiggyBanks.Handler.Domain.Cqrs.Events;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using PiggyBanks.Data.Interfaces.Contexts;
 
 namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
 {
@@ -19,7 +17,7 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
         , IRequestHandler<RegisterPiggyBankCommand, Result<PiggyBank, BusinessException>>
         , IRequestHandler<SaveMoneyCommand, Result<PiggyBank, BusinessException>>
         , IRequestHandler<RegisterPiggyBanksPaymentCommand, Result<List<PiggyBank>, BusinessException>>
-        
+
     {
         private readonly IPiggyBankAppService _piggyBankAppService;
         private readonly IPiggyBankDbContext _piggyBankDbContext;

@@ -27,7 +27,7 @@ namespace Accounts.Handler.Integration.Handlers
             _mediator = mediator;
             _bus = bus;
         }
-        
+
         public async Task Consume(ConsumeContext<PaymentRequestedEvent> context)
         {
             var command = _mapper.Map<PaymentRequestedEvent, PayCommand>(context.Message);

@@ -2,7 +2,6 @@
 using FinanceControlinator.Events.PiggyBanks;
 using FinanceControlinator.Events.PiggyBanks.DTOs;
 using Invoices.Domain.DTOs;
-using Invoices.Domain.Enums;
 using Invoices.Handler.Domain.Cqrs.Events;
 
 namespace Invoices.Handler.Configurations.Profiles

@@ -15,7 +15,7 @@ namespace PiggyBanks.Handler.Domain.Cqrs.Handlers
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly IPiggyBankDbContext _piggyBankDbContext;
-        
+
         public InvoicesHandler(IInvoiceAppService invoiceAppService, IPiggyBankDbContext piggyBankDbContext)
         {
             _invoiceAppService = invoiceAppService;

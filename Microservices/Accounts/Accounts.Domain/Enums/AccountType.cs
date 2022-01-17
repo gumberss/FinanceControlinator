@@ -6,4 +6,3 @@ namespace Accounts.Domain.Enums
         Credit//?
     }
 }
-    

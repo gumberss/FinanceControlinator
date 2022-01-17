@@ -4,10 +4,6 @@ using PiggyBanks.Application.Interfaces.AppServices;
 using PiggyBanks.Data.Interfaces.Contexts;
 using PiggyBanks.Data.Repositories;
 using PiggyBanks.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PiggyBanks.Application.AppServices

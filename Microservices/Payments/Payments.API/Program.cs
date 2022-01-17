@@ -1,7 +1,7 @@
-using Payments.API.Commons;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Payments.API.Commons;
 
 namespace Payments.API
 {

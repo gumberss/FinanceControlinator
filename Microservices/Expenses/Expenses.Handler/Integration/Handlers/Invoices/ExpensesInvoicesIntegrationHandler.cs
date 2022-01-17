@@ -3,7 +3,6 @@ using Expenses.Handler.Domain.Cqrs.Events.Invoices;
 using FinanceControlinator.Events.Invoices;
 using MassTransit;
 using MediatR;
-using System;
 using System.Threading.Tasks;
 
 namespace Expenses.Handler.Integration.Handlers.Invoices

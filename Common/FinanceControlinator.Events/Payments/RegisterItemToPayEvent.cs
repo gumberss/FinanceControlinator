@@ -3,7 +3,7 @@
 
 namespace FinanceControlinator.Events.Payments
 {
-    public class RegisterItemToPayEvent 
+    public class RegisterItemToPayEvent
     {
         public Guid Id { get; set; }
 

@@ -1,6 +1,4 @@
-using Payments.API.Commons;
-using Payments.Data.Contexts;
-using Payments.Handler.Configurations;
+using FinanceControlinator.Common.CustomLogs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Payments.API.Commons;
+using Payments.Data.Contexts;
+using Payments.Handler.Configurations;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
-using Microsoft.Extensions.Logging;
-using FinanceControlinator.Common.CustomLogs;
 
 namespace Payments.API
 {
@@ -53,7 +53,7 @@ namespace Payments.API
             });
 
             services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-            
+
             RegisterServices(services);
         }
 
@@ -68,7 +68,7 @@ namespace Payments.API
             , ILoggerFactory loggerFactory)
         {
             loggerFactory.AddProvider(new CustomLogProvider(new CustomLogConfig()));
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

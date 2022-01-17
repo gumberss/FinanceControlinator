@@ -1,7 +1,7 @@
-using Invoices.Domain.Enums;
 using FinanceControlinator.Common.Entities;
-using System;
 using Invoices.Domain.DTOs;
+using Invoices.Domain.Enums;
+using System;
 
 namespace Invoices.Domain.Models
 {

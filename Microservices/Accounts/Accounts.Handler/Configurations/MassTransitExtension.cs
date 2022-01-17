@@ -1,8 +1,8 @@
+using Accounts.Handler.Integration.Handlers;
+using FinanceControlinator.Common.Messaging;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using FinanceControlinator.Common.Messaging;
-using Accounts.Handler.Integration.Handlers;
 
 namespace Accounts.Handler.Configurations
 {
@@ -10,23 +10,23 @@ namespace Accounts.Handler.Configurations
     {
         public static void ConfigureMassTransit(this IServiceCollection services, RabbitMqValues configuration)
         {
-           services.AddMassTransit(x =>
-           {
-               x.AddConsumer<AccountsPaymentIntegrationHandler>();
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<AccountsPaymentIntegrationHandler>();
 
-               x.SetKebabCaseEndpointNameFormatter();
+                x.SetKebabCaseEndpointNameFormatter();
 
-               x.UsingRabbitMq((context, cfg) =>
-               {
-                   cfg.Host(new Uri(configuration.Host), host =>
-                   {
-                       host.Username(configuration.Username);
-                       host.Password(configuration.Password);
-                   });
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri(configuration.Host), host =>
+                    {
+                        host.Username(configuration.Username);
+                        host.Password(configuration.Password);
+                    });
 
-                   cfg.ConfigureEndpoints(context);
-               });
-           });
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
 
             services.AddMassTransitHostedService();
 

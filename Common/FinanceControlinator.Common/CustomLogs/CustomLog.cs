@@ -11,7 +11,7 @@ namespace FinanceControlinator.Common.CustomLogs
 
         public CustomLog(String flow, CustomLogConfig config)
         {
-            if (config is null) 
+            if (config is null)
                 throw new ArgumentNullException("config", "CustomLog's config file must have a value");
 
             _config = config;

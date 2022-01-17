@@ -1,19 +1,18 @@
-using Payments.Application.Interfaces.AppServices;
-using Payments.Data.Repositories;
-using Payments.Domain.Interfaces.Validators;
-using Payments.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Extensions.Logging;
+using Payments.Application.Interfaces.AppServices;
+using Payments.Data.Repositories;
+using Payments.Domain.Interfaces.Validators;
+using Payments.Domain.Localizations;
+using Payments.Domain.Models;
+using Raven.Client.Documents.Linq;
+using Raven.Client.Documents.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Raven.Client.Documents.Session;
-using Payments.Domain.Localizations;
-using Payments.Domain.Enums;
-using Raven.Client.Documents.Linq;
 
 namespace Payments.Application.AppServices
 {

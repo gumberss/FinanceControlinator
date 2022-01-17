@@ -9,26 +9,26 @@ namespace Invoices.Handler.Configurations
     {
         public static void ConfigureMassTransit(this IServiceCollection services, RabbitMqValues configuration)
         {
-           services.AddMassTransit(x =>
-           {
-               x.AddConsumer<InvoicesIntegrationHandler>();
-               x.AddConsumer<InvoicesPaymentIntegrationHandler>();
-               x.AddConsumer<InvoicesPiggyBankIntegrationHandler>();
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<InvoicesIntegrationHandler>();
+                x.AddConsumer<InvoicesPaymentIntegrationHandler>();
+                x.AddConsumer<InvoicesPiggyBankIntegrationHandler>();
 
-               x.SetKebabCaseEndpointNameFormatter();
+                x.SetKebabCaseEndpointNameFormatter();
 
-               x.UsingRabbitMq((context, cfg) =>
-               {
-                   cfg.Host(new Uri(configuration.Host), host =>
-                   {
-                       host.Username(configuration.Username);
-                       host.Password(configuration.Password);
-                   });
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri(configuration.Host), host =>
+                    {
+                        host.Username(configuration.Username);
+                        host.Password(configuration.Password);
+                    });
 
-                   cfg.ConfigureEndpoints(context);
-                   
-               });
-           });
+                    cfg.ConfigureEndpoints(context);
+
+                });
+            });
 
             services.AddMassTransitHostedService();
         }

@@ -22,7 +22,7 @@ namespace Invoices.Domain.Models
         }
 
         public decimal TotalCost { get => Items.Sum(x => x.InstallmentCost); }
-        
+
         public DateTime CloseDate { get; private set; }
 
         public List<InvoiceItem> Items { get; private set; }

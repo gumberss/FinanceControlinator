@@ -7,9 +7,7 @@ using Accounts.Domain.Services;
 using Accounts.Handler.Configurations;
 using Accounts.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.LogsBehaviors;
-using FinanceControlinator.Common.Messaging;
 using FluentValidation.AspNetCore;
-using MassTransit;
 using MediatR;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
@@ -27,13 +25,13 @@ namespace Accounts.API.Commons
 
             services.AddMediatR(typeof(Startup));
             services.AddMediatR(typeof(AccountHandler));
-            
+
             services.AddTransient<ILocalization, Ptbr>();
 
             services.AddFluentValidation();
 
             services.AddScoped<IAccountAppService, AccountAppService>();
-            
+
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountAppService, AccountAppService>();
             services.AddScoped<IAccountService, AccountService>();
@@ -44,7 +42,7 @@ namespace Accounts.API.Commons
         private static async Task<CosmosClient> InitializeCosmosClientInstanceAsync(IConfigurationSection configurationSection)
         {
             string databaseName = configurationSection.GetSection("DatabaseName").Value;
-            string containerName = configurationSection.GetSection("ContainerName").Value; 
+            string containerName = configurationSection.GetSection("ContainerName").Value;
             string account = configurationSection.GetSection("EndpointUri").Value;
             string key = configurationSection.GetSection("PrimaryKey").Value;
 

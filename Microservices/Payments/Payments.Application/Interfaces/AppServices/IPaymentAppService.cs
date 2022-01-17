@@ -1,9 +1,9 @@
-using Payments.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
+using Payments.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
 
 namespace Payments.Application.Interfaces.AppServices
 {

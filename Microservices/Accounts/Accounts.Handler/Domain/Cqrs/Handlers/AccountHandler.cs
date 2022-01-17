@@ -1,20 +1,15 @@
-using AutoMapper;
-using Microsoft.Extensions.Logging;
 using Accounts.Application.Interfaces.AppServices;
-using MediatR;
-using Accounts.Handler.Domain.Cqrs.Events.Commands;
-using FinanceControlinator.Common.Utils;
-using Accounts.Domain.Models;
-using FinanceControlinator.Common.Exceptions;
-using Accounts.Handler.Domain.Cqrs.Events.Queries;
-using System.Threading.Tasks;
-using System.Threading;
 using Accounts.Data.Repositories;
+using Accounts.Domain.Models;
+using Accounts.Handler.Domain.Cqrs.Events.Commands;
+using Accounts.Handler.Domain.Cqrs.Events.Queries;
+using FinanceControlinator.Common.Exceptions;
+using FinanceControlinator.Common.Utils;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Net;
-using System;
-using FinanceControlinator.Common.Messaging;
-using FinanceControlinator.Events.PiggyBanks;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Accounts.Handler.Domain.Cqrs.Handlers
 {

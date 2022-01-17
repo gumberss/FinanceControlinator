@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Payments.Handler.Integration.Handlers
 {
-    public class PaymentIntegrationHandler 
+    public class PaymentIntegrationHandler
         : IConsumer<RegisterItemToPayEvent>
         , IConsumer<PaymentConfirmedEvent>
     {
@@ -45,7 +45,7 @@ namespace Payments.Handler.Integration.Handlers
             var command = _mapper.Map<PaymentConfirmedEvent, ConfirmPaymentCommand>(context.Message);
 
             var result = await _mediator.Send(command);
-            
+
             if (result.IsFailure)
             {
                 //log

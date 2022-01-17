@@ -1,7 +1,3 @@
-using PiggyBanks.API.Commons;
-using PiggyBanks.Data.Contexts;
-using PiggyBanks.Handler.Configurations;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using PiggyBanks.API.Commons;
+using PiggyBanks.Data.Contexts;
 using PiggyBanks.Data.Interfaces.Contexts;
+using PiggyBanks.Handler.Configurations;
 
 namespace PiggyBanks.API
 {
@@ -42,7 +41,7 @@ namespace PiggyBanks.API
 
             services.AddDbContext<IPiggyBankDbContext, PiggyBankDbContext>(options =>
             {
-                  options.UseSqlServer(Configuration.GetConnectionString("PiggyBanksDbConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("PiggyBanksDbConnection"));
             });
 
             services.AddSwaggerGen(x =>
@@ -51,7 +50,7 @@ namespace PiggyBanks.API
             });
 
             services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-            
+
             RegisterServices(services);
         }
 

@@ -1,16 +1,15 @@
-using AutoMapper;
+using FinanceControlinator.Common.Exceptions;
+using FinanceControlinator.Common.Utils;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Domain.Models;
 using Invoices.Handler.Domain.Cqrs.Events;
-using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Utils;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Raven.Client.Documents.Session;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Raven.Client.Documents.Session;
 
 namespace Invoices.Handler.Domain.Cqrs.Handlers
 {
@@ -20,7 +19,7 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         , IRequestHandler<GetLastMonthInvoicesQuery, Result<List<Invoice>, BusinessException>>
         , IRequestHandler<RegisterInvoicePaymentCommand, Result<Invoice, BusinessException>>
         , IRequestHandler<RegisterExpenseCommand, Result<List<Invoice>, BusinessException>>
-        
+
     {
         private readonly IInvoiceAppService _invoiceAppService;
         private readonly ILogger<InvoiceHandler> _logger;
@@ -55,7 +54,7 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<Invoice, BusinessException>> Handle(RegisterInvoicePaymentCommand request, CancellationToken cancellationToken)
         {
-            var result =  await _invoiceAppService.RegisterPayment(request.Payment);
+            var result = await _invoiceAppService.RegisterPayment(request.Payment);
 
             if (result.IsFailure) return result.Error;
 

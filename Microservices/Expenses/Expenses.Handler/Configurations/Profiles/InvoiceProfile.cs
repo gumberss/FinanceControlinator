@@ -3,7 +3,6 @@ using Expenses.Domain.Models.Invoices;
 using Expenses.Handler.Domain.Cqrs.Events.Invoices;
 using FinanceControlinator.Events.Invoices;
 using FinanceControlinator.Events.Invoices.DTOs;
-using System;
 
 namespace Expenses.Handler.Configurations.Profiles
 {

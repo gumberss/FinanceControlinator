@@ -1,10 +1,7 @@
 using Invoices.API.Commons;
-using Invoices.Domain.Models;
-using Invoices.Handler.Domain.Cqrs.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Invoices.API.Controllers
 {

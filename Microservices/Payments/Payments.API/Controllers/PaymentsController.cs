@@ -1,11 +1,10 @@
-using Payments.API.Commons;
-using Payments.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
+using Payments.API.Commons;
 using Payments.Handler.Domain.Cqrs.Events.Commands;
 using Payments.Handler.Domain.Cqrs.Events.Queries;
+using System.Threading.Tasks;
 
 namespace Payments.API.Controllers
 {

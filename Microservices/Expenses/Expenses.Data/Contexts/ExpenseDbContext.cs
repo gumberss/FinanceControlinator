@@ -1,15 +1,11 @@
 ﻿using Expenses.Data.Interfaces.Contexts;
 using Expenses.Domain.Models.Expenses;
 using Expenses.Domain.Models.Invoices;
-using FinanceControlinator.Common.Contexts;
 using FinanceControlinator.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Expenses.Data.Contexts

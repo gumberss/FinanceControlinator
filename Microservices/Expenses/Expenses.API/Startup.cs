@@ -3,7 +3,6 @@ using Expenses.Data.Contexts;
 using Expenses.Data.Interfaces.Contexts;
 using Expenses.Handler.Configurations;
 using FinanceControlinator.Common.CustomLogs;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

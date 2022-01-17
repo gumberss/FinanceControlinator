@@ -1,9 +1,8 @@
-using Payments.Data.Commons;
-using Payments.Data.Contexts;
-using Payments.Domain.Models;
 using FinanceControlinator.Common.Repositories;
-using System;
+using Payments.Data.Commons;
+using Payments.Domain.Models;
 using Raven.Client.Documents.Session;
+using System;
 
 namespace Payments.Data.Repositories
 {

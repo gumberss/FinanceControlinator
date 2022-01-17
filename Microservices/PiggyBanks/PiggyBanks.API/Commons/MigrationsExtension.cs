@@ -1,12 +1,10 @@
-using PiggyBanks.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
+using PiggyBanks.Data.Contexts;
+using PiggyBanks.Data.Interfaces.Contexts;
 using System.Linq;
 using System.Threading.Tasks;
-using PiggyBanks.Data.Interfaces.Contexts;
 
 namespace PiggyBanks.API.Commons
 {
@@ -28,7 +26,7 @@ namespace PiggyBanks.API.Commons
                 }
             }
 
-           
+
         }
     }
 }

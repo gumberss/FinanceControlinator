@@ -1,12 +1,9 @@
 ﻿using Expenses.Application.Interfaces.AppServices;
-using Expenses.Data.Contexts;
-using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Repositories;
 using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;
 using Expenses.Domain.Models.Expenses;
-using Expenses.Domain.Models.Invoices;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Microsoft.Extensions.Logging;
@@ -213,7 +210,7 @@ namespace Expenses.Application.AppServices
             }
 
             var (toAdd, toUpdate, toDelete) = _expenseService.SegregateItems(expense, registeredExpense);
-                
+
             registeredExpense.Value
                 .ChangeTotalCost(expense.TotalCost)
                 .UpdateItems(toUpdate)

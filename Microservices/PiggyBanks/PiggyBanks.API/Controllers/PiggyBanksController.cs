@@ -1,13 +1,13 @@
-using PiggyBanks.API.Commons;
-using PiggyBanks.Domain.Models;
-using PiggyBanks.Handler.Domain.Cqrs.Events;
+using AutoMapper;
+using FinanceControlinator.Events.PiggyBanks;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PiggyBanks.API.Commons;
+using PiggyBanks.Domain.Models;
+using PiggyBanks.Handler.Domain.Cqrs.Events;
 using System.Threading.Tasks;
-using MassTransit;
-using AutoMapper;
-using FinanceControlinator.Events.PiggyBanks;
 
 namespace PiggyBanks.API.Controllers
 {
@@ -21,7 +21,7 @@ namespace PiggyBanks.API.Controllers
         private readonly IMapper _mapper;
 
         public PiggyBanksController(
-            ILogger<PiggyBanksController> logger, 
+            ILogger<PiggyBanksController> logger,
             IMediator mediator,
             IBus bus,
             IMapper mapper
@@ -38,7 +38,7 @@ namespace PiggyBanks.API.Controllers
         {
             var registerCommand = await _mediator.Send(new RegisterPiggyBankCommand { PiggyBank = piggyBank });
 
-            if (registerCommand.IsFailure)  
+            if (registerCommand.IsFailure)
                 return From(registerCommand);
 
             var @event = _mapper.Map<PiggyBank, PiggyBankCreatedEvent>(registerCommand.Value);

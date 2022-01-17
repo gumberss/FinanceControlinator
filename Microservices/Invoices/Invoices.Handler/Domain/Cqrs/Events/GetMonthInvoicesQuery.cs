@@ -1,6 +1,6 @@
-using Invoices.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
+using Invoices.Domain.Models;
 using MediatR;
 using System.Collections.Generic;
 

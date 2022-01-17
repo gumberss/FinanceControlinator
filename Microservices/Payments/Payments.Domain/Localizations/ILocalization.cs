@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Payments.Domain.Localizations
+﻿namespace Payments.Domain.Localizations
 {
     public interface ILocalization
     {

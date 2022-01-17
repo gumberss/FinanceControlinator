@@ -1,8 +1,8 @@
-using Payments.Domain.Interfaces.Validators;
-using Payments.Domain.Models;
 using FluentValidation;
-using System;
+using Payments.Domain.Interfaces.Validators;
 using Payments.Domain.Localizations;
+using Payments.Domain.Models;
+using System;
 
 namespace Payments.Domain.Validators
 {

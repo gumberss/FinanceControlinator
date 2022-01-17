@@ -2,13 +2,8 @@
 using Expenses.Data.Contexts;
 using Expenses.Data.Interfaces.Contexts;
 using Expenses.Domain.Models.Invoices;
-using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Repositories;
-using FinanceControlinator.Common.Utils;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Expenses.Data.Repositories
 {
