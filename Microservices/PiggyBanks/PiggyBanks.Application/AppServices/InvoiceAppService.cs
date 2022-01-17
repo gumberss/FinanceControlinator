@@ -11,20 +11,16 @@ namespace PiggyBanks.Application.AppServices
     public class InvoiceAppService : IInvoiceAppService
     {
         private readonly IInvoiceRepository _invoiceRepository;
-        private readonly IPiggyBankDbContext _piggyBankDbContext;
         private readonly IInvoiceItemRepository _invoiceItemRepository;
 
         public InvoiceAppService(
             IInvoiceRepository invoiceRepository,
-            IInvoiceItemRepository invoiceItemRepository,
-            IPiggyBankDbContext piggyBankDbContext
+            IInvoiceItemRepository invoiceItemRepository
             )
         {
             _invoiceRepository = invoiceRepository;
-            _piggyBankDbContext = piggyBankDbContext;
             _invoiceItemRepository = invoiceItemRepository;
         }
-
 
         public async Task<Result<Invoice, BusinessException>> RegisterPaid(Invoice paidInvoice)
         {

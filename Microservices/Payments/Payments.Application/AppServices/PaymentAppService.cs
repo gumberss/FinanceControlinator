@@ -148,5 +148,21 @@ namespace Payments.Application.AppServices
                 return await _paymentItemRepository.AddAsync(paymentItem);
             }
         }
+
+        public async Task<Result<Payment, BusinessException>> RejectPaymentFor(string paymentId, string reason)
+        {
+            var paymentRejected = await _paymentRepository.GetByIdAsync(paymentId);
+
+            if (paymentRejected.IsFailure) return paymentRejected.Error;
+
+            var itemWithPaymentRejected = await _paymentItemRepository.GetByIdAsync(paymentRejected.Value.ItemId);
+
+            if (itemWithPaymentRejected.IsFailure) return itemWithPaymentRejected.Error;
+
+            paymentRejected.Value.Reject(reason);
+            itemWithPaymentRejected.Value.Reject();
+
+            return paymentRejected;
+        }
     }
 }

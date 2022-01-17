@@ -55,7 +55,7 @@ namespace Accounts.Application.AppServices
             }
 
             return new BusinessException(System.Net.HttpStatusCode.BadRequest
-                , new ErrorData(_localization.SOME_ACCOUNT_IS_NOT_ABLE_TO_PAY_THE_REQUESTED_AMOUNT));
+                , new ErrorData(_localization.ACCOUNT_IS_NOT_ABLE_TO_PAY_THE_REQUESTED_AMOUNT));
         }
 
         public async Task<Result<Account, BusinessException>> Withdraw(Guid? accountId, decimal amount)

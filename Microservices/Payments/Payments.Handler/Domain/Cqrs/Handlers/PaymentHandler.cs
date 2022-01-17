@@ -20,6 +20,7 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
           , IRequestHandler<PayItemCommand, Result<Payment, BusinessException>>
           , IRequestHandler<ClosedItemsQuery, Result<List<PaymentItem>, BusinessException>>
           , IRequestHandler<ConfirmPaymentCommand, Result<Payment, BusinessException>>
+          , IRequestHandler<PaymentRejectedCommand, Result<Payment, BusinessException>>
     {
         private readonly IPaymentAppService _paymentAppService;
         private readonly IAsyncDocumentSession _documentSession;
@@ -85,7 +86,7 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
 
             if (!saveResult.Value)
             {
-                //create an error
+                //todo: create an error
             }
 
             return payment;
@@ -98,6 +99,19 @@ namespace Payments.Handler.Domain.Cqrs.Handlers
             if (closedItems.IsFailure) return closedItems.Error;
 
             return closedItems;
+        }
+
+        public async Task<Result<Payment, BusinessException>> Handle(PaymentRejectedCommand request, CancellationToken cancellationToken)
+        {
+            var paymentRejected = await _paymentAppService.RejectPaymentFor(request.Id, request.Reason);
+
+            if (paymentRejected.IsFailure) return paymentRejected.Error;
+
+            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
+
+            if (saveResult.IsFailure) return saveResult.Error;
+
+            return paymentRejected;
         }
     }
 }

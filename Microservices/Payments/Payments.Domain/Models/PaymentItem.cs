@@ -63,5 +63,14 @@ namespace Payments.Domain.Models
 
             return this;
         }
+
+        public PaymentItem Reject()
+        {
+            PaymentStatus = PaymentStatus.PaymentRejected;
+
+            Updated();
+
+            return this;
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace Payments.Application.Interfaces.AppServices
         Task<Result<Payment, BusinessException>> Pay(string itemId, string description, List<PaymentMethod> paymentMethods);
         Task<Result<List<PaymentItem>, BusinessException>> GetClosedItems();
         Task<Result<Payment, BusinessException>> ConfirmPayment(String paymentId);
+        Task<Result<Payment, BusinessException>> RejectPaymentFor(string paymentId, string reason);
     }
 }

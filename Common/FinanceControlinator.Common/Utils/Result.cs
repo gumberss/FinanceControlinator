@@ -43,6 +43,7 @@ namespace FinanceControlinator.Common.Utils
 
         public static implicit operator E(Result<T, E> result)
             => result.Error;
+
     }
 
     public class Result
