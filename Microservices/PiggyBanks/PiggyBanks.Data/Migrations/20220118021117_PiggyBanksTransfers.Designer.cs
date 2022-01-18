@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PiggyBanks.Data.Contexts;
 
 namespace PiggyBanks.Data.Migrations
 {
     [DbContext(typeof(PiggyBankDbContext))]
-    partial class PiggyBankDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220118021117_PiggyBanksTransfers")]
+    partial class PiggyBanksTransfers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
