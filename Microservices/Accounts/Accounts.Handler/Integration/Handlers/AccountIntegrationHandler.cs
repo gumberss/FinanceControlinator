@@ -1,7 +1,5 @@
 using AutoMapper;
-using MassTransit;
 using MediatR;
-using System.Threading.Tasks;
 
 namespace Accounts.Handler.Integration.Handlers
 {

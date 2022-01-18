@@ -1,5 +1,4 @@
-﻿using Invoices.Domain.Enums;
-using System;
+﻿using System;
 
 namespace Invoices.Domain.DTOs
 {

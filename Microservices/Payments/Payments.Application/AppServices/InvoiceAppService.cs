@@ -1,15 +1,11 @@
 ﻿using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
-using Microsoft.Extensions.Logging;
 using Payments.Application.Interfaces.AppServices;
 using Payments.Data.Repositories;
 using Payments.Domain.Models;
 using Raven.Client.Documents.Linq;
-using Raven.Client.Documents.Session;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Payments.Application.AppServices

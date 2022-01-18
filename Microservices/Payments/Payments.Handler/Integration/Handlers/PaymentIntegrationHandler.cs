@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace Payments.Handler.Integration.Handlers
 {
-    public class PaymentIntegrationHandler 
+    public class PaymentIntegrationHandler
         : IConsumer<RegisterItemToPayEvent>
         , IConsumer<PaymentConfirmedEvent>
+        , IConsumer<PaymentRejectedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
@@ -45,18 +46,21 @@ namespace Payments.Handler.Integration.Handlers
             var command = _mapper.Map<PaymentConfirmedEvent, ConfirmPaymentCommand>(context.Message);
 
             var result = await _mediator.Send(command);
-            
-            if (result.IsFailure)
-            {
-                //log
-                throw result.Error;
-            }
+
+            if (result.IsFailure) throw result.Error;
 
             var @event = _mapper.Map<Payment, PaymentPerformedEvent>(result.Value);
 
             await _bus.Publish(@event);
+        }
 
-            //publish payment performed
+        public async Task Consume(ConsumeContext<PaymentRejectedEvent> context)
+        {
+            var command = _mapper.Map<PaymentRejectedEvent, PaymentRejectedCommand>(context.Message);
+
+            var result = await _mediator.Send(command);
+
+            if (result.IsFailure) throw result.Error;
         }
     }
 }

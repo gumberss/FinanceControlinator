@@ -17,6 +17,6 @@ namespace PiggyBanks.Handler.Integration.Events.Invoices.DTOs
         public DateTime DueDate { get; set; }
 
         public virtual List<PiggyBankInvoiceItemDTO> Items { get; set; }
-    
+
     }
 }

@@ -1,6 +1,6 @@
 apiVersion: v2
-name: expenses
-description: A Helm for Expenses microservices
+name: invoices
+description: A Helm for Invoices microservices
 
 # A chart can be either an 'application' or a 'library' chart.
 #

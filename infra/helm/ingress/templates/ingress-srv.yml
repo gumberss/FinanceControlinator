@@ -16,3 +16,10 @@ spec:
                 name: {{ .Values.expenseReleaseName }}-srv
                 port:
                   number: 80
+          - path: /api/payments/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.paymentReleaseName }}-srv
+                port:
+                  number: 80

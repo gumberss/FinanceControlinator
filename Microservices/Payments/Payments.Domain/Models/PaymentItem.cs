@@ -58,7 +58,16 @@ namespace Payments.Domain.Models
         public PaymentItem Confirm()
         {
             PaymentStatus = PaymentStatus.Paid;
-            
+
+            Updated();
+
+            return this;
+        }
+
+        public PaymentItem Reject()
+        {
+            PaymentStatus = PaymentStatus.PaymentRejected;
+
             Updated();
 
             return this;

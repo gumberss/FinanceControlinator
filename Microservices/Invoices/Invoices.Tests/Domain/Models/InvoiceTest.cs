@@ -35,7 +35,7 @@ namespace Invoices.Tests.Domain.Models
         {
             var invoice = new Invoice(DateTime.Now);
             var item = new InvoiceItem(10, 100);
-            
+
             invoice.AddNew(item);
 
             invoice.Items.Should().HaveCount(1);

@@ -1,16 +1,16 @@
 using Accounts.Application.Interfaces.AppServices;
 using Accounts.Data.Repositories;
-using Microsoft.Extensions.Logging;
+using Accounts.Domain.Interfaces.Services;
 using Accounts.Domain.Localizations;
 using Accounts.Domain.Models;
-using System.Linq;
-using Accounts.Domain.Interfaces.Services;
-using System.Collections.Generic;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Accounts.Application.AppServices
 {
@@ -55,7 +55,7 @@ namespace Accounts.Application.AppServices
             }
 
             return new BusinessException(System.Net.HttpStatusCode.BadRequest
-                , new ErrorData(_localization.SOME_ACCOUNT_IS_NOT_ABLE_TO_PAY_THE_REQUESTED_AMOUNT));
+                , new ErrorData(_localization.ACCOUNT_IS_NOT_ABLE_TO_PAY_THE_REQUESTED_AMOUNT));
         }
 
         public async Task<Result<Account, BusinessException>> Withdraw(Guid? accountId, decimal amount)

@@ -1,7 +1,5 @@
 ﻿using FinanceControlinator.Common.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FinanceControlinator.Common.Utils
@@ -45,6 +43,7 @@ namespace FinanceControlinator.Common.Utils
 
         public static implicit operator E(Result<T, E> result)
             => result.Error;
+
     }
 
     public class Result

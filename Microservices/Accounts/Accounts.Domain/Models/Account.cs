@@ -10,7 +10,7 @@ namespace Accounts.Domain.Models
             Id = (id ?? Guid.NewGuid()).ToString();
         }
 
-        public decimal TotalAmount { get;  set; }
+        public decimal TotalAmount { get; set; }
 
         public Account Receive(decimal amount)
         {

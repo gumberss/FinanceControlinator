@@ -1,0 +1,9 @@
+microserviceName: payments
+replicaCount: 1
+dbUser: sa
+dbPassword: P@ssw0rd!
+image: gumberss/financecontrolinator-payments:latest
+rabbit:
+  host: amqp://finance-controlinator-rabbitmq/
+  password: qPWFKcAX7u
+  username: user

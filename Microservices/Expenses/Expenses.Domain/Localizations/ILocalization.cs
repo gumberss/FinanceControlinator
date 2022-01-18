@@ -1,5 +1,4 @@
-﻿using FinanceControlinator.Common.Exceptions;
-using System;
+﻿using System;
 
 namespace Expenses.Domain.Localizations
 {

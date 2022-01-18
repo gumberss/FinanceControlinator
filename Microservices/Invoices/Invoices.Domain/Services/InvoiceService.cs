@@ -42,8 +42,8 @@ namespace Invoices.Domain.Services
             var firstInvoiceCloseDate = startDate.AddMonths(monthCount);
 
             var lastInvoiceCloseDate = GetInvoiceCloseDateBy(endDate);
-            
-            if(lastInvoiceCloseDate.Year > firstInvoiceCloseDate.Year
+
+            if (lastInvoiceCloseDate.Year > firstInvoiceCloseDate.Year
                 || lastInvoiceCloseDate.Month > firstInvoiceCloseDate.Month
                 )
             {
@@ -51,8 +51,8 @@ namespace Invoices.Domain.Services
             }
 
             return
-                endDate.Day >= lastInvoiceCloseDate.Day 
-             && lastInvoiceCloseDate.Day > firstInvoiceCloseDate.Day 
+                endDate.Day >= lastInvoiceCloseDate.Day
+             && lastInvoiceCloseDate.Day > firstInvoiceCloseDate.Day
                 ? monthCount + 1
                 : monthCount;
         }

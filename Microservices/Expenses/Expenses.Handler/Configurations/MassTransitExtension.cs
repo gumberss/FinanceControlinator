@@ -1,8 +1,6 @@
 ﻿using Expenses.Handler.Integration.Handlers.Invoices;
 using MassTransit;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
 
 namespace Expenses.Handler.Configurations
@@ -11,25 +9,25 @@ namespace Expenses.Handler.Configurations
     {
         public static void ConfigureMassTransit(this IServiceCollection services, RabbitMqValues configuration)
         {
-           services.AddMassTransit(x =>
-           {
-               x.AddConsumer<ExpensesInvoicesIntegrationHandler>();
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<ExpensesInvoicesIntegrationHandler>();
 
-               x.SetKebabCaseEndpointNameFormatter();
+                x.SetKebabCaseEndpointNameFormatter();
 
-               x.UsingRabbitMq((context, cfg) =>
-               {
-                   cfg.Host(new Uri(configuration.Host), host =>
-                   {
-                       
-                       host.Username(configuration.Username);
-                       host.Password(configuration.Password);
-                   });
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri(configuration.Host), host =>
+                    {
 
-                   cfg.ConfigureEndpoints(context);
-                   
-               });
-           });
+                        host.Username(configuration.Username);
+                        host.Password(configuration.Password);
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+
+                });
+            });
 
             services.AddMassTransitHostedService();
         }

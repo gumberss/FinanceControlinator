@@ -1,5 +1,4 @@
 using Accounts.API.Commons;
-using Accounts.Domain.Models;
 using Accounts.Handler.Domain.Cqrs.Events.Commands;
 using Accounts.Handler.Domain.Cqrs.Events.Queries;
 using AutoMapper;
@@ -8,7 +7,6 @@ using FinanceControlinator.Events.PiggyBanks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace Accounts.API.Controllers
@@ -23,7 +21,7 @@ namespace Accounts.API.Controllers
         private readonly IMessageBus _bus;
 
         public AccountsController(
-            ILogger<AccountsController> logger, 
+            ILogger<AccountsController> logger,
             IMediator mediator,
             IMapper mapper,
             IMessageBus bus)

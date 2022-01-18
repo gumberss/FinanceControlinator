@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FinanceControlinator.Events.Invoices;
 using FinanceControlinator.Events.Invoices.DTOs;
 using Invoices.Domain.Models;
 

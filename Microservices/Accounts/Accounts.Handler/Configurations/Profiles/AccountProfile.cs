@@ -1,14 +1,14 @@
-using AutoMapper;
 using Accounts.Domain.Models;
-using FinanceControlinator.Events.Payments.DTOs;
-using FinanceControlinator.Events.Payments;
-using Accounts.Handler.Domain.Cqrs.Events.Commands.Payments;
-using System;
-using FinanceControlinator.Events.Accounts;
-using System.Collections.Generic;
-using FinanceControlinator.Events.Accounts.DTOs;
 using Accounts.Handler.Domain.Cqrs.Events.Commands;
+using Accounts.Handler.Domain.Cqrs.Events.Commands.Payments;
+using AutoMapper;
+using FinanceControlinator.Events.Accounts;
+using FinanceControlinator.Events.Accounts.DTOs;
+using FinanceControlinator.Events.Payments;
+using FinanceControlinator.Events.Payments.DTOs;
 using FinanceControlinator.Events.PiggyBanks;
+using System;
+using System.Collections.Generic;
 
 namespace Accounts.Handler.Configurations.Profiles
 {
@@ -27,7 +27,7 @@ namespace Accounts.Handler.Configurations.Profiles
                 .ForMember(x => x.AmountSourceId, x => x.MapFrom(y => y.AmountSourceId.ToString()));
 
             CreateMap<AccountChange, PaymentConfirmedEvent>()
-                .ForMember(x=> x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)));
+                .ForMember(x => x.Id, x => x.MapFrom(y => Guid.Parse(y.Id)));
 
             CreateMap<List<AccountChange>, AccountChangedEvent>()
                 .ForMember(x => x.AccountChangeDTOs, x => x.MapFrom(y => y));

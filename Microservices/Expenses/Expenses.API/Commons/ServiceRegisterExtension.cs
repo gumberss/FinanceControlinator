@@ -1,22 +1,18 @@
 ﻿using Expenses.Application.AppServices;
 using Expenses.Application.Interfaces.AppServices;
 using Expenses.Data.Repositories;
+using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;
+using Expenses.Domain.Services;
 using Expenses.Domain.Validators;
 using Expenses.Handler.Configurations;
 using Expenses.Handler.Domain.Cqrs.Handlers;
-using FinanceControlinator.Common.CustomLogs;
+using FinanceControlinator.Common.LogsBehaviors;
+using FinanceControlinator.Common.Messaging;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using FinanceControlinator.Common.LogsBehaviors;
-using Expenses.Data.Interfaces.Contexts;
-using Expenses.Data.Contexts;
-using Microsoft.EntityFrameworkCore;
-using FinanceControlinator.Common.Messaging;
-using Expenses.Domain.Services;
-using Expenses.Domain.Interfaces.Services;
 
 namespace Expenses.API.Commons
 {

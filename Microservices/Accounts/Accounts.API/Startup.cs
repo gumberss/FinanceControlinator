@@ -1,14 +1,14 @@
 using Accounts.API.Commons;
 using Accounts.Handler.Configurations;
+using FinanceControlinator.Common.CustomLogs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Logging;
-using FinanceControlinator.Common.CustomLogs;
+using Microsoft.OpenApi.Models;
 
 namespace Accounts.API
 {
@@ -41,7 +41,7 @@ namespace Accounts.API
             });
 
             services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-            
+
             RegisterServices(services);
         }
 
@@ -56,7 +56,7 @@ namespace Accounts.API
             , ILoggerFactory loggerFactory)
         {
             loggerFactory.AddProvider(new CustomLogProvider(new CustomLogConfig()));
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

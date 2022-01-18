@@ -13,7 +13,7 @@ namespace PiggyBanks.Domain.Models
         public PiggyBankType Type { get; set; }
 
         public DateTime GoalDate { get; set; }
-        
+
         public decimal GoalValue { get; set; }
 
         public decimal SavedValue { get; set; }

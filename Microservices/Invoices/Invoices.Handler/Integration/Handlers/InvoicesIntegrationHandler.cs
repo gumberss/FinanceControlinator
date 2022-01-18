@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using FinanceControlinator.Events.Invoices;
-using FinanceControlinator.Events.Invoices;
 using FinanceControlinator.Events.Payments;
 using Invoices.Application.Interfaces.AppServices;
-using Invoices.Domain.Models;
 using Invoices.Handler.Domain.Cqrs.Events;
 using MassTransit;
 using MediatR;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Invoices.Handler.Integration.Handlers

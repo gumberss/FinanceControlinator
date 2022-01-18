@@ -6,4 +6,3 @@ namespace Payments.Domain.Enums
         Credit//?
     }
 }
-    

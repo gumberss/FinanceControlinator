@@ -1,14 +1,9 @@
 ﻿using Expenses.Application.Interfaces.AppServices;
-using Expenses.Data.Contexts;
 using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Repositories;
 using Expenses.Domain.Models.Invoices;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.AppServices

@@ -1,5 +1,5 @@
-using Payments.Domain.Models;
 using FluentValidation;
+using Payments.Domain.Models;
 
 namespace Payments.Domain.Interfaces.Validators
 {

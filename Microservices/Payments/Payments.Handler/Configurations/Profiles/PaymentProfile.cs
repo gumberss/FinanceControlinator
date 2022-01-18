@@ -42,6 +42,8 @@ namespace Payments.Handler.Configurations.Profiles
             CreateMap<Payment, PaymentRequestedEvent>()
               .ForMember(x => x.Payment, x => x.MapFrom(y => y));
 
+            CreateMap<PaymentRejectedEvent, PaymentRejectedCommand>()
+                .ForMember(x => x.Id, x => x.MapFrom(y => y.Id.ToString()));
         }
     }
 }

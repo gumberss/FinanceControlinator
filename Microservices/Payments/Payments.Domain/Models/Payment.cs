@@ -62,12 +62,6 @@ namespace Payments.Domain.Models
             return this;
         }
 
-        public bool InProcess() => Status == PaymentStatus.PaymentRequested;
-
-        public bool Paid() => Status == PaymentStatus.Paid;
-
-        public bool WaitingForConfirmation() => Status == PaymentStatus.PaymentRequested;
-
         public Payment Confirm()
         {
             Status = PaymentStatus.Paid;
@@ -78,5 +72,22 @@ namespace Payments.Domain.Models
 
             return this;
         }
+
+        public Payment Reject(String reason)
+        {
+            Status = PaymentStatus.PaymentRejected;
+            
+            Description = reason;
+            
+            Updated();
+            
+            return this;
+        }
+
+        public bool InProcess() => Status == PaymentStatus.PaymentRequested;
+
+        public bool Paid() => Status == PaymentStatus.Paid;
+
+        public bool WaitingForConfirmation() => Status == PaymentStatus.PaymentRequested;
     }
 }

@@ -1,9 +1,8 @@
-using Invoices.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
+using Invoices.Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Invoices.Domain.DTOs;
 
 namespace Invoices.Application.Interfaces.AppServices
 {

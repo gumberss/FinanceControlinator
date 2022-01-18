@@ -1,9 +1,9 @@
-using Payments.Domain.Models;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
+using Payments.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
 
 namespace Payments.Application.Interfaces.AppServices
 {
@@ -13,5 +13,6 @@ namespace Payments.Application.Interfaces.AppServices
         Task<Result<Payment, BusinessException>> Pay(string itemId, string description, List<PaymentMethod> paymentMethods);
         Task<Result<List<PaymentItem>, BusinessException>> GetClosedItems();
         Task<Result<Payment, BusinessException>> ConfirmPayment(String paymentId);
+        Task<Result<Payment, BusinessException>> RejectPaymentFor(string paymentId, string reason);
     }
 }

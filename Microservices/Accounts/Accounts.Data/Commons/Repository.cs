@@ -175,7 +175,7 @@ namespace Accounts.Data.Commons
 
                 return result.Resource;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, ex);
             }

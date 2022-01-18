@@ -3,10 +3,6 @@ using FinanceControlinator.Events.PiggyBanks;
 using MassTransit;
 using MediatR;
 using PiggyBanks.Handler.Domain.Cqrs.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PiggyBanks.Handler.Integration.Handlers

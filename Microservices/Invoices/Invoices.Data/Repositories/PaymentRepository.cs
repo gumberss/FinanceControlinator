@@ -1,6 +1,6 @@
+using FinanceControlinator.Common.Repositories;
 using Invoices.Data.Commons;
 using Invoices.Domain.Models;
-using FinanceControlinator.Common.Repositories;
 using Raven.Client.Documents.Session;
 using System;
 

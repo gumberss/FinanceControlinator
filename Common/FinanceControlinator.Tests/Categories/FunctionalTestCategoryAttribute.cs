@@ -1,9 +1,7 @@
 ﻿using FinanceControlinator.Tests.Categories.Enums;
 using FinanceControlinator.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FinanceControlinator.Tests.Categories
 {

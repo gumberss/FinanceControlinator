@@ -1,3 +1,4 @@
+using FinanceControlinator.Common.CustomLogs;
 using Invoices.API.Commons;
 using Invoices.Data.Contexts;
 using Invoices.Handler.Configurations;
@@ -8,11 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
-using Microsoft.Extensions.Logging;
-using FinanceControlinator.Common.CustomLogs;
 
 namespace Invoices.API
 {
@@ -54,7 +54,7 @@ namespace Invoices.API
             });
 
             services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-            
+
             RegisterServices(services);
         }
 

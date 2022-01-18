@@ -6,7 +6,7 @@ using System;
 
 namespace Payments.Handler.Domain.Cqrs.Events.Commands
 {
-    public class ConfirmPaymentCommand 
+    public class ConfirmPaymentCommand
         : IRequest<Result<Payment, BusinessException>>
     {
         public String Id { get; set; }
