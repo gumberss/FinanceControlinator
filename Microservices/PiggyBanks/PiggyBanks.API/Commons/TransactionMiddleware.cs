@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PiggyBanks.API.Commons
 {
     /// <summary>
-    /// It is important to rollback something that happen in the process befere occured an error
+    /// It is important to rollback something that happen in the process before occured an error
     /// Ex: We update a data in database and when we try to send the message, an error occurs, we need to rollback the update...
     /// </summary>
     public class TransactionMiddleware

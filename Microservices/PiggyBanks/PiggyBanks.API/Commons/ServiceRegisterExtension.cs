@@ -33,6 +33,9 @@ namespace PiggyBanks.API.Commons
             services.AddScoped<IInvoiceAppService, InvoiceAppService>();
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IInvoiceItemRepository, InvoiceItemRepository>();
+
+            services.AddScoped<ITransferAppService, TransferAppService>();
+            services.AddScoped<ITransferRepository, TransferRepository>();
         }
     }
 }

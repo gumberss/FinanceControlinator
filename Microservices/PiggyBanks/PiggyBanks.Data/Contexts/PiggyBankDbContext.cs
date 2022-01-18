@@ -3,17 +3,18 @@ using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using PiggyBanks.Data.Configurations;
 using PiggyBanks.Data.Interfaces.Contexts;
 using PiggyBanks.Domain.Models;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace PiggyBanks.Data.Contexts
 {
     public class PiggyBankDbContext : DbContext, IPiggyBankDbContext
     {
-
         public PiggyBankDbContext(DbContextOptions options) : base(options)
         {
             ChangeTracker.LazyLoadingEnabled = false;
@@ -25,9 +26,13 @@ namespace PiggyBanks.Data.Contexts
 
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
+        public DbSet<Transfer> Transfers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("piggyBanks");
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
         }

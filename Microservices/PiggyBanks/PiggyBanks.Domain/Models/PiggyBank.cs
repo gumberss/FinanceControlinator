@@ -1,11 +1,18 @@
 using FinanceControlinator.Common.Entities;
 using PiggyBanks.Domain.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace PiggyBanks.Domain.Models
 {
     public class PiggyBank : Entity<Guid>
     {
+        public PiggyBank()
+        {
+            SourceTransfers = new List<Transfer>();
+            DestinationTransfers = new List<Transfer>();
+        }
+
         public String Title { get; set; }
 
         public String Description { get; set; }
@@ -21,6 +28,10 @@ namespace PiggyBanks.Domain.Models
         public DateTime StartDate { get; set; }
 
         public bool Default { get; set; }
+
+        public virtual List<Transfer> DestinationTransfers { get; set; }
+
+        public virtual List<Transfer> SourceTransfers { get; set; }
 
         public PiggyBank AsDefault()
         {
@@ -43,6 +54,15 @@ namespace PiggyBanks.Domain.Models
         public PiggyBank InstallmentPaid(decimal value)
         {
             return AddMoney(value);
+        }
+
+        public bool CanWithdraw(decimal amount) => SavedValue >= amount;
+
+        public PiggyBank Withdraw(decimal amount)
+        {
+            SavedValue -= amount;
+            Updated();
+            return this;
         }
     }
 }
