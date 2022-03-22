@@ -37,7 +37,7 @@ namespace PiggyBanks.Application.AppServices
             var source = piggyBanks.Value.Find(x => x.Id == transfer.SourceId);
             var destination = piggyBanks.Value.Find(x => x.Id == transfer.DestinationId);
 
-            if(source is null || destination is null)
+            if (source is null || destination is null)
             {
                 return new BusinessException(HttpStatusCode.BadRequest, "From or to is null"); //todo: change error message, please! (use localization)
             }
