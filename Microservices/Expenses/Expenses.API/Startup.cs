@@ -80,7 +80,7 @@ namespace Expenses.API
                 x.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses Microservice V1");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
