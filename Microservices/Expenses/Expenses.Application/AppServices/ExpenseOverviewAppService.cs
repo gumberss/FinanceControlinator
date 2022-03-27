@@ -63,7 +63,7 @@ namespace Expenses.Application.AppServices
                 var parsers = new List<(String key, String value)>
                 {
                     ("MOST_SPENT_PLACE", mostSpentMoneyPlace),
-                    ("TOTAL_VALUE", totalSpentMoneyInThePlace.ToString())
+                    ("TOTAL_VALUE", totalSpentMoneyInThePlace.ToString(_localization.CULTURE))
                 };
 
                 overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
@@ -73,7 +73,7 @@ namespace Expenses.Application.AppServices
 
             overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
                 {
-                    ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString())
+                    ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString(_localization.CULTURE))
                 })));
 
             return overviews;
