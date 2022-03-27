@@ -16,7 +16,7 @@ namespace Expenses.Tests.Domain.Services
     [TestClass]
     public class ExpenseOverviewServiceTest
     {
-        private ExpenseOverviewService _service;
+        private readonly ExpenseOverviewService _service;
 
         public ExpenseOverviewServiceTest()
         {
@@ -231,10 +231,10 @@ namespace Expenses.Tests.Domain.Services
         {
             var expenses = new List<Expense>()
             {
-                new Expense(){ TotalCost = 1.10M },
-                new Expense(){ TotalCost = 2.20M },
-                new Expense(){ TotalCost = 3.30M },
-                new Expense(){ TotalCost = 4.40M },
+                new Expense { TotalCost = 1.10M },
+                new Expense { TotalCost = 2.20M },
+                new Expense { TotalCost = 3.30M },
+                new Expense { TotalCost = 4.40M },
             };
 
             var result = _service.TotalMoneySpent(expenses);

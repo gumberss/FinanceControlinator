@@ -10,7 +10,7 @@ namespace FinanceControlinator.Common.Tests.Parsers.TextParsers
     [TestClass]
     public class TextParserTest
     {
-        TextParser _service;
+        private readonly TextParser _service;
 
         public TextParserTest()
         {
