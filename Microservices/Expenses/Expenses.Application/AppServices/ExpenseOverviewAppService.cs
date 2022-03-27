@@ -35,7 +35,7 @@ namespace Expenses.Application.AppServices
             _textParser = textParser;
         }
 
-        public async Task<Result<List<ExpenseOverview>, BusinessException>> GetExpensesOverview()
+        public async Task<Result<ExpenseOverview, BusinessException>> GetExpensesOverview()
         {
             var (startDate, endDate) = _dateService.StartAndEndMonthDate(DateTime.Now);
 
@@ -43,7 +43,14 @@ namespace Expenses.Application.AppServices
 
             if (expenses.IsFailure) return expenses.Error;
 
-            List<ExpenseOverview> overviews = new List<ExpenseOverview>();
+            List<ExpenseBrief> briefs = BuildBriefs(expenses);
+
+            return new ExpenseOverview(briefs, null);
+        }
+
+        private List<ExpenseBrief> BuildBriefs(Result<List<Expense>, BusinessException> expenses)
+        {
+            List<ExpenseBrief> briefs = new List<ExpenseBrief>();
 
             ExpenseType? mostSpentType = _expenseService.MostSpentType(expenses.Value);
 
@@ -54,7 +61,7 @@ namespace Expenses.Application.AppServices
                     ("MOST_SPENT_TYPE", _localization.EXPENSE_TYPE(mostSpentType.Value))
                 };
 
-                overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers)));
+                briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers)));
             }
 
             (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseService.MostSpentMoneyPlace(expenses.Value);
@@ -67,17 +74,16 @@ namespace Expenses.Application.AppServices
                     ("TOTAL_VALUE", totalSpentMoneyInThePlace.ToString(_localization.CULTURE))
                 };
 
-                overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
+                briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
             }
 
             decimal totalMonthExpense = _expenseService.TotalMoneySpent(expenses.Value);
 
-            overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
+            briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
                 {
                     ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString(_localization.CULTURE))
                 })));
-
-            return overviews;
+            return briefs;
         }
     }
 }
