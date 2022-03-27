@@ -2,6 +2,7 @@
 using Expenses.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Expenses.Domain.Localizations
 {
@@ -51,5 +52,7 @@ namespace Expenses.Domain.Localizations
             { ExpenseType.Other, "Outros" },
 
         }[expenseType];
+
+        public CultureInfo CULTURE => new CultureInfo("pt-BR");
     }
 }

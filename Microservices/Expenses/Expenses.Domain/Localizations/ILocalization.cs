@@ -1,5 +1,6 @@
 ﻿using Expenses.Domain.Enums;
 using System;
+using System.Globalization;
 
 namespace Expenses.Domain.Localizations
 {
@@ -24,5 +25,7 @@ namespace Expenses.Domain.Localizations
         string EXPENSE_TYPE(ExpenseType expenseType);
         string TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE { get; }
         string TOTAL_SPENT_IN_THE_MONTH_TEMPLATE { get; }
+
+        CultureInfo CULTURE { get; }
     }
 }
