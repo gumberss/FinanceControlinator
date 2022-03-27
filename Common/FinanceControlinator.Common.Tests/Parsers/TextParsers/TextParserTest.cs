@@ -24,8 +24,8 @@ namespace FinanceControlinator.Common.Tests.Parsers.TextParsers
         {
             var parsers = new List<(string key, string value)>
             {
-                ("[[THE_KEY]]", "Jarbas"),
-                ("[[OTHER_KEY]]", "are you?")
+                ("THE_KEY", "Jarbas"),
+                ("OTHER_KEY", "are you?")
             };
 
             var result = _service.Parse("Hi, [[THE_KEY]], how [[OTHER_KEY]]", parsers);
