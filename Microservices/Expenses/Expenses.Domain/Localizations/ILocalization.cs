@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Expenses.Domain.Enums;
+using System;
 
 namespace Expenses.Domain.Localizations
 {
@@ -18,5 +19,10 @@ namespace Expenses.Domain.Localizations
         string EXPENSE_COST_IS_LESS_THAN_WHAT_WAS_PAID { get; }
         string EXPENSE_INSTALLMENTS_IS_LESS_THAN_TIMES_PAID { get; }
         string INSTALLMENTS_QUANTITY_IS_NOT_VALID { get; }
+        string MOST_EXPENT_TYPE_TEMPLATE { get; }
+
+        string EXPENSE_TYPE(ExpenseType expenseType);
+        string TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE { get; }
+        string TOTAL_SPENT_IN_THE_MONTH_TEMPLATE { get; }
     }
 }

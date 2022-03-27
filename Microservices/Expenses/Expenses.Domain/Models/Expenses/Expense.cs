@@ -12,7 +12,7 @@ namespace Expenses.Domain.Models.Expenses
 
         public String Description { get; set; }
 
-        public DateTime PurchaseDay { get; set; }
+        public DateTime PurchaseDate { get; set; }
 
         public ExpenseType Type { get; set; }
 

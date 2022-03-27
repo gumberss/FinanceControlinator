@@ -1,6 +1,7 @@
 ﻿using Expenses.API.Commons;
 using Expenses.Domain.Models.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
+using Expenses.Handler.Domain.Cqrs.ExpenseOverviews;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,12 @@ namespace Expenses.API.Controllers
         public async Task<IActionResult> Get()
         {
             return From(await _mediator.Send(new GetAllExpensesQuery()));
+        }
+
+        [HttpGet("Overview")]
+        public async Task<IActionResult> Overview()
+        {
+            return From(await _mediator.Send(new ExpenseOverviewQuery()));
         }
 
         [HttpGet("Month")]

@@ -10,6 +10,8 @@ using Expenses.Handler.Configurations;
 using Expenses.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.LogsBehaviors;
 using FinanceControlinator.Common.Messaging;
+using FinanceControlinator.Common.Parsers.TextParsers;
+using FinanceControlinator.Common.Utils;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,9 +35,14 @@ namespace Expenses.API.Commons
 
             services.AddFluentValidation();
 
-            services.AddTransient<IExpenseService, ExpenseService>();
+            services.AddTransient<IDateService, DateService>();
 
+            services.AddTransient<IExpenseService, ExpenseService>();
+            services.AddTransient<IExpenseOverviewService, ExpenseOverviewService>();
+            services.AddTransient<ITextParser, TextParser>();
+            
             services.AddTransient<IExpenseAppService, ExpenseAppService>();
+            services.AddTransient<IExpenseOverviewAppService, ExpenseOverviewAppService>();
             services.AddTransient<IInvoiceAppService, InvoiceAppService>();
 
             services.AddTransient<IExpenseItemRepository, ExpenseItemRepository>();

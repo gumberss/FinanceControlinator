@@ -12,5 +12,8 @@ namespace FinanceControlinator.Tests.Categories.Enums
 
         [Description("Recording Piggy Banks")]
         RecordingPiggyBanks,
+
+        [Description("Overview")]
+        Overview,
     }
 }

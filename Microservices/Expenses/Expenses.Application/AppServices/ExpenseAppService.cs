@@ -1,5 +1,6 @@
 ﻿using Expenses.Application.Interfaces.AppServices;
 using Expenses.Data.Repositories;
+using Expenses.Domain.Enums;
 using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;
@@ -24,6 +25,7 @@ namespace Expenses.Application.AppServices
         private readonly ILocalization _localization;
         private readonly ILogger<IExpenseAppService> _logger;
         private readonly IExpenseService _expenseService;
+        private readonly IDateService _dateService;
 
         public ExpenseAppService(
                 IExpenseRepository expenseRepository
@@ -33,6 +35,7 @@ namespace Expenses.Application.AppServices
                 , ILocalization localization
                 , ILogger<IExpenseAppService> logger
                 , IExpenseService expenseService
+            , IDateService dateService
             )
         {
             _expenseRepository = expenseRepository;
@@ -42,6 +45,7 @@ namespace Expenses.Application.AppServices
             _localization = localization;
             _logger = logger;
             _expenseService = expenseService;
+            _dateService = dateService;
         }
 
         public async Task<Result<List<Expense>, BusinessException>> GetAllExpenses()
@@ -71,8 +75,8 @@ namespace Expenses.Application.AppServices
 
             var result = await _expenseRepository.GetAllAsync(
                 include: e => e.Items
-                , e => e.PurchaseDay.Month == month
-                , e => e.PurchaseDay.Year == year);
+                , e => e.PurchaseDate.Month == month
+                , e => e.PurchaseDate.Year == year);
 
             if (result.IsFailure)
             {
@@ -98,8 +102,8 @@ namespace Expenses.Application.AppServices
 
             var result = await _expenseRepository.GetAllAsync(
                 include: e => e.Items
-                , e => e.PurchaseDay.Month == month
-                , e => e.PurchaseDay.Year == year);
+                , e => e.PurchaseDate.Month == month
+                , e => e.PurchaseDate.Year == year);
 
             if (result.IsFailure)
             {
@@ -187,7 +191,7 @@ namespace Expenses.Application.AppServices
 
             if (invoicesWithExpenseCosts.IsFailure) return invoicesWithExpenseCosts.Error;
 
-            bool newTotalCostIsValid = _expenseService.TotalCostIsValid(expense, invoicesWithExpenseCosts);
+            bool newTotalCostIsValid = _expenseService.IsTotalCostValid(expense, invoicesWithExpenseCosts);
 
             if (!newTotalCostIsValid)
             {
@@ -219,5 +223,6 @@ namespace Expenses.Application.AppServices
 
             return registeredExpense;
         }
+
     }
 }
