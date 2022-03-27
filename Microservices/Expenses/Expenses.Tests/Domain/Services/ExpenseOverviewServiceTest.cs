@@ -229,7 +229,7 @@ namespace Expenses.Tests.Domain.Services
         [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.Overview)]
         public void Should_return_the_sum_of_all_expenses_when_there_are_expenses()
         {
-            var expenses = new List<Expense>()
+            var expenses = new List<Expense>
             {
                 new Expense { TotalCost = 1.10M },
                 new Expense { TotalCost = 2.20M },
