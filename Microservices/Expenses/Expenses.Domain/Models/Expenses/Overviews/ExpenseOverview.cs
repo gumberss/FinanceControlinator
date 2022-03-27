@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Expenses.Domain.Models.Expenses.Overviews
 {
     public class ExpenseOverview
     {
-        public ExpenseOverview(String text)
-        {
-            Text = text;
-        }
+        public List<ExpenseBrief> Briefs { get; private set; } 
+        public List<ExpensePartition> ExpensePartition { get; private set; }
 
-        public String Text { get; set; }
+        public ExpenseOverview(List<ExpenseBrief> briefs, List<ExpensePartition> expensePartition)
+        {
+            Briefs = briefs;
+            ExpensePartition = expensePartition;
+        }
     }
 }
