@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Expenses.Domain.Models.Expenses
+namespace Expenses.Domain.Models.Expenses.Overviews
 {
     public class ExpenseOverview
     {
