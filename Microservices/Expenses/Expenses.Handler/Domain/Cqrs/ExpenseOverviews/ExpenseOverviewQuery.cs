@@ -9,4 +9,9 @@ namespace Expenses.Handler.Domain.Cqrs.ExpenseOverviews
     public class ExpenseOverviewQuery : IRequest<Result<List<ExpenseOverviewDTO>, BusinessException>>
     {
     }
+
+
+    //ExpenseOverview
+        //ExpenseBrief
+        //ExpensePartition
 }
