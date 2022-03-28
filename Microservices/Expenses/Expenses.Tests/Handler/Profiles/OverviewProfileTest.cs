@@ -60,7 +60,7 @@ namespace Expenses.Tests.Handler.Profiles
                     new ExpenseBriefDTO { Text = "A brief" },
                     new ExpenseBriefDTO { Text = "A brief 2" }
                 },
-                ExpensePartitions = new List<ExpensePartitionDTO>
+                Partitions = new List<ExpensePartitionDTO>
                 {
                     new ExpensePartitionDTO
                     {
