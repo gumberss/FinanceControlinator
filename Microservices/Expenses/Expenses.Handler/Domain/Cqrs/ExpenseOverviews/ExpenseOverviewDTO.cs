@@ -6,7 +6,7 @@ namespace Expenses.Handler.Domain.Cqrs.ExpenseOverviews
     public class ExpenseOverviewDTO
     {
         public List<ExpenseBriefDTO> Briefs { get; set; }
-        public List<ExpensePartitionDTO> ExpensePartitions { get; set; }
+        public List<ExpensePartitionDTO> Partitions { get; set; }
 
     }
 
