@@ -1,9 +1,15 @@
 ﻿using AutoMapper;
+using Expenses.Domain.Enums;
+using Expenses.Domain.Localizations;
 using Expenses.Domain.Models.Expenses.Overviews;
 using Expenses.Handler.Configurations.Profiles;
 using Expenses.Handler.Domain.Cqrs.ExpenseOverviews;
+using FinanceControlinator.Tests.Categories;
+using FinanceControlinator.Tests.Categories.Enums;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 
 namespace Expenses.Tests.Handler.Profiles
@@ -15,16 +21,23 @@ namespace Expenses.Tests.Handler.Profiles
 
         public OverviewProfileTest()
         {
-            _config = new MapperConfiguration(cfg => cfg.AddProfile<OverviewProfile>());
+            Mock<IServiceProvider> _serviceProvider = new Mock<IServiceProvider>();
+            _serviceProvider.Setup(x => x.GetService(typeof(ILocalization))).Returns(new Ptbr());
+
+            _config = new MapperConfiguration(cfg => cfg.AddProfile(new OverviewProfile(_serviceProvider.Object)));
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.Overview)]
+        [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.Overview)]
         public void Is_valid_configuration()
         {
             _config.AssertConfigurationIsValid();
         }
 
         [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.Overview)]
+        [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.Overview)]
         public void Should_parse_to_DTO_correct()
         {
             var mapper = _config.CreateMapper();
@@ -36,8 +49,8 @@ namespace Expenses.Tests.Handler.Profiles
             },
             new List<ExpensePartition>
             {
-                new ExpensePartition("Market", 40.25f, 1080.32M),
-                new ExpensePartition("Bill", 21.25f, 180.32M)
+                new ExpensePartition(ExpenseType.Market, 40.25f, 1080.32M),
+                new ExpensePartition(ExpenseType.Bill, 21.25f, 180.32M)
             });
 
             var expenseOverviewDTO = new ExpenseOverviewDTO
@@ -51,14 +64,14 @@ namespace Expenses.Tests.Handler.Profiles
                 {
                     new ExpensePartitionDTO
                     {
-                        Type = "Market", 
-                        Percent = 40.25f, 
+                        Type = "Mercado",
+                        Percent = 40.25f,
                         TotalValue = 1080.32M
                     },
                     new ExpensePartitionDTO
                     {
-                        Type = "Bill", 
-                        Percent = 21.25f, 
+                        Type = "Contas",
+                        Percent = 21.25f,
                         TotalValue = 180.32M
                     }
                 }

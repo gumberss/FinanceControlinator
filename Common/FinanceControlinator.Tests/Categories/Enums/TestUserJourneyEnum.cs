@@ -15,5 +15,8 @@ namespace FinanceControlinator.Tests.Categories.Enums
 
         [Description("Overview")]
         Overview,
+
+        [Description("Expense General")]
+        ExpenseGeneral,
     }
 }

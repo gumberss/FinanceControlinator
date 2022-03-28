@@ -23,6 +23,9 @@ namespace FinanceControlinator.Tests.Categories.Enums
         SavingMoney,
 
         [Description("Overview")]
-        Overview
+        Overview,
+
+        [Description("General")]
+        General
     }
 }

@@ -43,16 +43,24 @@ namespace Expenses.Application.AppServices
 
             if (expenses.IsFailure) return expenses.Error;
 
-            List<ExpenseBrief> briefs = BuildBriefs(expenses);
+            var briefs = BuildBriefs(expenses.Value);
 
-            return new ExpenseOverview(briefs, null);
+            var partitions = BuildPartitions(expenses.Value);
+
+            return new ExpenseOverview(briefs, partitions);
         }
 
-        private List<ExpenseBrief> BuildBriefs(Result<List<Expense>, BusinessException> expenses)
+        private List<ExpensePartition> BuildPartitions(List<Expense> expenses)
+        {
+            return null;
+            //var expensePartitions = _expenseService.GetExpenseCostByType(expenses);
+        }
+
+        private List<ExpenseBrief> BuildBriefs(List<Expense> expenses)
         {
             List<ExpenseBrief> briefs = new List<ExpenseBrief>();
 
-            ExpenseType? mostSpentType = _expenseService.MostSpentType(expenses.Value);
+            ExpenseType? mostSpentType = _expenseService.MostSpentType(expenses);
 
             if (mostSpentType.HasValue)
             {
@@ -64,7 +72,7 @@ namespace Expenses.Application.AppServices
                 briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers)));
             }
 
-            (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseService.MostSpentMoneyPlace(expenses.Value);
+            (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseService.MostSpentMoneyPlace(expenses);
 
             if (totalSpentMoneyInThePlace > 0)
             {
@@ -77,7 +85,7 @@ namespace Expenses.Application.AppServices
                 briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
             }
 
-            decimal totalMonthExpense = _expenseService.TotalMoneySpent(expenses.Value);
+            decimal totalMonthExpense = _expenseService.TotalMoneySpent(expenses);
 
             briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
                 {
