@@ -24,8 +24,6 @@ namespace Expenses.API.Commons
         {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
-            services.ConfigureHandlerAutoMapper();
-
             services.AddMediatR(typeof(Startup));
             services.AddMediatR(typeof(ExpenseHandler));
 
@@ -51,6 +49,9 @@ namespace Expenses.API.Commons
             services.AddTransient<IInvoiceItemRepository, InvoiceItemRepository>();
 
             services.AddTransient<IExpenseValidator, ExpenseValidator>();
+            
+            // Must be the last one
+            services.ConfigureHandlerAutoMapper();
         }
     }
 }

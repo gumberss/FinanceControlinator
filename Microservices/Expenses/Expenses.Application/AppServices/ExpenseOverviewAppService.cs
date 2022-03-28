@@ -4,6 +4,7 @@ using Expenses.Domain.Enums;
 using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Localizations;
 using Expenses.Domain.Models.Expenses;
+using Expenses.Domain.Models.Expenses.Overviews;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Parsers.TextParsers;
 using FinanceControlinator.Common.Utils;
@@ -34,7 +35,7 @@ namespace Expenses.Application.AppServices
             _textParser = textParser;
         }
 
-        public async Task<Result<List<ExpenseOverview>, BusinessException>> GetExpensesOverview()
+        public async Task<Result<ExpenseOverview, BusinessException>> GetExpensesOverview()
         {
             var (startDate, endDate) = _dateService.StartAndEndMonthDate(DateTime.Now);
 
@@ -42,9 +43,24 @@ namespace Expenses.Application.AppServices
 
             if (expenses.IsFailure) return expenses.Error;
 
-            List<ExpenseOverview> overviews = new List<ExpenseOverview>();
+            var briefs = BuildBriefs(expenses.Value);
 
-            ExpenseType? mostSpentType = _expenseService.MostSpentType(expenses.Value);
+            var partitions = BuildPartitions(expenses.Value);
+
+            return new ExpenseOverview(briefs, partitions);
+        }
+
+        private List<ExpensePartition> BuildPartitions(List<Expense> expenses)
+        {
+            return null;
+            //var expensePartitions = _expenseService.GetExpenseCostByType(expenses);
+        }
+
+        private List<ExpenseBrief> BuildBriefs(List<Expense> expenses)
+        {
+            List<ExpenseBrief> briefs = new List<ExpenseBrief>();
+
+            ExpenseType? mostSpentType = _expenseService.MostSpentType(expenses);
 
             if (mostSpentType.HasValue)
             {
@@ -53,10 +69,10 @@ namespace Expenses.Application.AppServices
                     ("MOST_SPENT_TYPE", _localization.EXPENSE_TYPE(mostSpentType.Value))
                 };
 
-                overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers)));
+                briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers)));
             }
 
-            (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseService.MostSpentMoneyPlace(expenses.Value);
+            (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseService.MostSpentMoneyPlace(expenses);
 
             if (totalSpentMoneyInThePlace > 0)
             {
@@ -66,17 +82,16 @@ namespace Expenses.Application.AppServices
                     ("TOTAL_VALUE", totalSpentMoneyInThePlace.ToString(_localization.CULTURE))
                 };
 
-                overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
+                briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
             }
 
-            decimal totalMonthExpense = _expenseService.TotalMoneySpent(expenses.Value);
+            decimal totalMonthExpense = _expenseService.TotalMoneySpent(expenses);
 
-            overviews.Add(new ExpenseOverview(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
+            briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
                 {
                     ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString(_localization.CULTURE))
                 })));
-
-            return overviews;
+            return briefs;
         }
     }
 }
