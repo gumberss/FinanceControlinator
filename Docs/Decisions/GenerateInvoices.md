@@ -9,4 +9,4 @@
 - If we consider to change Event Driven for Message Driven (2) we will need to know the invoices microsservices bussines rules on piggy banks microservice
 ![image](https://user-images.githubusercontent.com/38296002/134834777-172f83d0-8108-491a-a95f-8b2073c2f682.png)
 - So, we decide to use event driven just because it.
-- It is the best way to go? Problably not, but it is the better way I can think.
+- It is the best way to go? Probably not, but it is the better way I can think.

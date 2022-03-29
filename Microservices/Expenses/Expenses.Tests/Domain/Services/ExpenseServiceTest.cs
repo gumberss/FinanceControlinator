@@ -45,7 +45,7 @@ namespace Expenses.Tests.Domain.Services
                 invoice1
             };
 
-            var isValid = _service.TotalCostIsValid(expense, paidInvoices);
+            var isValid = _service.IsTotalCostValid(expense, paidInvoices);
 
             isValid.Should().BeTrue();
         }
@@ -81,7 +81,7 @@ namespace Expenses.Tests.Domain.Services
                 invoice2
             };
 
-            var isValid = _service.TotalCostIsValid(expense, paidInvoices);
+            var isValid = _service.IsTotalCostValid(expense, paidInvoices);
 
             isValid.Should().BeTrue();
         }
@@ -109,7 +109,7 @@ namespace Expenses.Tests.Domain.Services
                 invoice1
             };
 
-            var isValid = _service.TotalCostIsValid(expense, paidInvoices);
+            var isValid = _service.IsTotalCostValid(expense, paidInvoices);
 
             isValid.Should().BeFalse();
         }

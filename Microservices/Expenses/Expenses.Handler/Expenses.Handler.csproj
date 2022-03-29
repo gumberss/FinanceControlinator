@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Domain\Cqrs\Events\Expenses\Details\" />
     <Folder Include="Domain\Handlers\" />
   </ItemGroup>
 
