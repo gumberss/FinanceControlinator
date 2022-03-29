@@ -24,7 +24,7 @@ namespace Expenses.Domain.Services
                 .FirstOrDefault()?
                 .Key;
 
-        public decimal TotalMoneySpent(List<Expense> expenses)
+        public decimal TotalMoneySpent(List<Expense> expenses) 
             => expenses.Sum(x => x.TotalCost);
 
         public List<ExpensePartition> GroupByType(List<Expense> expenses)
