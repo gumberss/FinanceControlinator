@@ -10,6 +10,8 @@ using Expenses.Handler.Configurations;
 using Expenses.Handler.Domain.Cqrs.Handlers;
 using FinanceControlinator.Common.LogsBehaviors;
 using FinanceControlinator.Common.Messaging;
+using FinanceControlinator.Common.Parsers.TextParsers;
+using FinanceControlinator.Common.Utils;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +24,6 @@ namespace Expenses.API.Commons
         {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
-            services.ConfigureHandlerAutoMapper();
-
             services.AddMediatR(typeof(Startup));
             services.AddMediatR(typeof(ExpenseHandler));
 
@@ -33,9 +33,14 @@ namespace Expenses.API.Commons
 
             services.AddFluentValidation();
 
-            services.AddTransient<IExpenseService, ExpenseService>();
+            services.AddTransient<IDateService, DateService>();
 
+            services.AddTransient<IExpenseService, ExpenseService>();
+            services.AddTransient<IExpenseOverviewService, ExpenseOverviewService>();
+            services.AddTransient<ITextParser, TextParser>();
+            
             services.AddTransient<IExpenseAppService, ExpenseAppService>();
+            services.AddTransient<IExpenseOverviewAppService, ExpenseOverviewAppService>();
             services.AddTransient<IInvoiceAppService, InvoiceAppService>();
 
             services.AddTransient<IExpenseItemRepository, ExpenseItemRepository>();
@@ -44,6 +49,9 @@ namespace Expenses.API.Commons
             services.AddTransient<IInvoiceItemRepository, InvoiceItemRepository>();
 
             services.AddTransient<IExpenseValidator, ExpenseValidator>();
+            
+            // Must be the last one
+            services.ConfigureHandlerAutoMapper();
         }
     }
 }

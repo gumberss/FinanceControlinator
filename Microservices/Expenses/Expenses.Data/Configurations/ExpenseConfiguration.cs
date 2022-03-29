@@ -16,7 +16,7 @@ namespace Expenses.Data.Configurations
                 .IsRequired();
 
             builder
-                .Property(x => x.PurchaseDay)
+                .Property(x => x.PurchaseDate)
                 .IsRequired();
 
             builder

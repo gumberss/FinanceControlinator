@@ -1,6 +1,7 @@
 ﻿using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Models.Expenses;
 using Expenses.Domain.Models.Invoices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,7 +20,7 @@ namespace Expenses.Domain.Services
             return (toAdd, toUpdate, toDelete);
         }
 
-        public bool TotalCostIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts)
+        public bool IsTotalCostValid(Expense expense, List<Invoice> invoicesWithExpenseCosts)
         {
             var totalExpensePaid = invoicesWithExpenseCosts
                             .SelectMany(inv => inv.ItemsFrom(expense))

@@ -10,7 +10,7 @@ namespace Expenses.Domain.Validators
     {
         public ExpenseValidator(ILocalization localization)
         {
-            RuleFor(x => x.PurchaseDay)
+            RuleFor(x => x.PurchaseDate)
                 .GreaterThan(DateTime.MinValue)
                 .WithMessage(localization.DATE_INCORRECT);
 

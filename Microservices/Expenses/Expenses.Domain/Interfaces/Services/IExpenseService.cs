@@ -1,4 +1,5 @@
-﻿using Expenses.Domain.Models.Expenses;
+﻿using Expenses.Domain.Enums;
+using Expenses.Domain.Models.Expenses;
 using Expenses.Domain.Models.Invoices;
 using System.Collections.Generic;
 
@@ -8,8 +9,9 @@ namespace Expenses.Domain.Interfaces.Services
     {
         (List<ExpenseItem> toDelete, List<ExpenseItem> toAdd, List<ExpenseItem> toUpdate) SegregateItems(Expense expense, Expense registeredExpense);
 
-        bool TotalCostIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts);
+        bool IsTotalCostValid(Expense expense, List<Invoice> invoicesWithExpenseCosts);
 
         bool InstallmentsCountIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts);
+        
     }
 }

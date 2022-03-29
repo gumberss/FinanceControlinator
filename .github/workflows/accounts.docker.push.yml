@@ -1,0 +1,19 @@
+name: docker-push-accounts
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Microservices/Accounts/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker build -f "./Microservices/Accounts/Accounts.API/Dockerfile" --force-rm -t gumberss/financecontrolinator-accounts .
+      - run: docker push gumberss/financecontrolinator-accounts

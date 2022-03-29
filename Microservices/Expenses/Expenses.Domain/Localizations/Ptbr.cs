@@ -1,4 +1,9 @@
 ﻿
+using Expenses.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
 namespace Expenses.Domain.Localizations
 {
     public class Ptbr : ILocalization
@@ -30,5 +35,24 @@ namespace Expenses.Domain.Localizations
         public string EXPENSE_INSTALLMENTS_IS_LESS_THAN_TIMES_PAID => "A quantidade de parcelas da despesa é inferior a quantidade de parcelas já pagas";
 
         public string INSTALLMENTS_QUANTITY_IS_NOT_VALID => "A quantidade de parcelas não é válida";
+
+        public string MOST_EXPENT_TYPE_TEMPLATE => "Maior gasto esse mês foi com [[MOST_SPENT_TYPE]]";
+
+        public String TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE => "O lugar que você mais gastou foi em [[MOST_SPENT_PLACE]] R$[[TOTAL_VALUE]]";
+
+        public String TOTAL_SPENT_IN_THE_MONTH_TEMPLATE => "Você gastou R$[[TOTAL_SPENT_IN_THE_MONTH]] esse mês";
+
+        public string EXPENSE_TYPE(ExpenseType expenseType) => new Dictionary<ExpenseType, String>
+        {
+            { ExpenseType.Market, "Mercado" },
+            { ExpenseType.Bill, "Contas" },
+            { ExpenseType.Investment, "Investimento" },
+            { ExpenseType.Health, "Saúde" },
+            { ExpenseType.Leisure, "Lazer" },
+            { ExpenseType.Other, "Outros" },
+
+        }[expenseType];
+
+        public CultureInfo CULTURE => new CultureInfo("pt-BR");
     }
 }
