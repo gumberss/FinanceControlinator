@@ -243,5 +243,59 @@ namespace Expenses.Tests.Domain.Services
         }
 
         #endregion TotalMoneySpent
+
+        #region GroupByType
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.Overview)]
+        [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.Overview)]
+        public void Should_return_a_partition_for_each_exppense_type_even_though_there_are_no_spend_of_the_type()
+        {
+            var partitions = _service.GroupByType(new List<Expense>());
+
+            var expenseTypes = Enum.GetValues(typeof(ExpenseType)).Cast<ExpenseType>();
+
+            partitions.Should().HaveCount(expenseTypes.Count());
+
+            expenseTypes.All(expenseType => partitions.Any(y => y.Type == expenseType));
+        }
+
+        [TestMethod]
+        [JourneyCategory(TestUserJourneyEnum.Overview)]
+        [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.Overview)]
+        public void Should_make_partitions_grouping_expenses_by_type()
+        {
+            var expenses = new List<Expense>
+            {
+                new Expense
+                {
+                    Type = ExpenseType.Market,
+                    TotalCost = 700
+                },
+                new Expense
+                {
+                    Type = ExpenseType.Market,
+                    TotalCost = 200
+                },
+                new Expense
+                {
+                    Type = ExpenseType.Leisure,
+                    TotalCost = 100
+                }
+            };
+
+            var partitions = _service.GroupByType(expenses);
+
+            var marketPartition = partitions.Find(x => x.Type == ExpenseType.Market);
+
+            marketPartition.TotalValue.Should().Be(900);
+            marketPartition.Percent.Should().Be(90);
+
+            var leisurePartition = partitions.Find(x => x.Type == ExpenseType.Leisure);
+            leisurePartition.TotalValue.Should().Be(100);
+            leisurePartition.Percent.Should().Be(10);
+        }
+
+        #endregion GroupByType
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Expenses.Domain.Enums;
 using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Models.Expenses;
+using Expenses.Domain.Models.Expenses.Overviews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,25 @@ namespace Expenses.Domain.Services
 
         public decimal TotalMoneySpent(List<Expense> expenses) 
             => expenses.Sum(x => x.TotalCost);
+
+        public List<ExpensePartition> GroupByType(List<Expense> expenses)
+        {
+            var totalSpent = expenses.Sum(x => x.TotalCost);
+
+            Func<decimal, float> getPercent = current => ((float)(current / totalSpent) * 100);
+
+            var partitionsSpent = expenses
+                .GroupBy(x => x.Type)
+                .Select(x => new ExpensePartition(x.Key, getPercent(x.Sum(y => y.TotalCost)), x.Sum(y => y.TotalCost)))
+                .ToList();
+
+            var partitionsNotSpent =
+                Enum.GetValues(typeof(ExpenseType))
+                .Cast<ExpenseType>()
+                .Except(partitionsSpent.Select(x => x.Type))
+                .Select(x => new ExpensePartition(x, 0, 0));
+
+            return partitionsSpent.Concat(partitionsNotSpent).ToList();
+        }
     }
 }

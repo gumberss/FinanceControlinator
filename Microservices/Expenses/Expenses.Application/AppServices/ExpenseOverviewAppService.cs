@@ -18,7 +18,7 @@ namespace Expenses.Application.AppServices
     {
         private readonly IDateService _dateService;
         private readonly IExpenseRepository _expenseRepository;
-        private readonly IExpenseOverviewService _expenseService;
+        private readonly IExpenseOverviewService _expenseOverviewService;
         private readonly ILocalization _localization;
         private readonly ITextParser _textParser;
 
@@ -30,7 +30,7 @@ namespace Expenses.Application.AppServices
         {
             _dateService = dateService;
             _expenseRepository = expenseRepository;
-            _expenseService = expenseService;
+            _expenseOverviewService = expenseService;
             _localization = localization;
             _textParser = textParser;
         }
@@ -52,15 +52,14 @@ namespace Expenses.Application.AppServices
 
         private List<ExpensePartition> BuildPartitions(List<Expense> expenses)
         {
-            return null;
-            //var expensePartitions = _expenseService.GetExpenseCostByType(expenses);
+            return _expenseOverviewService.GroupByType(expenses);
         }
 
         private List<ExpenseBrief> BuildBriefs(List<Expense> expenses)
         {
             List<ExpenseBrief> briefs = new List<ExpenseBrief>();
 
-            ExpenseType? mostSpentType = _expenseService.MostSpentType(expenses);
+            ExpenseType? mostSpentType = _expenseOverviewService.MostSpentType(expenses);
 
             if (mostSpentType.HasValue)
             {
@@ -72,7 +71,7 @@ namespace Expenses.Application.AppServices
                 briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers)));
             }
 
-            (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseService.MostSpentMoneyPlace(expenses);
+            (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseOverviewService.MostSpentMoneyPlace(expenses);
 
             if (totalSpentMoneyInThePlace > 0)
             {
@@ -85,12 +84,13 @@ namespace Expenses.Application.AppServices
                 briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
             }
 
-            decimal totalMonthExpense = _expenseService.TotalMoneySpent(expenses);
+            decimal totalMonthExpense = _expenseOverviewService.TotalMoneySpent(expenses);
 
             briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
                 {
                     ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString(_localization.CULTURE))
                 })));
+
             return briefs;
         }
     }
