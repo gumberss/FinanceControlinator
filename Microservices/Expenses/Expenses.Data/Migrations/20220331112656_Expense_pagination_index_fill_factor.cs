@@ -6,11 +6,6 @@ namespace Expenses.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Expense_Pagination",
-                schema: "expenses",
-                table: "Expenses");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Expense_Pagination",
                 schema: "expenses",
@@ -25,13 +20,6 @@ namespace Expenses.Data.Migrations
                 name: "IX_Expense_Pagination",
                 schema: "expenses",
                 table: "Expenses");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Expense_Pagination",
-                schema: "expenses",
-                table: "Expenses",
-                column: "PurchaseDate")
-                .Annotation("SqlServer:FillFactor", 20);
         }
     }
 }
