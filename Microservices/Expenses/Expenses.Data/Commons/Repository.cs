@@ -25,6 +25,8 @@ namespace Expenses.Data.Commons
             _dbSet = _context.Set<TEntity>();
         }
 
+        protected IQueryable<TEntity> GetQueryable() => _dbSet;
+
         public async Task<Result<TEntity, BusinessException>> AddAsync(TEntity entity)
         {
             try
