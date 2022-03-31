@@ -23,6 +23,7 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
         , IRequestHandler<GetAllExpensesQuery, Result<List<Expense>, BusinessException>>
         , IRequestHandler<GetMonthExpensesQuery, Result<List<Expense>, BusinessException>>
         , IRequestHandler<GetLastMonthExpensesQuery, Result<List<Expense>, BusinessException>>
+        , IRequestHandler<GetPaginationExpensesQuery, Result<List<Expense>, BusinessException>>
     {
         private readonly IExpenseAppService _expenseAppService;
         private readonly ILogger<ExpenseHandler> _logger;
@@ -113,6 +114,11 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
         public async Task<Result<List<Expense>, BusinessException>> Handle(GetLastMonthExpensesQuery request, CancellationToken cancellationToken)
         {
             return await _expenseAppService.GetLastMonthExpenses();
+        }
+
+        public async Task<Result<List<Expense>, BusinessException>> Handle(GetPaginationExpensesQuery request, CancellationToken cancellationToken)
+        {
+            return await _expenseAppService.GetByPagination(request.Page, request.Count);
         }
     }
 }

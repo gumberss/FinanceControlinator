@@ -10,6 +10,7 @@ namespace Expenses.Data.Configurations
         public void Configure(EntityTypeBuilder<Expense> builder)
         {
             builder.HasKey(b => b.Id);
+
             builder
                 .Property(x => x.Title)
                 .HasMaxLength(50)
@@ -47,6 +48,11 @@ namespace Expenses.Data.Configurations
 
             builder
                 .Property(x => x.UpdatedDate);
+
+            builder
+              .HasIndex(x => x.PurchaseDate)
+              .HasDatabaseName("IX_Expense_Pagination")
+              .HasFillFactor(80);
         }
     }
 }

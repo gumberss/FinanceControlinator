@@ -34,10 +34,10 @@ namespace Expenses.API.Controllers
             return From(await _mediator.Send(new UpdateExpenseCommand { Expense = expense }));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("{page}/{count}")]
+        public async Task<IActionResult> Get(int page, int count)
         {
-            return From(await _mediator.Send(new GetAllExpensesQuery()));
+            return From(await _mediator.Send(new GetPaginationExpensesQuery(page,count)));
         }
 
         [HttpGet("Overview")]

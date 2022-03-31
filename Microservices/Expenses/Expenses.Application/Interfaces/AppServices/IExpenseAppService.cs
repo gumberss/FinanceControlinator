@@ -17,5 +17,7 @@ namespace Expenses.Application.Interfaces.AppServices
         Task<Result<List<Expense>, BusinessException>> GetMonthExpenses();
 
         Task<Result<List<Expense>, BusinessException>> GetLastMonthExpenses();
+
+        Task<Result<List<Expense>, BusinessException>> GetByPagination(int page, int count);
     }
 }
