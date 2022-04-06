@@ -20,32 +20,26 @@ namespace Expenses.Application.AppServices
     {
         private readonly IExpenseRepository _expenseRepository;
         private readonly IInvoiceRepository _invoiceRepository;
-        private readonly IExpenseItemRepository _expenseItemRepository;
         private readonly IExpenseValidator _expenseValidator;
         private readonly ILocalization _localization;
         private readonly ILogger<IExpenseAppService> _logger;
         private readonly IExpenseService _expenseService;
-        private readonly IDateService _dateService;
 
         public ExpenseAppService(
                 IExpenseRepository expenseRepository
                 , IInvoiceRepository invoiceRepository
                 , IExpenseValidator expenseValidator
-                , IExpenseItemRepository expenseItemRepository
                 , ILocalization localization
                 , ILogger<IExpenseAppService> logger
                 , IExpenseService expenseService
-            , IDateService dateService
             )
         {
             _expenseRepository = expenseRepository;
             _invoiceRepository = invoiceRepository;
-            _expenseItemRepository = expenseItemRepository;
             _expenseValidator = expenseValidator;
             _localization = localization;
             _logger = logger;
             _expenseService = expenseService;
-            _dateService = dateService;
         }
 
         public async Task<Result<List<Expense>, BusinessException>> GetAllExpenses()
@@ -129,17 +123,6 @@ namespace Expenses.Application.AppServices
             {
                 var errorDatas = validationResult.Errors.Select(x => new ErrorData(x.ErrorMessage, x.PropertyName));
                 var exception = new BusinessException(HttpStatusCode.BadRequest, errorDatas);
-
-                _logger.LogInformation(exception.Log());
-
-                return exception;
-            }
-
-            if (!expense.TotalCostIsValid())
-            {
-                var errorData = new ErrorData(_localization.TOTAL_COST_DOES_NOT_MATCH_WITH_ITEMS, "TotalCost");
-                var exception = new BusinessException(HttpStatusCode.BadRequest, errorData);
-
                 _logger.LogInformation(exception.Log());
 
                 return exception;
@@ -150,8 +133,7 @@ namespace Expenses.Application.AppServices
             if (addResult.IsFailure)
             {
                 var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
-                var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
-
+                var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData, addResult.Error);
                 _logger.LogError(addResult.Error, exception.Log());
 
                 return exception;
@@ -227,7 +209,6 @@ namespace Expenses.Application.AppServices
         public Task<Result<List<Expense>, BusinessException>> GetByPagination(int page, int count)
         {
             return _expenseRepository.GetPaginationAsync(page, count);
-                
         }
     }
 }
