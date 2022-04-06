@@ -227,7 +227,6 @@ namespace Expenses.Application.AppServices
         public Task<Result<List<Expense>, BusinessException>> GetByPagination(int page, int count)
         {
             return _expenseRepository.GetPaginationAsync(page, count);
-                
         }
     }
 }
