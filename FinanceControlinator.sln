@@ -91,7 +91,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiggyBanks.Tests", "Microse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiggyBanks.Domain", "Microservices\PiggyBanks\PiggyBanks.Domain\PiggyBanks.Domain.csproj", "{1E6BF8A4-67BE-4F38-B317-86C3EF90E033}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceControlinator.Common.Tests", "Common\FinanceControlinator.Common.Tests\FinanceControlinator.Common.Tests.csproj", "{1D642360-0277-4C97-8C55-6487AA64E289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceControlinator.Common.Tests", "Common\FinanceControlinator.Common.Tests\FinanceControlinator.Common.Tests.csproj", "{1D642360-0277-4C97-8C55-6487AA64E289}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
