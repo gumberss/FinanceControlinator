@@ -13,82 +13,70 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace Expenses.API
-{
-    public class Startup
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host
+    .ConfigureServices(services =>
     {
-        public Startup(IConfiguration configuration)
+        var rabbitMqValues = new RabbitMqValues()
         {
-            Configuration = configuration;
-        }
+            Host = builder.Configuration.GetSection("RabbitMq:Host").Value,
+            Username = builder.Configuration.GetSection("RabbitMq:Username").Value,
+            Password = builder.Configuration.GetSection("RabbitMq:Password").Value,
+        };
 
-        public IConfiguration Configuration { get; }
+        services.ConfigureMassTransit(rabbitMqValues);
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        services.AddControllers()
+            .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
+        services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
         {
-            var rabbitMqValues = new RabbitMqValues()
-            {
-                Host = Configuration.GetSection("RabbitMq:Host").Value,
-                Username = Configuration.GetSection("RabbitMq:Username").Value,
-                Password = Configuration.GetSection("RabbitMq:Password").Value,
-            };
+            options.UseSqlServer(builder.Configuration.GetConnectionString("ExpensesDbConnection"));
+        });
 
-            services.ConfigureMassTransit(rabbitMqValues);
-
-            services.AddControllers()
-                .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
-
-            services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("ExpensesDbConnection"));
-            });
-
-            services.AddSwaggerGen(x =>
-            {
-                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Expenses Microservice", Version = "v1" });
-            });
-
-            services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-
-            RegisterServices(services);
-        }
-
-        private void RegisterServices(IServiceCollection services)
+        services.AddSwaggerGen(x =>
         {
-            services.RegisterServices();
-        }
+            x.SwaggerDoc("v1", new OpenApiInfo { Title = "Expenses Microservice", Version = "v1" });
+        });
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(
-            IApplicationBuilder app
-          , IWebHostEnvironment env
-          , ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddProvider(new CustomLogProvider(new CustomLogConfig()));
+        services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+        services.RegisterServices();
+    });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(x =>
-            {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses Microservice V1");
-            });
 
-            //app.UseHttpsRedirection();
+builder.Logging
+    .ClearProviders()
+    .AddConsole()
+    .AddProvider(new CustomLogProvider(new CustomLogConfig()));
 
-            app.UseRouting();
+var app = builder
+    .Build()
+    .Migrate()
+    .Result;
 
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
-    }
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(x =>
+{
+    x.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses Microservice V1");
+});
+
+//app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+app.Run();

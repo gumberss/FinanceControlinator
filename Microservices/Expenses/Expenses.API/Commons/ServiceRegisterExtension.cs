@@ -24,7 +24,6 @@ namespace Expenses.API.Commons
         {
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
-            services.AddMediatR(typeof(Startup));
             services.AddMediatR(typeof(ExpenseHandler));
 
             services.AddTransient<IMessageBus, MassTransitMessageBus>();

@@ -1,5 +1,6 @@
 ﻿using Expenses.Data.Contexts;
 using Expenses.Data.Interfaces.Contexts;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,7 +11,7 @@ namespace Expenses.API.Commons
 {
     public static class MigrationsExtension
     {
-        public static async Task<IHost> Migrate(this IHost host)
+        public static async Task<T> Migrate<T>(this T host) where T : IHost
         {
             var serviceScopeFactory = host.Services.GetService<IServiceScopeFactory>();
 
