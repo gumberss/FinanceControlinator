@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  expense-service-local-test:
+    build:
+        context: ../../..
+        dockerfile: Microservices/Expenses/Expenses.API/Dockerfile
+    container_name: expense-service-local-test
+    ports:
+      - "5001:80"
+    networks:
+      - default
+    environment:
+      ConnectionStrings__ExpensesDbConnection: Server=192.168.1.102;Database=Expenses;User Id=sa;Password=HereWeG0Again!
+      RabbitMq__Host: "amqp://192.168.1.102:5672/"
+      RabbitMq__Password: "guest"
+      RabbitMq__Username: "guest"
+
+#cd C:\Github\FinanceControlinator\Microservices\Expenses\Expenses.API      
+#docker-compose build
