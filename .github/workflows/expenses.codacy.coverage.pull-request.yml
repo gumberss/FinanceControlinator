@@ -20,9 +20,9 @@ jobs:
     - name: Build
       run: dotnet build Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj --no-restore
     - name: Test
-      run: dotnet test Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory:"test.coverage"
     - name: Run codacy-coverage-reporter
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: Microservices/Expenses/Expenses.Tests/bin/Debug/net6.0/coverage.opencover.xml
+        coverage-reports: Microservices/Expenses/Expenses.Tests/coverage.cobertura.xml
