@@ -1,4 +1,4 @@
-name: Run Expense Tests
+name: Publish Expenses coverage to Codacy
 
 on:
   pull_request:
