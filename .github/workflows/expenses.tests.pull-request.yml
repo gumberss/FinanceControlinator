@@ -23,3 +23,9 @@ jobs:
       run: dotnet build Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj --no-restore
     - name: Test
       run: dotnet test Microservices/Expenses/Expenses.Tests/Expenses.Tests.csproj --no-build --verbosity normal
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: Microservices/Expenses/Expenses.Tests/coverage.opencover.xml
+      
