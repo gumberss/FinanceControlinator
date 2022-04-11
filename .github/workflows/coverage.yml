@@ -1,4 +1,4 @@
-name: Publish Expenses coverage to Codacy
+name: Coverage
 
 on:
   pull_request:
