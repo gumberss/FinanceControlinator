@@ -1,0 +1,26 @@
+name: Publish Expenses coverage to Codacy
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+       dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore FinanceControlinator.sln
+    - name: Build
+      run: dotnet build FinanceControlinator.sln --no-restore
+    - name: Test
+      run: dotnet test FinanceControlinator.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput='./cobertura.xml'
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: cobertura.xml
