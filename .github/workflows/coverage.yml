@@ -27,4 +27,4 @@ jobs:
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: Microservices/Expenses/Expenses.Tests/cobertura.xml
+        coverage-reports: Microservices/Expenses/Expenses.Tests/cobertura.xml,Microservices/Accounts/Accounts.Tests/cobertura.xml,Microservices/Invoices/Invoices.Tests/cobertura.xml,Microservices/Payments/Payments.Tests/cobertura.xml,Microservices/PiggyBanks/PiggyBanks.Tests/cobertura.xml
