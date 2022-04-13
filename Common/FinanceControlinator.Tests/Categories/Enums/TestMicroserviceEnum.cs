@@ -11,6 +11,9 @@ namespace FinanceControlinator.Tests.Categories.Enums
         Expenses,
 
         [Description("PiggyBanks")]
-        PiggyBanks
+        PiggyBanks,
+
+        [Description("Localization")]
+        Localization
     }
 }
