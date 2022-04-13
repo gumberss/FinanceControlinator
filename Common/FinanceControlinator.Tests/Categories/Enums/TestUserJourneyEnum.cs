@@ -18,5 +18,8 @@ namespace FinanceControlinator.Tests.Categories.Enums
 
         [Description("Expense General")]
         ExpenseGeneral,
+
+        [Description("Localization")]
+        Localization,
     }
 }

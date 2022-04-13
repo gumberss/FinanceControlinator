@@ -19,8 +19,8 @@ namespace Expenses.Tests.Domain.Localizations
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.ExpenseGeneral)]
-        [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.General)]
+        [JourneyCategory(TestUserJourneyEnum.Localization)]
+        [UnitTestCategory(TestMicroserviceEnum.Localization, TestFeatureEnum.General)]
         public void Should_have_an_answer_to_each_expense_type()
         {
             Enum.GetValues(typeof(ExpenseType)).Cast<ExpenseType>()
