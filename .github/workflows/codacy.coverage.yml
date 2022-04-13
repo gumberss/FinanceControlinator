@@ -1,4 +1,4 @@
-name: Coverage
+name: Codacy Coverage
 
 on:
   pull_request:
