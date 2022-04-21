@@ -93,6 +93,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiggyBanks.Domain", "Micros
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceControlinator.Common.Tests", "Common\FinanceControlinator.Common.Tests\FinanceControlinator.Common.Tests.csproj", "{1D642360-0277-4C97-8C55-6487AA64E289}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{2E239D07-2C63-4D78-8339-925FA86928EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "Microservices\Identity\Identity.csproj", "{38FC7641-9733-4A70-AB73-63E8CD696769}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -251,6 +255,10 @@ Global
 		{1D642360-0277-4C97-8C55-6487AA64E289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D642360-0277-4C97-8C55-6487AA64E289}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D642360-0277-4C97-8C55-6487AA64E289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38FC7641-9733-4A70-AB73-63E8CD696769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38FC7641-9733-4A70-AB73-63E8CD696769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38FC7641-9733-4A70-AB73-63E8CD696769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38FC7641-9733-4A70-AB73-63E8CD696769}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -299,6 +307,8 @@ Global
 		{5376C8E2-9256-4C31-A62C-186A18E80088} = {EB2682E7-BB28-4B51-A7F0-C21E00F13778}
 		{1E6BF8A4-67BE-4F38-B317-86C3EF90E033} = {EB2682E7-BB28-4B51-A7F0-C21E00F13778}
 		{1D642360-0277-4C97-8C55-6487AA64E289} = {7900280F-9520-44D5-B441-98146CDBEBC9}
+		{2E239D07-2C63-4D78-8339-925FA86928EE} = {21961752-1C34-4E9C-B3A0-8FD12D4FC3C4}
+		{38FC7641-9733-4A70-AB73-63E8CD696769} = {2E239D07-2C63-4D78-8339-925FA86928EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB162E36-E524-4A3F-AD2D-FE4E554E814C}
