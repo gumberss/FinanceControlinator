@@ -11,20 +11,20 @@ namespace Identity.Routes
         {
             app.MapPost("/Authenticate", [AllowAnonymous] async (UserLoginDTO userDTO, UserManager<IdentityUser> userManager,
                 ITokenService tokenService) =>
-             {
-                 var user = await userManager.FindByNameAsync(userDTO.UserName);
+            {
+                var user = await userManager.FindByNameAsync(userDTO.UserName);
 
-                 if (user is null || !await userManager.CheckPasswordAsync(user, userDTO.Password))
-                     return Results.Unauthorized();
+                if (user is null || !await userManager.CheckPasswordAsync(user, userDTO.Password))
+                    return Results.Unauthorized();
 
                 string token = GenerateToken(app, tokenService, user);
 
-                 return Results.Ok(new
-                 {
-                     token
-                 });
+                return Results.Ok(new
+                {
+                    token
+                });
 
-             }).WithName("Authenticate");
+            }).WithName("Authenticate");
 
             app.MapPost("/SignUp", [AllowAnonymous] async (UserLoginDTO userDTO, UserManager<IdentityUser> userManager,
              ITokenService tokenService) =>
