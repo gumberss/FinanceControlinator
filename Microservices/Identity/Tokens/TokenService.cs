@@ -7,16 +7,17 @@ namespace Identity.Tokens
 {
     internal interface ITokenService
     {
-        string BuildToken(string key, string issuer, IEnumerable<string> audience, string userName, TimeSpan duration);
+        string BuildToken(string key, string issuer, IEnumerable<string> audience, string userName, String userId, TimeSpan duration);
     }
 
     public class TokenService : ITokenService
     {
-        public string BuildToken(string key, string issuer, IEnumerable<string> audience, string userName, TimeSpan duration)
+        public string BuildToken(string key, string issuer, IEnumerable<string> audience, string userName, String userId, TimeSpan duration)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, userName),
+                new Claim(JwtRegisteredClaimNames.Sub, userId),
             };
 
             claims.AddRange(audience.Select(aud => new Claim(JwtRegisteredClaimNames.Aud, aud)));
