@@ -13,7 +13,7 @@ namespace Identity.Extensions
 
             builder.Services.AddDbContext<IdentityAppDbContext>(
                          options => options
-                         .UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+                         .UseSqlServer(builder.Configuration.GetConnectionString("IdentityDbConnection")));
         }
     }
 }
