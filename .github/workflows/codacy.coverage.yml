@@ -1,0 +1,30 @@
+name: Codacy Coverage
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET 5.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Setup .NET 6.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+       dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore FinanceControlinator.sln
+    - name: Build
+      run: dotnet build FinanceControlinator.sln --no-restore
+    - name: Test
+      run: dotnet test FinanceControlinator.sln --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput='./cobertura.xml'
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: Microservices/Expenses/Expenses.Tests/cobertura.xml,Microservices/Accounts/Accounts.Tests/cobertura.xml,Microservices/Invoices/Invoices.Tests/cobertura.xml,Microservices/Payments/Payments.Tests/cobertura.xml,Microservices/PiggyBanks/PiggyBanks.Tests/cobertura.xml,Common/FinanceControlinator.Common.Tests/cobertura.xml
