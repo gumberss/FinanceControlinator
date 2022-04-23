@@ -42,7 +42,7 @@ namespace Payments.Data.Commons
             {
                 _session.Delete(entity);
 
-                return await Task.FromResult(true);
+                return await Task.FromResult(true).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -83,7 +83,7 @@ namespace Payments.Data.Commons
 
         public async Task<Result<bool, BusinessException>> DeleteAsync(TEntityId id)
         {
-            return await DeleteAsync(new List<TEntityId> { id });
+            return await DeleteAsync(new List<TEntityId> { id }).ConfigureAwait(false);
         }
 
         public Task<Result<bool, BusinessException>> DeleteAsync(IEnumerable<TEntity> entities)

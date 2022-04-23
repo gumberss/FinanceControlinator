@@ -25,7 +25,7 @@ namespace Expenses.Tests.Application.AppServices
     [TestClass]
     public class ExpenseAppServiceTest
     {
-        public ExpenseAppService _service;
+        readonly ExpenseAppService _service;
 
         readonly Mock<IExpenseRepository> _expenseRepository;
         readonly Mock<IInvoiceRepository> _invoiceRepository;
@@ -111,7 +111,7 @@ namespace Expenses.Tests.Application.AppServices
 
             _logger.Verify(x => x.Log(LogLevel.Information,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((o, t) => true),
+                    It.Is<It.IsAnyType>((_, _) => true),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
         }
