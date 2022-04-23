@@ -25,11 +25,10 @@ namespace Expenses.Tests.Application.AppServices
     [TestClass]
     public class ExpenseAppServiceTest
     {
-        public ExpenseAppService _service { get; }
+        public ExpenseAppService _service;
 
         readonly Mock<IExpenseRepository> _expenseRepository;
         readonly Mock<IInvoiceRepository> _invoiceRepository;
-        readonly Mock<IExpenseItemRepository> _expenseItemRepository;
         readonly Mock<IExpenseValidator> _expenseValidator;
         readonly Mock<ILocalization> _localization;
         readonly Mock<ILogger<IExpenseAppService>> _logger;
@@ -66,7 +65,7 @@ namespace Expenses.Tests.Application.AppServices
                 .Setup(x => x.ValidateAsync(expense, It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(new ValidationResult()));
 
-            var _ = await _service.RegisterExpense(expense);
+            await _service.RegisterExpense(expense);
 
             _expenseValidator.Verify(x => x.ValidateAsync(expense, It.IsAny<CancellationToken>()), Times.Once);
         }
@@ -131,7 +130,8 @@ namespace Expenses.Tests.Application.AppServices
                 .Returns(Task.FromResult(new ValidationResult(new[] { error })));
 
             var result = await _service.RegisterExpense(expense);
-
+            result.IsFailure.Should().BeTrue();
+            result.Error.Message.Should().Be("I found a error here");
             _expenseValidator.Verify(x => x.ValidateAsync(expense, It.IsAny<CancellationToken>()), Times.Once);
             _expenseRepository.Verify(x => x.AddAsync(It.IsAny<Expense>()), Times.Never);
         }

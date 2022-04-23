@@ -146,17 +146,7 @@ namespace Payments.Data.Commons
 
             IQueryable<TEntity> queryableQuery = query;
 
-            var result = await Result.Try(queryableQuery.FirstOrDefaultAsync<TEntity>(x => x.Id.ToString() == id.ToString()));
-
-            if (result.IsFailure)
-                return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
-
-            return result.Value;
-        }
-
-        public async Task<Result<TEntity, BusinessException>> GetByIdAsync(TEntityId id)
-        {
-            var result = await Result.Try(_session.LoadAsync<TEntity>(id.ToString()));
+            var result = await Result.Try(queryableQuery.FirstOrDefaultAsync(x => x.Id.ToString() == id.ToString()));
 
             if (result.IsFailure)
                 return new BusinessException(System.Net.HttpStatusCode.InternalServerError, result.Error);
