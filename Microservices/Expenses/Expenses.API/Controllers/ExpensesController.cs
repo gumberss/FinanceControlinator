@@ -3,6 +3,7 @@ using Expenses.Domain.Models.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using Expenses.Handler.Domain.Cqrs.ExpenseOverviews;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace Expenses.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ExpensesController : ApiControllerBase
     {
         private readonly IMediator _mediator;
