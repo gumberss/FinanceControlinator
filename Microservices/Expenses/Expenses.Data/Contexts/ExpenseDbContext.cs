@@ -32,18 +32,6 @@ namespace Expenses.Data.Contexts
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
-
-            //var typesToMapping = (from x in Assembly.GetExecutingAssembly().GetTypes()
-            //                      where x.IsClass && typeof(IMapping).IsAssignableFrom(x)
-            //                      select x).ToList();
-            //// Varrendo todos os tipos que são mapeamento 
-            //// Com ajuda do Reflection criamos as instancias 
-            //// e adicionamos no Entity Framework
-            //foreach (var mapping in typesToMapping)
-            //{
-            //    dynamic mappingClass = Activator.CreateInstance(mapping);
-            //    modelBuilder.Configurations.Add(mappingClass);
-            //}
         }
 
         public static readonly ILoggerFactory MyLoggerFactory

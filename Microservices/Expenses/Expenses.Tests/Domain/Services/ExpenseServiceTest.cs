@@ -27,7 +27,7 @@ namespace Expenses.Tests.Domain.Services
         [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.ExpenseUpdate)]
         public void Should_return_valid_when_the_expense_cost_is_greater_than_its_cost_in_paid_invoice()
         {
-            var expense = new Expense()
+            var expense = new Expense
             {
                 Id = Guid.NewGuid(),
                 TotalCost = 20
@@ -40,7 +40,7 @@ namespace Expenses.Tests.Domain.Services
                 InstallmentCost = 10
             });
 
-            List<Invoice> paidInvoices = new List<Invoice>()
+            List<Invoice> paidInvoices = new List<Invoice>
             {
                 invoice1
             };
@@ -55,7 +55,7 @@ namespace Expenses.Tests.Domain.Services
         [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.ExpenseUpdate)]
         public void Should_return_valid_when_the_expense_cost_is_greater_than_its_cost_in_paid_invoices()
         {
-            var expense = new Expense()
+            var expense = new Expense
             {
                 Id = Guid.NewGuid(),
                 TotalCost = 20
@@ -75,7 +75,7 @@ namespace Expenses.Tests.Domain.Services
                 InstallmentCost = 5
             });
 
-            List<Invoice> paidInvoices = new List<Invoice>()
+            List<Invoice> paidInvoices = new List<Invoice>
             {
                 invoice1,
                 invoice2

@@ -89,8 +89,6 @@ app.UseSwaggerUI(x =>
     x.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses Microservice V1");
 });
 
-//app.UseHttpsRedirection();
-
 app.UseRouting();
 
 app.UseAuthentication();

@@ -29,7 +29,7 @@ namespace Invoices.Tests.Domain.Services
         [TestInitialize]
         public void Init()
         {
-            _expense = new Expense()
+            _expense = new Expense
             {
                 Id = Guid.NewGuid().ToString(),
                 Title = "Expense",
@@ -162,7 +162,7 @@ namespace Invoices.Tests.Domain.Services
             };
             existentInvoice.AddNew(new InvoiceItem(1, 100));
 
-            var existentInvoices = new List<Invoice>() { existentInvoice };
+            var existentInvoices = new List<Invoice> { existentInvoice };
 
             var currentInvoiceDate = _purchaseDay;
 

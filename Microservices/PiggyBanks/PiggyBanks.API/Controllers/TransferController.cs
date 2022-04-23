@@ -37,12 +37,5 @@ namespace PiggyBanks.API.Controllers
 
             return From(registerCommand);
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> Get()
-        //{
-        //    return From(await _mediator.Send());
-        //}
-
     }
 }
