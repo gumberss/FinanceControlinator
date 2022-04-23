@@ -21,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host
     .ConfigureServices(services =>
     {
-        var rabbitMqValues = new RabbitMqValues()
+        var rabbitMqValues = new RabbitMqValues
         {
             Host = builder.Configuration.GetSection("RabbitMq:Host").Value,
             Username = builder.Configuration.GetSection("RabbitMq:Username").Value,

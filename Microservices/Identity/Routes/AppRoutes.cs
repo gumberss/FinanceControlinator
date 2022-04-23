@@ -26,8 +26,7 @@ namespace Identity.Routes
 
             }).WithName("Authenticate");
 
-            app.MapPost("/SignUp", [AllowAnonymous] async (UserLoginDTO userDTO, UserManager<IdentityUser> userManager,
-             ITokenService tokenService) =>
+            app.MapPost("/SignUp", [AllowAnonymous] async (UserLoginDTO userDTO, UserManager<IdentityUser> userManager) =>
             {
                 var identityUser = new IdentityUser
                 {
