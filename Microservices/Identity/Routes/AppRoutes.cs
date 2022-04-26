@@ -9,7 +9,7 @@ namespace Identity.Routes
     {
         public static void MapRoutes(WebApplication app)
         {
-            app.MapPost("/Authenticate", [AllowAnonymous] async (UserLoginDTO userDTO, UserManager<IdentityUser> userManager,
+            app.MapPost("/SignIn", [AllowAnonymous] async (UserLoginDTO userDTO, UserManager<IdentityUser> userManager,
                 ITokenService tokenService) =>
             {
                 var user = await userManager.FindByNameAsync(userDTO.UserName);
@@ -24,7 +24,7 @@ namespace Identity.Routes
                     token
                 });
 
-            }).WithName("Authenticate");
+            }).WithName("SignIn");
 
             app.MapPost("/SignUp", [AllowAnonymous] async (UserLoginDTO userDTO, UserManager<IdentityUser> userManager) =>
             {
