@@ -3,6 +3,7 @@ using Expenses.Application.Interfaces.AppServices;
 using Expenses.Data.Interfaces.Contexts;
 using Expenses.Domain.Localizations;
 using Expenses.Domain.Models.Expenses;
+using Expenses.DTO.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Messaging;
@@ -52,7 +53,8 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
         {
             using (_logger.BeginScope(this.GetType().Name))
             {
-                var result = await _expenseAppService.RegisterExpense(request.Expense);
+                var expense = _mapper.Map<ExpenseDTO, Expense>(request.Expense);
+                var result = await _expenseAppService.RegisterExpense(expense);
 
                 if (result.IsFailure) return result;
 
@@ -60,8 +62,7 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
 
                 if (saveResult.IsFailure)
                 {
-                    var errorData = new ErrorData(_localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
-                    var exception = new BusinessException(HttpStatusCode.InternalServerError, errorData);
+                    var exception = new BusinessException(HttpStatusCode.InternalServerError, _localization.AN_ERROR_OCCURRED_ON_THE_SERVER);
 
                     _logger.LogError(saveResult.Error, exception.Log());
 
@@ -70,7 +71,7 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
 
                 var generateInvoicesEvent = _mapper.Map<Expense, GenerateInvoicesEvent>(result.Value);
 
-                await _bus.Publish(generateInvoicesEvent);
+                await _bus.Publish(generateInvoicesEvent, cancellationToken);
 
                 return result;
             }
