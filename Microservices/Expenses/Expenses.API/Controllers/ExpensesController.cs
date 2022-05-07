@@ -26,8 +26,9 @@ namespace Expenses.API.Controllers
             : From(await _mediator.Send(new RegisterExpenseCommand(expense with { UserId = UserId.Value })));
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Expense expense)
-            => From(await _mediator.Send(new UpdateExpenseCommand(expense)));
+        public async Task<IActionResult> Put([FromBody] ExpenseDTO expense)
+            => !UserId.HasValue ? Unauthorized()
+            : From(await _mediator.Send(new UpdateExpenseCommand(expense with { UserId = UserId.Value })));
 
         [HttpGet("{page}/{count}")]
         public async Task<IActionResult> Get(int page, int count)
