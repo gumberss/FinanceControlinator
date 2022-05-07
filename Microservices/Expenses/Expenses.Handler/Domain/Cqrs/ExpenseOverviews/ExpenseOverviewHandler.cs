@@ -22,7 +22,7 @@ namespace Expenses.Handler.Domain.Cqrs.ExpenseOverviews
 
         public async Task<Result<ExpenseOverviewDTO, BusinessException>> Handle(ExpenseOverviewQuery request, CancellationToken cancellationToken)
         {
-            var result = await _expenseOverviewAppService.GetExpensesOverview();
+            var result = await _expenseOverviewAppService.GetExpensesOverview(request.UserId);
 
             if (result.IsFailure) return result.Error;
 
