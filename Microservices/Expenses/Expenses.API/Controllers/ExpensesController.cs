@@ -22,7 +22,7 @@ namespace Expenses.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ExpenseDTO expense)
-            => UserId is null ? Unauthorized()
+            => !UserId.HasValue ? Unauthorized()
             : From(await _mediator.Send(new RegisterExpenseCommand { Expense = expense with { UserId = UserId.Value} }));
 
         [HttpPut]
@@ -31,12 +31,12 @@ namespace Expenses.API.Controllers
 
         [HttpGet("{page}/{count}")]
         public async Task<IActionResult> Get(int page, int count)
-            => UserId is null ? Unauthorized()
+            => !UserId.HasValue ? Unauthorized()
             : From(await _mediator.Send(new GetPaginationExpensesQuery(page, count, UserId.Value)));
 
         [HttpGet("Overview")]
         public async Task<IActionResult> Overview()
-            => UserId is null ? Unauthorized()
+            => !UserId.HasValue ? Unauthorized()
             : From(await _mediator.Send(new ExpenseOverviewQuery(UserId.Value)));
 
         [HttpGet("Month")]

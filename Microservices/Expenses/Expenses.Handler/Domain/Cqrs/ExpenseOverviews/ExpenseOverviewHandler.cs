@@ -24,9 +24,9 @@ namespace Expenses.Handler.Domain.Cqrs.ExpenseOverviews
         {
             var result = await _expenseOverviewAppService.GetExpensesOverview(request.UserId);
 
-            if (result.IsFailure) return result.Error;
-
-            return _mapper.Map<ExpenseOverviewDTO>(result.Value);
+            return result.IsFailure
+                ? result.Error
+                : _mapper.Map<ExpenseOverviewDTO>(result.Value);
         }
     }
 }
