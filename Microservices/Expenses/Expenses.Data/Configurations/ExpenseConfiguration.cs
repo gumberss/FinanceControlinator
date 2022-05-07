@@ -42,12 +42,21 @@ namespace Expenses.Data.Configurations
                 .Property(x => x.Type);
 
             builder
+                .Property(x => x.UserId)
+                .IsRequired();
+
+            builder
                 .Property(x => x.CreatedDate)
                 .IsRequired()
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             builder
                 .Property(x => x.UpdatedDate);
+
+            builder
+               .HasIndex(x => x.UserId)
+               .HasDatabaseName("IX_Expense_UserId")
+               .HasFillFactor(80);
 
             builder
               .HasIndex(x => x.PurchaseDate)

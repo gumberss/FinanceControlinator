@@ -4,6 +4,7 @@ using Expenses.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expenses.Data.Migrations
 {
     [DbContext(typeof(ExpenseDbContext))]
-    partial class ExpenseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220507120058_AddingUserIdToExpenseTable")]
+    partial class AddingUserIdToExpenseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +23,7 @@ namespace Expenses.Data.Migrations
                 .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1, 1);
 
             modelBuilder.Entity("Expenses.Domain.Models.Expenses.Expense", b =>
                 {
@@ -77,11 +79,6 @@ namespace Expenses.Data.Migrations
                         .HasDatabaseName("IX_Expense_Pagination");
 
                     SqlServerIndexBuilderExtensions.HasFillFactor(b.HasIndex("PurchaseDate"), 80);
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("IX_Expense_UserId");
-
-                    SqlServerIndexBuilderExtensions.HasFillFactor(b.HasIndex("UserId"), 80);
 
                     b.ToTable("Expenses", "expenses");
                 });
