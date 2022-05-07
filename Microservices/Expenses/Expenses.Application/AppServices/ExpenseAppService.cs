@@ -206,9 +206,9 @@ namespace Expenses.Application.AppServices
             return registeredExpense;
         }
 
-        public Task<Result<List<Expense>, BusinessException>> GetByPagination(int page, int count)
+        public Task<Result<List<Expense>, BusinessException>> GetByPagination(int page, int count, Guid userId)
         {
-            return _expenseRepository.GetPaginationAsync(page, count);
+            return _expenseRepository.GetPaginationAsync(page, count, userId);
         }
     }
 }

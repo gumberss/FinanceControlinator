@@ -9,14 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Expenses.Data.Repositories
 {
     public interface IExpenseRepository : IRepository<Expense, Guid>
     {
-        Task<Result<List<Expense>, BusinessException>> GetPaginationAsync(int page, int count);
+        Task<Result<List<Expense>, BusinessException>> GetPaginationAsync(int page, int count, Guid userId);
     }
 
     public class ExpenseRepository : Repository<Expense, ExpenseDbContext, Guid>, IExpenseRepository
@@ -26,9 +25,10 @@ namespace Expenses.Data.Repositories
 
         }
 
-        public async Task<Result<List<Expense>, BusinessException>> GetPaginationAsync(int page, int count)
+        public async Task<Result<List<Expense>, BusinessException>> GetPaginationAsync(int page, int count, Guid userId)
         {
             return await Result.Try(GetQueryable()
+                .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.PurchaseDate)
                 .Skip((page - 1) * count)
                 .Take(count)

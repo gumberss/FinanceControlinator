@@ -31,7 +31,8 @@ namespace Expenses.API.Controllers
 
         [HttpGet("{page}/{count}")]
         public async Task<IActionResult> Get(int page, int count)
-            => From(await _mediator.Send(new GetPaginationExpensesQuery(page, count)));
+            => UserId is null ? Unauthorized()
+            : From(await _mediator.Send(new GetPaginationExpensesQuery(page, count, UserId.Value)));
 
         [HttpGet("Overview")]
         public async Task<IActionResult> Overview()
