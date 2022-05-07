@@ -1,6 +1,5 @@
 ﻿using Expenses.Application.Interfaces.AppServices;
 using Expenses.Data.Repositories;
-using Expenses.Domain.Enums;
 using Expenses.Domain.Interfaces.Services;
 using Expenses.Domain.Interfaces.Validators;
 using Expenses.Domain.Localizations;

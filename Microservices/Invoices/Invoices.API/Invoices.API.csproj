@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Invoices.API</AssemblyName>
     <RootNamespace>Invoices.API</RootNamespace>
     <UserSecretsId>d961ec75-fd17-438f-b13a-34ab96cd6488</UserSecretsId>
