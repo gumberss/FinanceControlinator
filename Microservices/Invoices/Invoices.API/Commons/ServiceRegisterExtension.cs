@@ -20,7 +20,6 @@ namespace Invoices.API.Commons
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.ConfigureHandlerAutoMapper();
 
-            services.AddMediatR(typeof(Startup));
             services.AddMediatR(typeof(InvoiceHandler));
 
             services.AddTransient<ILocalization, Ptbr>();
