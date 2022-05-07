@@ -1,5 +1,6 @@
 ﻿using Expenses.API.Commons;
 using Expenses.Domain.Models.Expenses;
+using Expenses.DTO.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using Expenses.Handler.Domain.Cqrs.ExpenseOverviews;
 using MediatR;
@@ -20,8 +21,9 @@ namespace Expenses.API.Controllers
             => _mediator = mediator;
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Expense expense)
-            => From(await _mediator.Send(new RegisterExpenseCommand { Expense = expense }));
+        public async Task<IActionResult> Post([FromBody] ExpenseDTO expense)
+            => UserId is null ? Unauthorized()
+            : From(await _mediator.Send(new RegisterExpenseCommand { Expense = expense with { UserId = UserId.Value} }));
 
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] Expense expense)
