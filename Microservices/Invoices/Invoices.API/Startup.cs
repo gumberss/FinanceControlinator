@@ -14,28 +14,6 @@ using Microsoft.OpenApi.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 
-
-/*public static void Main(string[] args)
-{
-    CreateHostBuilder(args)
-        .Build()
-        .EnsureDatabaseExists()
-        .Run();
-}
-
-public static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .ConfigureLogging(logging =>
-        {
-            logging.ClearProviders();
-            logging.AddConsole();
-        })
-        .ConfigureWebHostDefaults(webBuilder =>
-        {
-            webBuilder.UseStartup<Startup>();
-        });*/
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 var rabbitMqValues = new RabbitMqValues()
