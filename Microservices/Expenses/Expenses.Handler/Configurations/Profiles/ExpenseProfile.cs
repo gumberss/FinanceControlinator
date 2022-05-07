@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Expenses.Domain.Models.Expenses;
+using Expenses.DTO.Expenses;
 using FinanceControlinator.Events.Invoices;
 using FinanceControlinator.Events.Invoices.DTOs;
 
@@ -14,6 +15,9 @@ namespace Expenses.Handler.Configurations.Profiles
 
             CreateMap<Expense, InvoiceExpenseDTO>()
                 .ForMember(x => x.DetailsPath, x => x.MapFrom(y => $"expenses/{y.Id}"));
+
+            CreateMap<ExpenseDTO, Expense>();
+            CreateMap<ExpenseItemDTO, ExpenseItem>();
         }
     }
 }
