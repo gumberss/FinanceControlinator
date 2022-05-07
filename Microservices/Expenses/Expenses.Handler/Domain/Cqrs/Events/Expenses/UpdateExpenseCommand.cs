@@ -8,5 +8,10 @@ namespace Expenses.Handler.Domain.Cqrs.Events.Expenses
     public class UpdateExpenseCommand : IRequest<Result<Expense, BusinessException>>
     {
         public Expense Expense { get; set; }
+
+        public UpdateExpenseCommand(Expense expense)
+        {
+            Expense = expense;
+        }
     }
 }

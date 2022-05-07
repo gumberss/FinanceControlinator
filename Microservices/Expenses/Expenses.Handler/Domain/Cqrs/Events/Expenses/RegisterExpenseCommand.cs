@@ -10,5 +10,10 @@ namespace Expenses.Handler.Domain.Cqrs.Events.Expenses
     public class RegisterExpenseCommand : IRequest<Result<Expense, BusinessException>>
     {
         public ExpenseDTO Expense { get; set; }
+
+        public RegisterExpenseCommand(ExpenseDTO expense)
+        {
+            Expense = expense;
+        }
     }
 }

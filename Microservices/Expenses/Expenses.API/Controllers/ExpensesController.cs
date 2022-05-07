@@ -23,11 +23,11 @@ namespace Expenses.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ExpenseDTO expense)
             => !UserId.HasValue ? Unauthorized()
-            : From(await _mediator.Send(new RegisterExpenseCommand { Expense = expense with { UserId = UserId.Value} }));
+            : From(await _mediator.Send(new RegisterExpenseCommand(expense with { UserId = UserId.Value })));
 
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] Expense expense)
-            => From(await _mediator.Send(new UpdateExpenseCommand { Expense = expense }));
+            => From(await _mediator.Send(new UpdateExpenseCommand(expense)));
 
         [HttpGet("{page}/{count}")]
         public async Task<IActionResult> Get(int page, int count)
