@@ -119,7 +119,7 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<List<Expense>, BusinessException>> Handle(GetPaginationExpensesQuery request, CancellationToken cancellationToken)
         {
-            return await _expenseAppService.GetByPagination(request.Page, request.Count);
+            return await _expenseAppService.GetByPagination(request.Page, request.Count, request.UserId);
         }
     }
 }
