@@ -79,7 +79,8 @@ namespace Expenses.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<Expense, BusinessException>> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
         {
-            var result = await _expenseAppService.UpdateExpense(request.Expense);
+            var expense = _mapper.Map<ExpenseDTO, Expense>(request.Expense);
+            var result = await _expenseAppService.UpdateExpense(expense);
 
             if (result.IsFailure) return result;
 

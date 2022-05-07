@@ -154,6 +154,7 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
+            //TODO: filter by user when this functionality is added
             var registeredExpense = await _expenseRepository.GetByIdAsync(expense.Id, exp => exp.Items);
 
             if (registeredExpense.IsFailure) return registeredExpense.Error;
