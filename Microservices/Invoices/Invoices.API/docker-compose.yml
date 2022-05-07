@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  invoice-service-local-test:
+    build:
+        context: ../../..
+        dockerfile: Microservices/Invoices/Invoices.API/Dockerfile
+    container_name: invoice-service-local-test
+    ports:
+      - "5002:80"
+    networks:
+      - default
+    environment:
+      ConnectionStrings__InvoicesDbConnection: "http://192.168.1.100:10000"
+      ConnectionStrings__InvoicesDbName: "Invoices"
+      RabbitMq__Host: "amqp://192.168.1.102:5672/"
+      RabbitMq__Password: "guest"
+      RabbitMq__Username: "guest"
+      
+#cd C:\Github\FinanceControlinator\Microservices\Invoices\Invoices.API      
+#docker-compose build 
+#docker-compose up
