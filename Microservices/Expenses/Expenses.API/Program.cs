@@ -18,37 +18,33 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host
-    .ConfigureServices(services =>
-    {
-        var rabbitMqValues = new RabbitMqValues
-        {
-            Host = builder.Configuration.GetSection("RabbitMq:Host").Value,
-            Username = builder.Configuration.GetSection("RabbitMq:Username").Value,
-            Password = builder.Configuration.GetSection("RabbitMq:Password").Value,
-        };
+var rabbitMqValues = new RabbitMqValues
+{
+    Host = builder.Configuration.GetSection("RabbitMq:Host").Value,
+    Username = builder.Configuration.GetSection("RabbitMq:Username").Value,
+    Password = builder.Configuration.GetSection("RabbitMq:Password").Value,
+};
 
-        services.ConfigureMassTransit(rabbitMqValues);
+builder.Services.ConfigureMassTransit(rabbitMqValues);
 
-        services.AddControllers()
-            .AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            );
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
 
-        services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
-        {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("ExpensesDbConnection"));
-        });
+builder.Services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ExpensesDbConnection"));
+});
 
-        services.AddSwaggerGen(x =>
-        {
-            x.SwaggerDoc("v1", new OpenApiInfo { Title = "Expenses Microservice", Version = "v1" });
-        });
+builder.Services.AddSwaggerGen(x =>
+{
+    x.SwaggerDoc("v1", new OpenApiInfo { Title = "Expenses Microservice", Version = "v1" });
+});
 
-        services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
+builder.Services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
 
-        services.RegisterServices();
-    });
+builder.Services.RegisterServices();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -73,21 +69,12 @@ builder.Logging
     .AddConsole()
     .AddProvider(new CustomLogProvider(new CustomLogConfig()));
 
+builder.Services.AddSwaggerGen();
+
 var app = builder
     .Build()
     .Migrate()
     .Result;
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-
-app.UseSwagger();
-app.UseSwaggerUI(x =>
-{
-    x.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses Microservice V1");
-});
 
 app.UseRouting();
 
@@ -97,5 +84,15 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(x =>
+    {
+        x.SwaggerEndpoint("/swagger/v1/swagger.json", "Expenses Microservice V1");
+    });
+}
 
 app.Run();
