@@ -11,6 +11,7 @@ namespace Expenses.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ExpensesController : ApiControllerBase
     {
         private readonly IMediator _mediator;
