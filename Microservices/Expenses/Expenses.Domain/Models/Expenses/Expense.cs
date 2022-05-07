@@ -24,6 +24,8 @@ namespace Expenses.Domain.Models.Expenses
 
         public decimal TotalCost { get; set; }
 
+        public Guid UserId { get; set; }
+
         public List<ExpenseItem> Items { get; set; }
 
         public bool TotalCostIsValid()

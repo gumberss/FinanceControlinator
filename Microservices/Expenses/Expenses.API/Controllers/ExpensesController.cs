@@ -1,5 +1,6 @@
 ﻿using Expenses.API.Commons;
 using Expenses.Domain.Models.Expenses;
+using Expenses.DTO.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using Expenses.Handler.Domain.Cqrs.ExpenseOverviews;
 using MediatR;
@@ -11,6 +12,7 @@ namespace Expenses.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ExpensesController : ApiControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,20 +21,24 @@ namespace Expenses.API.Controllers
             => _mediator = mediator;
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Expense expense)
-            => From(await _mediator.Send(new RegisterExpenseCommand { Expense = expense }));
+        public async Task<IActionResult> Post([FromBody] ExpenseDTO expense)
+            => !UserId.HasValue ? Unauthorized()
+            : From(await _mediator.Send(new RegisterExpenseCommand(expense with { UserId = UserId.Value })));
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] Expense expense)
-            => From(await _mediator.Send(new UpdateExpenseCommand { Expense = expense }));
+        public async Task<IActionResult> Put([FromBody] ExpenseDTO expense)
+            => !UserId.HasValue ? Unauthorized()
+            : From(await _mediator.Send(new UpdateExpenseCommand(expense with { UserId = UserId.Value })));
 
         [HttpGet("{page}/{count}")]
         public async Task<IActionResult> Get(int page, int count)
-            => From(await _mediator.Send(new GetPaginationExpensesQuery(page, count)));
+            => !UserId.HasValue ? Unauthorized()
+            : From(await _mediator.Send(new GetPaginationExpensesQuery(page, count, UserId.Value)));
 
         [HttpGet("Overview")]
         public async Task<IActionResult> Overview()
-            => From(await _mediator.Send(new ExpenseOverviewQuery()));
+            => !UserId.HasValue ? Unauthorized()
+            : From(await _mediator.Send(new ExpenseOverviewQuery(UserId.Value)));
 
         [HttpGet("Month")]
         public async Task<IActionResult> GetMonth()

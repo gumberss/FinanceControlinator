@@ -154,6 +154,7 @@ namespace Expenses.Application.AppServices
                 return exception;
             }
 
+            //TODO: filter by user when this functionality is added
             var registeredExpense = await _expenseRepository.GetByIdAsync(expense.Id, exp => exp.Items);
 
             if (registeredExpense.IsFailure) return registeredExpense.Error;
@@ -206,9 +207,9 @@ namespace Expenses.Application.AppServices
             return registeredExpense;
         }
 
-        public Task<Result<List<Expense>, BusinessException>> GetByPagination(int page, int count)
+        public Task<Result<List<Expense>, BusinessException>> GetByPagination(int page, int count, Guid userId)
         {
-            return _expenseRepository.GetPaginationAsync(page, count);
+            return _expenseRepository.GetPaginationAsync(page, count, userId);
         }
     }
 }

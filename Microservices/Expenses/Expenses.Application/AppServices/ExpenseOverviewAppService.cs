@@ -9,6 +9,7 @@ using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Parsers.TextParsers;
 using FinanceControlinator.Common.Utils;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,19 +36,19 @@ namespace Expenses.Application.AppServices
             _textParser = textParser;
         }
 
-        public async Task<Result<ExpenseOverview, BusinessException>> GetExpensesOverview()
+        public async Task<Result<ExpenseOverview, BusinessException>> GetExpensesOverview(Guid userId)
         {
             var (startDate, endDate) = _dateService.StartAndEndMonthDate(DateTime.Now);
 
-            var expenses = await _expenseRepository.GetAllAsync(null, x => x.PurchaseDate >= startDate && x.PurchaseDate <= endDate);
+            var expenses = await _expenseRepository.GetAllAsync(null,
+                x => x.UserId == userId
+                  && x.PurchaseDate >= startDate
+                  && x.PurchaseDate <= endDate);
 
-            if (expenses.IsFailure) return expenses.Error;
-
-            var briefs = BuildBriefs(expenses.Value);
-
-            var partitions = BuildPartitions(expenses.Value);
-
-            return new ExpenseOverview(briefs, partitions);
+            return expenses.IsFailure
+                ? expenses.Error
+                : new ExpenseOverview(BuildBriefs(expenses.Value).ToList()
+                                    , BuildPartitions(expenses.Value));
         }
 
         private List<ExpensePartition> BuildPartitions(List<Expense> expenses)
@@ -55,10 +56,8 @@ namespace Expenses.Application.AppServices
             return _expenseOverviewService.GroupByType(expenses);
         }
 
-        private List<ExpenseBrief> BuildBriefs(List<Expense> expenses)
+        private IEnumerable<ExpenseBrief> BuildBriefs(List<Expense> expenses)
         {
-            List<ExpenseBrief> briefs = new List<ExpenseBrief>();
-
             ExpenseType? mostSpentType = _expenseOverviewService.MostSpentType(expenses);
 
             if (mostSpentType.HasValue)
@@ -68,7 +67,7 @@ namespace Expenses.Application.AppServices
                     ("MOST_SPENT_TYPE", _localization.EXPENSE_TYPE(mostSpentType.Value))
                 };
 
-                briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers)));
+                yield return new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers));
             }
 
             (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseOverviewService.MostSpentMoneyPlace(expenses);
@@ -81,17 +80,15 @@ namespace Expenses.Application.AppServices
                     ("TOTAL_VALUE", totalSpentMoneyInThePlace.ToString(_localization.CULTURE))
                 };
 
-                briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers)));
+                yield return new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers));
             }
 
             decimal totalMonthExpense = _expenseOverviewService.TotalMoneySpent(expenses);
 
-            briefs.Add(new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
+            yield return new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
                 {
                     ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString(_localization.CULTURE))
-                })));
-
-            return briefs;
+                }));
         }
     }
 }

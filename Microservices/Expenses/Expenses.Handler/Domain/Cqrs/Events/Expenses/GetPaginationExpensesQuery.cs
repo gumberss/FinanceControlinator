@@ -2,6 +2,7 @@
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using MediatR;
+using System;
 using System.Collections.Generic;
 
 namespace Expenses.Handler.Domain.Cqrs.Events.Expenses
@@ -12,10 +13,13 @@ namespace Expenses.Handler.Domain.Cqrs.Events.Expenses
 
         public int Count { get; set; }
 
-        public GetPaginationExpensesQuery(int page, int count)
+        public Guid UserId { get; set; }
+
+        public GetPaginationExpensesQuery(int page, int count, Guid userId)
         {
             Page = page;
             Count = count;
+            UserId = userId;
         }
     }
 }

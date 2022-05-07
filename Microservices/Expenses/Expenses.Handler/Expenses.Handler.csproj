@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Domain\Handlers\**" />
+    <EmbeddedResource Remove="Domain\Handlers\**" />
+    <None Remove="Domain\Handlers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Domain\Cqrs\Events\Expenses\Details\" />
-    <Folder Include="Domain\Handlers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +26,7 @@
     <ProjectReference Include="..\..\..\Common\FinanceControlinator.Events\FinanceControlinator.Events.csproj" />
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
+    <ProjectReference Include="..\Expenses.DTO\Expenses.DTO.csproj" />
   </ItemGroup>
 
 </Project>
