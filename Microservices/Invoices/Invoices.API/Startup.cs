@@ -14,83 +14,86 @@ using Microsoft.OpenApi.Models;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 
-namespace Invoices.API
+
+/*public static void Main(string[] args)
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            var rabbitMqValues = new RabbitMqValues()
-            {
-                Host = Configuration.GetSection("RabbitMq:Host").Value,
-                Username = Configuration.GetSection("RabbitMq:Username").Value,
-                Password = Configuration.GetSection("RabbitMq:Password").Value,
-            };
-
-            services.ConfigureMassTransit(rabbitMqValues);
-
-            services.AddControllers()
-                .AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
-
-            var dbConnection = Configuration.GetConnectionString("InvoicesDbConnection");
-            var dbName = Configuration.GetConnectionString("InvoicesDbName");
-            services.AddSingleton<IDocumentStore>(x => DocumentStoreHolder.GetStore(dbConnection, dbName));
-            //services.AddTransient<IDocumentSession>(x => x.GetService<IDocumentStore>().OpenSession());
-            services.AddScoped<IAsyncDocumentSession>(x => x.GetService<IDocumentStore>().OpenAsyncSession());
-
-            services.AddSwaggerGen(x =>
-            {
-                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Invoices Microservice", Version = "v1" });
-            });
-
-            services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
-
-            RegisterServices(services);
-        }
-
-        private void RegisterServices(IServiceCollection services)
-        {
-            services.RegisterServices();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipel1ine.
-        public void Configure(
-            IApplicationBuilder app
-          , IWebHostEnvironment env
-          , ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddProvider(new CustomLogProvider(new CustomLogConfig()));
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseSwagger();
-            app.UseSwaggerUI(x =>
-            {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Invoices Microservice V1");
-            });
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
-    }
+    CreateHostBuilder(args)
+        .Build()
+        .EnsureDatabaseExists()
+        .Run();
 }
+
+public static IHostBuilder CreateHostBuilder(string[] args) =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddConsole();
+        })
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Startup>();
+        });*/
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+var rabbitMqValues = new RabbitMqValues()
+{
+    Host = builder.Configuration.GetSection("RabbitMq:Host").Value,
+    Username = builder.Configuration.GetSection("RabbitMq:Username").Value,
+    Password = builder.Configuration.GetSection("RabbitMq:Password").Value,
+};
+
+builder.Services.ConfigureMassTransit(rabbitMqValues);
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
+
+var dbConnection = builder.Configuration.GetConnectionString("InvoicesDbConnection");
+var dbName = builder.Configuration.GetConnectionString("InvoicesDbName");
+builder.Services.AddSingleton<IDocumentStore>(x => DocumentStoreHolder.GetStore(dbConnection, dbName));
+builder.Services.AddScoped<IAsyncDocumentSession>(x => x.GetService<IDocumentStore>().OpenAsyncSession());
+
+builder.Services.AddSwaggerGen(x =>
+{
+    x.SwaggerDoc("v1", new OpenApiInfo { Title = "Invoices Microservice", Version = "v1" });
+});
+
+builder.Services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
+
+builder.Services.RegisterServices();
+
+builder.Logging
+    .ClearProviders()
+    .AddConsole()
+    .AddProvider(new CustomLogProvider(new CustomLogConfig()));
+
+var app = builder
+    .Build()
+    .EnsureDatabaseExists();
+
+
+if (app.Environment.IsDevelopment())
+    app.UseDeveloperExceptionPage();
+else
+    app.UseHttpsRedirection();
+
+app.UseSwagger();
+
+app.UseSwaggerUI(x =>
+{
+    x.SwaggerEndpoint("/swagger/v1/swagger.json", "Invoices Microservice V1");
+});
+
+app.UseRouting();
+
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+app.Run();
