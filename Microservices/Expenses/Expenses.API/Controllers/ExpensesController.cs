@@ -36,7 +36,8 @@ namespace Expenses.API.Controllers
 
         [HttpGet("Overview")]
         public async Task<IActionResult> Overview()
-            => From(await _mediator.Send(new ExpenseOverviewQuery()));
+            => UserId is null ? Unauthorized()
+            : From(await _mediator.Send(new ExpenseOverviewQuery(UserId.Value)));
 
         [HttpGet("Month")]
         public async Task<IActionResult> GetMonth()

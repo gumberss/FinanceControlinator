@@ -35,11 +35,14 @@ namespace Expenses.Application.AppServices
             _textParser = textParser;
         }
 
-        public async Task<Result<ExpenseOverview, BusinessException>> GetExpensesOverview()
+        public async Task<Result<ExpenseOverview, BusinessException>> GetExpensesOverview(Guid userId)
         {
             var (startDate, endDate) = _dateService.StartAndEndMonthDate(DateTime.Now);
 
-            var expenses = await _expenseRepository.GetAllAsync(null, x => x.PurchaseDate >= startDate && x.PurchaseDate <= endDate);
+            var expenses = await _expenseRepository.GetAllAsync(null, 
+                x => x.UserId == userId
+                  && x.PurchaseDate >= startDate
+                  && x.PurchaseDate <= endDate);
 
             if (expenses.IsFailure) return expenses.Error;
 
