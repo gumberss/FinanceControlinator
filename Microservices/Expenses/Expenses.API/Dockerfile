@@ -13,6 +13,7 @@ COPY ["Microservices/Expenses/Expenses.Domain/Expenses.Domain.csproj", "Microser
 COPY ["Common/FinanceControlinator.Common/FinanceControlinator.Common.csproj", "FinanceControlinator.Common/"]
 COPY ["Common/FinanceControlinator.Events/FinanceControlinator.Events.csproj", "FinanceControlinator.Events/"]
 COPY ["Microservices/Expenses/Expenses.Data/Expenses.Data.csproj", "Microservices/Expenses/Expenses.Data/"]
+COPY ["Microservices/Expenses/Expenses.DTO/Expenses.DTO.csproj", "Microservices/Expenses/Expenses.DTO/"]
 COPY ["Microservices/Expenses/Expenses.Handler/Expenses.Handler.csproj", "Microservices/Expenses/Expenses.Handler/"]
 COPY ["Microservices/Expenses/Expenses.Application/Expenses.Application.csproj", "Microservices/Expenses/Expenses.Application/"]
 RUN dotnet restore "Microservices/Expenses/Expenses.API/Expenses.API.csproj"
