@@ -13,8 +13,7 @@ namespace Invoices.Domain.Services
         List<Invoice> RegisterExpense(
             Expense expense
           , List<Invoice> existentInvoices
-          , DateTime currentInvoiceDate
-        );
+          , DateTime currentInvoiceDate);
 
         int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate);
     }
@@ -44,8 +43,7 @@ namespace Invoices.Domain.Services
             var lastInvoiceCloseDate = GetInvoiceCloseDateBy(endDate);
 
             if (lastInvoiceCloseDate.Year > firstInvoiceCloseDate.Year
-                || lastInvoiceCloseDate.Month > firstInvoiceCloseDate.Month
-                )
+                || lastInvoiceCloseDate.Month > firstInvoiceCloseDate.Month)
             {
                 return GetInvoiceInstallmentsByDateRange(startDate, endDate, monthCount + 1);
             }

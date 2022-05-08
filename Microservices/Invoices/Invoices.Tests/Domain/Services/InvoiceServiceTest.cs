@@ -13,6 +13,8 @@ using System.Linq;
 namespace Invoices.Tests.Domain.Services
 {
     [TestClass]
+    [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
+    [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
     public class InvoiceServiceTest
     {
         private static InvoiceService _invoiceService;
@@ -42,8 +44,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_create_a_new_invoice_when_a_new_expense_was_informed()
         {
             _expense.InstallmentsCount = 1;
@@ -65,8 +65,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_create_two_new_invoices_when_the_informed_expense_was_buy_in_two_installments()
         {
             var existentInvoices = new List<Invoice>();
@@ -102,8 +100,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_add_the_expense_in_an_invoice_when_that_month_invoice_already_exists()
         {
             var purchaseDay = new DateTime(2021, 08, 05);
@@ -150,8 +146,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_create_a_new_invoice_when_the_month_invoice_already_exist_but_of_the_other_year()
         {
             var existentInvoiceDate = new DateTime(2004, 08, 05);
@@ -174,8 +168,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Should_put_the_rest_of_the_expense_cost_on_the_last_invoice()
         {
             _expense.InstallmentsCount = 3;
@@ -200,8 +192,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         [DataRow(2021, 9, 1, 2021, 9, 30)]
         [DataRow(2021, 9, 15, 2021, 9, 30)]
         [DataRow(2021, 9, 30, 2021, 9, 30)]
@@ -223,8 +213,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         [DataRow("01/09/2021", "01/09/2021", "31/10/2021", 1)]
         [DataRow("15/09/2021", "15/09/2021", "30/11/2021", 2)]
         [DataRow("30/09/2021", "30/09/2021", "31/12/2021", 3)]
@@ -247,8 +235,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_maior_que_o_dia_da_data_inicial_de_meses_diferente()
         {
             var startDate = new DateTime(2021, 09, 10);
@@ -260,8 +246,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_maior_que_o_dia_da_data_inicial_do_mesmo_mes()
         {
             var startDate = new DateTime(2021, 09, 20);
@@ -273,8 +257,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_menor_que_o_dia_da_data_inicial_de_meses_diferente()
         {
             var startDate = new DateTime(2021, 09, 20);
@@ -286,8 +268,6 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
         public void Deveria_encontrar_a_quantidade_de_parcelas_quando_o_dia_da_data_final_foi_menor_que_o_dia_da_data_inicial_do_mesmo_mes()
         {
             var startDate = new DateTime(2021, 09, 10);
@@ -299,13 +279,12 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
-        [DataRow("10/09/2021", "09/09/2021")]
-        [DataRow("10/10/2021", "11/09/2021")]
-        [DataRow("10/10/2021", "11/11/2020")]
-        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_a_data_final_for_menor_que_a_data_inicial
-            (String startDateString, String endDateString)
+        [DataRow("10/09/2021", "09/09/2021", 0)]//not complete a month
+        [DataRow("10/10/2021", "11/09/2021", 0)]//end date before start date
+        [DataRow("10/10/2021", "11/11/2020", 0)]//end day and month after but year before the start date
+        [DataRow("10/10/2020", "11/11/2021", 13)]//day, month and year before the start date
+        public void Should_find_correctly_the_installment_count
+            (String startDateString, String endDateString, int expected)
         {
             string dateFormat = "dd/MM/yyyy";
 
@@ -316,26 +295,7 @@ namespace Invoices.Tests.Domain.Services
 
             var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
 
-            installments.Should().Be(0);
-        }
-
-        [TestMethod]
-        [JourneyCategory(TestUserJourneyEnum.RecordingExpenses)]
-        [UnitTestCategory(TestMicroserviceEnum.Invoices, TestFeatureEnum.InvoiceGeneration)]
-        [DataRow("10/10/2020", "11/11/2021")]
-        public void Deveria_encontrar_a_quantidade_de_parcelas_quando_a_data_final_for_menor_que_a_data_inicial22222222
-          (String startDateString, String endDateString)
-        {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var startDate = DateTime.ParseExact(startDateString, dateFormat, ptbr);
-            var endDate = DateTime.ParseExact(endDateString, dateFormat, ptbr);
-
-            var installments = _invoiceService.GetInvoiceInstallmentsByDateRange(startDate, endDate);
-
-            installments.Should().Be(13);
+            installments.Should().Be(expected);
         }
     }
 }
