@@ -26,11 +26,16 @@ namespace Invoices.API.Commons
 
             services.AddFluentValidation();
 
+            services.AddTransient<IInvoiceSyncAppService, InvoiceSyncAppService>();
             services.AddTransient<IInvoiceAppService, InvoiceAppService>();
+
+            services.AddTransient<IInvoiceService, InvoiceService>();
+            services.AddTransient<IInvoiceOverviewService, InvoiceOverviewService>();
+
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
-            services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
+
             services.AddTransient<IMessageBus, MassTransitMessageBus>();
 
         }
