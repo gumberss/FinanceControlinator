@@ -43,5 +43,12 @@ namespace Invoices.Domain.Models
 
             return this;
         }
+
+        public InvoiceItem WithType(InvoiceItemType type)
+        {
+            Type = type;
+
+            return this;
+        }
     }
 }
