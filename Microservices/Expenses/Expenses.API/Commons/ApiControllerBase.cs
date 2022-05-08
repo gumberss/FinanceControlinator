@@ -9,7 +9,7 @@ namespace Expenses.API.Commons
 {
     public class ApiControllerBase : ControllerBase
     {
-        protected Guid? UserId => 
+        protected Guid? UserId =>
                 Guid.TryParse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value, out Guid id)
                     ? id
                     : null;
