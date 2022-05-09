@@ -1,6 +1,5 @@
 ﻿using Invoices.Domain.Enums;
 using Invoices.Domain.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +7,15 @@ namespace Invoices.Domain.Services
 {
     public interface IInvoiceOverviewService
     {
+        string InvoiceCloseDateText(Invoice invoice);
 
+        decimal FuturePurchasePercent(Invoice invoice);
+
+        decimal InvestmentPercent(Invoice invoice);
+
+        decimal BillAverageSpentDiffPercent(Invoice current, List<Invoice> comparable);
+
+        decimal InvoiceSpentDiffPercent(Invoice current, List<Invoice> comparable);
     }
 
     public class InvoiceOverviewService : IInvoiceOverviewService
