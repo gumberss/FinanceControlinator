@@ -36,11 +36,11 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
 
         }
 
-        public Task<Result<InvoiceSyncDTO, BusinessException>> Handle(InvoiceSyncQuery request, CancellationToken cancellationToken)
+        public async Task<Result<InvoiceSyncDTO, BusinessException>> Handle(InvoiceSyncQuery request, CancellationToken cancellationToken)
         {
-            var a = _invoiceSyncAppService.SyncUpdatesFrom(request.LastSyncTimestamp);
+            var a = await _invoiceSyncAppService.SyncUpdatesFrom(request.LastSyncTimestamp);
 
-            return null;
+            return new InvoiceSyncDTO();
         }
     }
 }
