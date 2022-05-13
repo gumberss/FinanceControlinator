@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Invoices.Domain.Localizations
 {
@@ -6,5 +7,19 @@ namespace Invoices.Domain.Localizations
     {
         String DATE_INCORRECT { get; }
         string PAYMENT_ALREADY_EXISTENT { get; }
+        string OVERVIEW_FUTURE_PURCHASE_PERCENT { get; }
+        CultureInfo CULTURE { get; }
+        string INVOICE_OVERVIEW_INVESTMENT_PERCENT { get; }
+        string INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_SIX_MONTHES { get; }
+        string INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_SIX_MONTHES { get; }
+        string INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES { get; }
+
+        string INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_INVOICE { get; }
+        string INVOICE_COST_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_INVOICE { get; }
+        string INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICE { get; }
+
+        string INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_SIX_INVOICES { get; }
+        string INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_SIX_INVOICES { get; }
+        string INVOICE_COST_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES { get; }
     }
 }
