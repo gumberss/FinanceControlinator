@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace Invoices.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
     public class InvoicesController : ApiControllerBase
     {
@@ -24,7 +24,7 @@ namespace Invoices.API.Controllers
 
         [HttpGet("sync")]
         public IActionResult Sync([FromQuery] long timestamp)
-            => !UserId.HasValue ? Unauthorized()
-            : Ok(_mediator.Send(new InvoiceSyncQuery(timestamp)));
+            => //!UserId.HasValue ? Unauthorized(): 
+            Ok(_mediator.Send(new InvoiceSyncQuery(timestamp)));
     }
 }
