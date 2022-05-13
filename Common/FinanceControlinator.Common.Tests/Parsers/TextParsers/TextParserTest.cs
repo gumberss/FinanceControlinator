@@ -22,13 +22,9 @@ namespace FinanceControlinator.Common.Tests.Parsers.TextParsers
         [UnitTestCategory(TestMicroserviceEnum.Expenses, TestFeatureEnum.ExpenseUpdate)]
         public void Should_parse_text_replacing_key_for_value()
         {
-            var parsers = new List<(string key, string value)>
-            {
-                ("THE_KEY", "Jarbas"),
-                ("OTHER_KEY", "are you?")
-            };
-
-            var result = _service.Parse("Hi, [[THE_KEY]], how [[OTHER_KEY]]", parsers);
+            var result = _service.Parse("Hi, [[THE_KEY]], how [[OTHER_KEY]]"
+                , ("THE_KEY", "Jarbas")
+                , ("OTHER_KEY", "are you?"));
 
             result.Should().Be("Hi, Jarbas, how are you?");
         }
