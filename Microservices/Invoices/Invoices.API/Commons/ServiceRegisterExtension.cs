@@ -1,5 +1,7 @@
 using FinanceControlinator.Common.LogsBehaviors;
 using FinanceControlinator.Common.Messaging;
+using FinanceControlinator.Common.Parsers.TextParsers;
+using FinanceControlinator.Common.Utils;
 using FluentValidation.AspNetCore;
 using Invoices.Application.AppServices;
 using Invoices.Application.Interfaces.AppServices;
@@ -36,6 +38,8 @@ namespace Invoices.API.Commons
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
 
+            services.AddTransient<ITextParser, TextParser>();
+            services.AddTransient<IDateService, DateService>();
             services.AddTransient<IMessageBus, MassTransitMessageBus>();
 
         }
