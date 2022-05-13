@@ -1,6 +1,8 @@
 ﻿using Invoices.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Invoices.Domain.Services
 {
@@ -16,6 +18,12 @@ namespace Invoices.Domain.Services
           , DateTime currentInvoiceDate);
 
         int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate);
+        
+        List<Invoice> LastInvoicesFrom(Invoice invoice, List<Invoice> pastInvoices, int count);
+        
+        Func<Invoice, bool> AnyItemChangedSince(DateTime lastSyncDateTime);
+        
+        Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare);
     }
 
     public class InvoiceService : IInvoiceService
@@ -30,9 +38,7 @@ namespace Invoices.Domain.Services
         }
 
         public int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate)
-        {
-            return GetInvoiceInstallmentsByDateRange(startDate, endDate, 0);
-        }
+            => GetInvoiceInstallmentsByDateRange(startDate, endDate, 0);
 
         private int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate, int monthCount)
         {
@@ -130,5 +136,18 @@ namespace Invoices.Domain.Services
             return new InvoiceItem(installment, installmentCost)
                 .From(expense);
         }
+
+        public List<Invoice> LastInvoicesFrom(Invoice invoice, List<Invoice> pastInvoices, int count)
+            => pastInvoices
+                .Where(x => x.CloseDate < invoice.CloseDate)
+                .OrderByDescending(x => x.CloseDate)
+                .Take(count).ToList();
+
+        public Func<Invoice, bool> AnyItemChangedSince(DateTime lastSyncDateTime)
+            => x => x.Items.Any(y => y.CreatedDate > lastSyncDateTime
+                                  || y.UpdatedDate > lastSyncDateTime);
+
+        public Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare)
+            => x => x.CloseDate > invoiceDateToCompare;
     }
 }
