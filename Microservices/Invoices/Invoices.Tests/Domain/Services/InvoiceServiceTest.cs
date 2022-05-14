@@ -297,5 +297,147 @@ namespace Invoices.Tests.Domain.Services
 
             installments.Should().Be(expected);
         }
+
+        [TestMethod]
+        public void Should_return_the_last_invoices_before_the_invoice_base_when_there_are_more_invoices_than_requested()
+        {
+            var baseInvoice = new Invoice(DateTime.Now);
+
+            var expected = new List<Invoice> {
+                new Invoice(DateTime.Now.AddMonths(-1)),
+                new Invoice(DateTime.Now.AddMonths(-2))
+            };
+
+            var lastInvoices = new List<Invoice>
+            {
+                new Invoice(DateTime.Now.AddMonths(-3)),
+                new Invoice(DateTime.Now.AddMonths(-4)),
+                new Invoice(DateTime.Now.AddMonths(-5)),
+            }
+            .Concat(expected)
+            .ToList();
+
+            _invoiceService.LastInvoicesFrom(baseInvoice, lastInvoices, 2)
+                .Should().BeEquivalentTo(expected);
+        }
+
+        [TestMethod]
+        public void Should_return_the_last_invoices_before_the_invoice_base_when_there_are_same_invoices_quantity_than_requested()
+        {
+            var baseInvoice = new Invoice(DateTime.Now);
+
+            var lastInvoices = new List<Invoice>
+            {
+                new Invoice(DateTime.Now.AddMonths(-1)),
+                new Invoice(DateTime.Now.AddMonths(-2)),
+                new Invoice(DateTime.Now.AddMonths(-3)),
+                new Invoice(DateTime.Now.AddMonths(-4)),
+                new Invoice(DateTime.Now.AddMonths(-5)),
+            };
+
+            _invoiceService.LastInvoicesFrom(baseInvoice, lastInvoices, 5)
+                .Should().BeEquivalentTo(lastInvoices);
+        }
+
+        [TestMethod]
+        public void Should_return_the_last_invoices_before_the_invoice_base_when_there_are_les_invoices_than_requested()
+        {
+            var baseInvoice = new Invoice(DateTime.Now);
+
+            var lastInvoices = new List<Invoice>
+            {
+                new Invoice(DateTime.Now.AddMonths(-1)),
+                new Invoice(DateTime.Now.AddMonths(-2)),
+            };
+
+            _invoiceService.LastInvoicesFrom(baseInvoice, lastInvoices, 5000)
+                .Should().BeEquivalentTo(lastInvoices);
+        }
+
+        [TestMethod]
+        public void Should_have_itens_added_after_the_date_informed()
+        {
+            var baseDate = DateTime.Now.AddMonths(-4);
+
+            var invoices = new List<Invoice>
+            {
+                new Invoice(DateTime.Now.AddMonths(-1000))
+                .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-1000)})
+                .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-1)}),
+                new Invoice(DateTime.Now.AddMonths(-3)).AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-1)}),
+            };
+
+            invoices
+                .All(_invoiceService.AnyItemChangedSince(baseDate))
+                .Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void Should_have_itens_updated_after_the_date_informed()
+        {
+            var baseDate = DateTime.Now.AddMonths(-4);
+
+            var invoices = new List<Invoice>
+            {
+                new Invoice(DateTime.Now.AddMonths(-1000))
+                    .AddNew(new InvoiceItem(0,0){
+                        UpdatedDate = DateTime.Now.AddMonths(-1000),
+                        CreatedDate = DateTime.Now.AddMonths(-500)})
+                    .AddNew(new InvoiceItem(0,0){
+                        UpdatedDate = DateTime.Now.AddMonths(-1), // Updated recently
+                        CreatedDate = DateTime.Now.AddMonths(-500)}), 
+                new Invoice(DateTime.Now.AddMonths(-2))
+                    .AddNew(new InvoiceItem(0,0){
+                        UpdatedDate = DateTime.Now.AddMonths(-1), 
+                        CreatedDate = DateTime.Now.AddMonths(-500)}),
+                new Invoice(DateTime.Now.AddMonths(-3))
+                    .AddNew(new InvoiceItem(0,0){
+                        UpdatedDate = DateTime.Now.AddMonths(-1), 
+                        CreatedDate = DateTime.Now.AddMonths(-500)}),
+            };
+
+            invoices
+              .All(_invoiceService.AnyItemChangedSince(baseDate))
+              .Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void Should_not_have_itens_updated_after_the_date_informed_when_no_one_items_was_changed_after_the_date_informed()
+        {
+            var baseDate = DateTime.Now.AddMonths(-4);
+
+            var invoices = new List<Invoice>
+            {
+                new Invoice(DateTime.Now.AddMonths(-5))
+                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-5)})
+                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.Now.AddMonths(-5), CreatedDate = DateTime.Now.AddMonths(-5)}),
+                new Invoice(DateTime.Now.AddMonths(-6))
+                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-7)})
+                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.Now.AddMonths(-7), CreatedDate = DateTime.Now.AddMonths(-5)}),
+                new Invoice(DateTime.Now.AddMonths(-5))
+                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.Now.AddMonths(-100), CreatedDate = DateTime.Now.AddMonths(-5)})
+                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-500)}),
+            };
+
+            invoices
+               .All(_invoiceService.AnyItemChangedSince(baseDate))
+               .Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void Should_return_true_when_the_invoice_has_the_close_date_after_the_date_informed()
+        {
+            _invoiceService
+                .ClosedInvoiceAfter(DateTime.Now.AddMonths(-1))(new Invoice(DateTime.Now))
+                .Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void Should_return_false_when_the_invoice_not_has_the_close_date_after_the_date_informed()
+        {
+            _invoiceService
+              .ClosedInvoiceAfter(DateTime.Now)(new Invoice(DateTime.Now.AddMonths(-1)))
+              .Should().BeFalse();
+        }
     }
 }
