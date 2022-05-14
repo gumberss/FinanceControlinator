@@ -72,9 +72,9 @@ namespace Invoices.Application.AppServices
                 .ToList());
         }
 
-        private InvoiceMonthDataSync BuildMonthDataSync(Invoice invoice, List<Invoice> changedInvoices)
+        private InvoiceMonthDataSync BuildMonthDataSync(Invoice invoice, List<Invoice> contextInvoices)
         {
-            BuildBriefs(invoice, changedInvoices);
+            BuildBriefs(invoice, contextInvoices);
 
             return null;
         }
