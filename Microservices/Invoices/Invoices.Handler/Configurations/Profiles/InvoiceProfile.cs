@@ -27,6 +27,12 @@ namespace Invoices.Handler.Configurations.Profiles
 
             CreateMap<Invoice, InvoicePaidEvent>()
                 .ForMember(x => x.Invoice, x => x.MapFrom(y => y));
+
+            CreateMap<Invoice, InvoiceDTO>();
+            CreateMap<InvoiceItem, InvoiceItemDTO>();
+
+            CreateMap<Invoice, DTOs.Invoices.InvoiceDTO>();
+            CreateMap<InvoiceItem, DTOs.Invoices.InvoiceItemDTO>();
         }
     }
 }
