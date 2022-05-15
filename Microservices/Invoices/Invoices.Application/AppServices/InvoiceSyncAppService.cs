@@ -74,9 +74,23 @@ namespace Invoices.Application.AppServices
 
         private InvoiceMonthDataSync BuildMonthDataSync(Invoice invoice, List<Invoice> contextInvoices)
         {
-            BuildBriefs(invoice, contextInvoices);
+            var baseDate = DateTime.Now;
 
-            return null;
+            var overviewStatus = _invoiceOverviewService.OverviewStatus(_invoiceService.Status(invoice, baseDate));
+
+            var overviewStatusText = _textParser.Parse(
+                _invoiceOverviewService.OverviewStatusText(overviewStatus, _localization),
+                ("DAYS", _invoiceService.DaysRemainingToNextStage(invoice, baseDate).ToString()));
+            
+            var overview = new InvoiceOverviewSync(
+                 date: _invoiceOverviewService.InvoiceCloseDateText(invoice),
+                 statusText: overviewStatusText,
+                 status: overviewStatus,
+                 totalCost: _localization.FORMAT_MONEY(invoice.TotalCost),
+                 briefs: BuildBriefs(invoice, contextInvoices).ToList(),
+                 partitions: null);
+
+            return new InvoiceMonthDataSync(overview, invoice);
         }
 
         private IEnumerable<InvoiceBrief> BuildBriefs(Invoice invoice, List<Invoice> contextInvoices)

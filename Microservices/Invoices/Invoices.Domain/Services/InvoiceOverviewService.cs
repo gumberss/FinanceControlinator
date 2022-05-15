@@ -2,6 +2,7 @@
 using Invoices.Domain.Localizations;
 using Invoices.Domain.Models;
 using Invoices.Domain.Models.Sync;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,20 +11,15 @@ namespace Invoices.Domain.Services
     public interface IInvoiceOverviewService
     {
         string InvoiceCloseDateText(Invoice invoice);
-
         decimal FuturePurchasePercent(Invoice invoice);
-
         decimal InvestmentPercent(Invoice invoice);
-
         decimal BillAverageSpentDiffPercent(Invoice current, List<Invoice> comparable);
-
         decimal InvoiceSpentDiffPercent(Invoice current, List<Invoice> comparable);
-
         InvoiceBriefStatus PercentBriefStatus(decimal percentIncrease);
-
         string BillPercentComparedWithLastSixMonthesText(decimal billPercentIncrease, ILocalization localization);
-
         string InvoicePercentComparedWithLastSixMonthesText(decimal invoiceCosDifftPercentLastSixMonthes, ILocalization localization);
+        InvoiceOverviewStatus OverviewStatus(InvoiceStatus invoiceStatus);
+        string OverviewStatusText(InvoiceOverviewStatus overviewStatus, ILocalization localization);
     }
 
     public class InvoiceOverviewService : IInvoiceOverviewService
@@ -74,6 +70,16 @@ namespace Invoices.Domain.Services
                 _ => localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES
             };
 
+        public InvoiceOverviewStatus OverviewStatus(InvoiceStatus invoiceStatus)
+            => invoiceStatus switch
+            {
+                InvoiceStatus.Overdue => InvoiceOverviewStatus.Overdue,
+                InvoiceStatus.Paid => InvoiceOverviewStatus.Paid,
+                InvoiceStatus.Closed => InvoiceOverviewStatus.Closed,
+                InvoiceStatus.Open => InvoiceOverviewStatus.Open,
+                _ => InvoiceOverviewStatus.Future,
+            };
+
         private static decimal PercentByType(Invoice invoice, InvoiceItemType type)
             => Percent(invoice.Items
                     .Where(x => x.Type == type)
@@ -81,9 +87,23 @@ namespace Invoices.Domain.Services
                 , invoice.TotalCost);
 
         private static decimal AveragePercent(decimal toFind, decimal total, int totalItems)
-            => Percent(toFind - total / totalItems, total / totalItems);
+            => totalItems == 0 || totalItems == 0
+            ? 0 
+            : Percent(toFind - total / totalItems, total / totalItems);
 
         private static decimal Percent(decimal toFind, decimal total)
-            => (toFind / total) * 100;
+            => total == 0 
+            ? 0 
+            : (toFind / total) * 100;
+
+        public string OverviewStatusText(InvoiceOverviewStatus overviewStatus, ILocalization localization)
+            => overviewStatus switch
+            {
+                InvoiceOverviewStatus.Overdue => localization.OVERDUE,
+                InvoiceOverviewStatus.Paid => localization.PAID,
+                InvoiceOverviewStatus.Open => localization.OPEN,
+                InvoiceOverviewStatus.Closed => localization.CLOSED,
+                _ => string.Empty,
+            };
     }
 }

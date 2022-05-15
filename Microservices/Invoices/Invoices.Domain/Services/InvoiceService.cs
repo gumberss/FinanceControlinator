@@ -1,4 +1,5 @@
-﻿using Invoices.Domain.Models;
+﻿using Invoices.Domain.Enums;
+using Invoices.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,14 @@ namespace Invoices.Domain.Services
           , DateTime currentInvoiceDate);
 
         int GetInvoiceInstallmentsByDateRange(DateTime startDate, DateTime endDate);
-        
+
         List<Invoice> LastInvoicesFrom(Invoice invoice, List<Invoice> pastInvoices, int count);
-        
+
         Func<Invoice, bool> AnyItemChangedSince(DateTime lastSyncDateTime);
-        
+
         Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare);
+        InvoiceStatus Status(Invoice invoice, DateTime baseDate);
+        int DaysRemainingToNextStage(Invoice invoice, DateTime baseDate);
     }
 
     public class InvoiceService : IInvoiceService
@@ -149,5 +152,56 @@ namespace Invoices.Domain.Services
 
         public Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare)
             => x => x.CloseDate > invoiceDateToCompare;
+
+        public InvoiceStatus Status(Invoice invoice, DateTime baseDate)
+         => invoice switch
+         {
+             _ when IsPaid(invoice) => InvoiceStatus.Paid,
+             _ when IsOverdue(invoice, baseDate) => InvoiceStatus.Overdue,
+             _ when IsClosed(invoice, baseDate) => InvoiceStatus.Closed,
+             _ when IsOpened(invoice, baseDate) => InvoiceStatus.Open,
+             _ => InvoiceStatus.Future
+         };
+
+        public int DaysRemainingToNextStage(Invoice invoice, DateTime baseDate)
+       => Status(invoice, baseDate) switch
+       {
+           InvoiceStatus.Paid => 0,
+           InvoiceStatus.Closed => DaysToOverdue(invoice, baseDate),
+           InvoiceStatus.Open => DaysToClose(invoice, baseDate),
+           InvoiceStatus.Overdue => OverdueDays(invoice, baseDate),
+           _ => DaysToOpen(invoice, baseDate),
+       };
+
+        private int DaysToOpen(Invoice invoice, DateTime baseDate)
+            => DiffInDays(GetInvoiceCloseDateBy(invoice.CloseDate.AddMonths(-1)).AddDays(1), baseDate);
+
+        private int OverdueDays(Invoice invoice, DateTime baseDate)
+            => DiffInDays(baseDate, invoice.DueDate);
+
+        private int DaysToOverdue(Invoice invoice, DateTime baseDate)
+            => DiffInDays(invoice.DueDate, baseDate);
+
+        private int DaysToClose(Invoice invoice, DateTime baseDate)
+            => DiffInDays(invoice.CloseDate, baseDate);
+
+        private int DiffInDays(DateTime date1, DateTime date2)
+            => Math.Abs((date1 - date2).Days);
+
+        private bool IsPaid(Invoice invoice)
+            => invoice.PaymentStatus == PaymentStatus.Paid;
+
+        private bool IsOpened(Invoice invoice, DateTime baseDate)
+            => !IsClosed(invoice, baseDate)
+            && invoice.CloseDate.Month == baseDate.Month
+            && invoice.CloseDate.Year == baseDate.Year;
+
+        private bool IsOverdue(Invoice invoice, DateTime baseDate)
+            => IsClosed(invoice, baseDate)
+            && !IsPaid(invoice)
+            && invoice.DueDate.Date < baseDate.Date;
+
+        private bool IsClosed(Invoice invoice, DateTime baseDate)
+            => invoice.CloseDate.Date < baseDate.Date;
     }
 }
