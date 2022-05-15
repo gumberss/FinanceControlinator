@@ -3,6 +3,7 @@ using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Domain.Localizations;
+using Invoices.Domain.Models.Sync;
 using Invoices.DTOs.Invoices.Sync;
 using Invoices.Handler.Domain.Cqrs.Events.Sync;
 using MediatR;
@@ -38,9 +39,11 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
 
         public async Task<Result<InvoiceSyncDTO, BusinessException>> Handle(InvoiceSyncQuery request, CancellationToken cancellationToken)
         {
-            var a = await _invoiceSyncAppService.SyncUpdatesFrom(request.LastSyncTimestamp);
+            var result = await _invoiceSyncAppService.SyncUpdatesFrom(request.LastSyncTimestamp);
 
-            return new InvoiceSyncDTO();
+            if (result.IsFailure) return result.Error;
+
+            return _mapper.Map<InvoiceSync, InvoiceSyncDTO>(result.Value);
         }
     }
 }
