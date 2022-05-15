@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Invoices.API.Controllers
 {
@@ -23,8 +24,8 @@ namespace Invoices.API.Controllers
         }
 
         [HttpGet("sync")]
-        public IActionResult Sync([FromQuery] long timestamp)
+        public async Task<IActionResult> Sync([FromQuery] long timestamp)
             => //!UserId.HasValue ? Unauthorized(): 
-            Ok(_mediator.Send(new InvoiceSyncQuery(timestamp)));
+            From(await _mediator.Send(new InvoiceSyncQuery(timestamp)));
     }
 }
