@@ -22,7 +22,7 @@ namespace FinanceControlinator.Common.Parsers.TextParsers
 
             var (key, value) = parsers.First();
 
-            return Parse(message.Replace($"[[{key}]]", value), parsers);
+            return Parse(message.Replace($"[[{key}]]", value), parsers.Skip(1));
         }
     }
 }
