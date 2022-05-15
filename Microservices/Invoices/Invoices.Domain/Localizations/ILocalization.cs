@@ -5,10 +5,11 @@ namespace Invoices.Domain.Localizations
 {
     public interface ILocalization
     {
-        String DATE_INCORRECT { get; }
+        CultureInfo CULTURE { get; }
+
+        string DATE_INCORRECT { get; }
         string PAYMENT_ALREADY_EXISTENT { get; }
         string OVERVIEW_FUTURE_PURCHASE_PERCENT { get; }
-        CultureInfo CULTURE { get; }
         string INVOICE_OVERVIEW_INVESTMENT_PERCENT { get; }
         string INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_SIX_MONTHES { get; }
         string INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_SIX_MONTHES { get; }
@@ -21,5 +22,11 @@ namespace Invoices.Domain.Localizations
         string INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_SIX_INVOICES { get; }
         string INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_SIX_INVOICES { get; }
         string INVOICE_COST_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES { get; }
+        string OVERDUE { get; }
+        string PAID { get; }
+        string OPEN { get; }
+        string CLOSED { get; }
+
+        string FORMAT_MONEY(decimal value);
     }
 }

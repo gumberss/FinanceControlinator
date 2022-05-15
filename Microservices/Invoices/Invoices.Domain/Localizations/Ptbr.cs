@@ -26,5 +26,16 @@ namespace Invoices.Domain.Localizations
         public string INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_SIX_INVOICES => "O valor da fatura aumentou [[PERCENT]]% comparado com as ultimas 6";
         public string INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_SIX_INVOICES => "O valor da fatura diminuiu [[PERCENT]]% comparado com as ultimas 6";
         public string INVOICE_COST_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES => "O valor da fatura não mudou comparado com as ultimas 6";
+
+        public string OVERDUE => "[[DAYS]] dias atrasada";
+
+        public string PAID => "Paga";
+
+        public string OPEN => "[[DAYS]] dias para fechar";
+
+        public string CLOSED => "[[DAYS]] dias para vencer";
+
+
+        public string FORMAT_MONEY(decimal value) => value.ToString("C2", CULTURE);
     }
 }
