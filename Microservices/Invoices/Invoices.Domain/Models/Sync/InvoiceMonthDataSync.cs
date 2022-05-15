@@ -2,11 +2,11 @@
 {
     public record InvoiceMonthDataSync
     {
-        public InvoiceOverview Overview { get; set; }
+        public InvoiceOverviewSync Overview { get; set; }
 
         public Invoice Invoice { get; set; }
 
-        public InvoiceMonthDataSync(InvoiceOverview overview, Invoice invoice)
+        public InvoiceMonthDataSync(InvoiceOverviewSync overview, Invoice invoice)
         {
             Overview = overview;
             Invoice = invoice;
