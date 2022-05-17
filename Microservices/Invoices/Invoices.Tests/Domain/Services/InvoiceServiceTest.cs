@@ -201,10 +201,6 @@ namespace Invoices.Tests.Domain.Services
           , int closeYear, int closeMonth, int closeDay)
         {
             var baseDate = new DateTime(baseYear, baseMonth, baseDay);
-
-            _expense.InstallmentsCount = 3;
-            _expense.TotalCost = 100;
-
             var invoiceCloseDate = _invoiceService.GetInvoiceCloseDateBy(baseDate);
 
             invoiceCloseDate.Year.Should().Be(closeYear);
@@ -301,18 +297,18 @@ namespace Invoices.Tests.Domain.Services
         [TestMethod]
         public void Should_return_the_last_invoices_before_the_invoice_base_when_there_are_more_invoices_than_requested()
         {
-            var baseInvoice = new Invoice(DateTime.Now);
+            var baseInvoice = new Invoice(DateTime.UtcNow);
 
             var expected = new List<Invoice> {
-                new Invoice(DateTime.Now.AddMonths(-1)),
-                new Invoice(DateTime.Now.AddMonths(-2))
+                new Invoice(DateTime.UtcNow.AddMonths(-1)),
+                new Invoice(DateTime.UtcNow.AddMonths(-2))
             };
 
             var lastInvoices = new List<Invoice>
             {
-                new Invoice(DateTime.Now.AddMonths(-3)),
-                new Invoice(DateTime.Now.AddMonths(-4)),
-                new Invoice(DateTime.Now.AddMonths(-5)),
+                new Invoice(DateTime.UtcNow.AddMonths(-3)),
+                new Invoice(DateTime.UtcNow.AddMonths(-4)),
+                new Invoice(DateTime.UtcNow.AddMonths(-5)),
             }
             .Concat(expected)
             .ToList();
@@ -324,15 +320,15 @@ namespace Invoices.Tests.Domain.Services
         [TestMethod]
         public void Should_return_the_last_invoices_before_the_invoice_base_when_there_are_same_invoices_quantity_than_requested()
         {
-            var baseInvoice = new Invoice(DateTime.Now);
+            var baseInvoice = new Invoice(DateTime.UtcNow);
 
             var lastInvoices = new List<Invoice>
             {
-                new Invoice(DateTime.Now.AddMonths(-1)),
-                new Invoice(DateTime.Now.AddMonths(-2)),
-                new Invoice(DateTime.Now.AddMonths(-3)),
-                new Invoice(DateTime.Now.AddMonths(-4)),
-                new Invoice(DateTime.Now.AddMonths(-5)),
+                new Invoice(DateTime.UtcNow.AddMonths(-1)),
+                new Invoice(DateTime.UtcNow.AddMonths(-2)),
+                new Invoice(DateTime.UtcNow.AddMonths(-3)),
+                new Invoice(DateTime.UtcNow.AddMonths(-4)),
+                new Invoice(DateTime.UtcNow.AddMonths(-5)),
             };
 
             _invoiceService.LastInvoicesFrom(baseInvoice, lastInvoices, 5)
@@ -342,12 +338,12 @@ namespace Invoices.Tests.Domain.Services
         [TestMethod]
         public void Should_return_the_last_invoices_before_the_invoice_base_when_there_are_les_invoices_than_requested()
         {
-            var baseInvoice = new Invoice(DateTime.Now);
+            var baseInvoice = new Invoice(DateTime.UtcNow);
 
             var lastInvoices = new List<Invoice>
             {
-                new Invoice(DateTime.Now.AddMonths(-1)),
-                new Invoice(DateTime.Now.AddMonths(-2)),
+                new Invoice(DateTime.UtcNow.AddMonths(-1)),
+                new Invoice(DateTime.UtcNow.AddMonths(-2)),
             };
 
             _invoiceService.LastInvoicesFrom(baseInvoice, lastInvoices, 5000)
@@ -357,14 +353,14 @@ namespace Invoices.Tests.Domain.Services
         [TestMethod]
         public void Should_have_itens_added_after_the_date_informed()
         {
-            var baseDate = DateTime.Now.AddMonths(-4);
+            var baseDate = DateTime.UtcNow.AddMonths(-4);
 
             var invoices = new List<Invoice>
             {
-                new Invoice(DateTime.Now.AddMonths(-1000))
-                .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-1000)})
-                .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-1)}),
-                new Invoice(DateTime.Now.AddMonths(-3)).AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-1)}),
+                new Invoice(DateTime.UtcNow.AddMonths(-1000))
+                .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.UtcNow.AddMonths(-1000)})
+                .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.UtcNow.AddMonths(-1)}),
+                new Invoice(DateTime.UtcNow.AddMonths(-3)).AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.UtcNow.AddMonths(-1)}),
             };
 
             invoices
@@ -375,25 +371,25 @@ namespace Invoices.Tests.Domain.Services
         [TestMethod]
         public void Should_have_itens_updated_after_the_date_informed()
         {
-            var baseDate = DateTime.Now.AddMonths(-4);
+            var baseDate = DateTime.UtcNow.AddMonths(-4);
 
             var invoices = new List<Invoice>
             {
-                new Invoice(DateTime.Now.AddMonths(-1000))
+                new Invoice(DateTime.UtcNow.AddMonths(-1000))
                     .AddNew(new InvoiceItem(0,0){
-                        UpdatedDate = DateTime.Now.AddMonths(-1000),
-                        CreatedDate = DateTime.Now.AddMonths(-500)})
+                        UpdatedDate = DateTime.UtcNow.AddMonths(-1000),
+                        CreatedDate = DateTime.UtcNow.AddMonths(-500)})
                     .AddNew(new InvoiceItem(0,0){
-                        UpdatedDate = DateTime.Now.AddMonths(-1), // Updated recently
-                        CreatedDate = DateTime.Now.AddMonths(-500)}), 
-                new Invoice(DateTime.Now.AddMonths(-2))
+                        UpdatedDate = DateTime.UtcNow.AddMonths(-1), // Updated recently
+                        CreatedDate = DateTime.UtcNow.AddMonths(-500)}),
+                new Invoice(DateTime.UtcNow.AddMonths(-2))
                     .AddNew(new InvoiceItem(0,0){
-                        UpdatedDate = DateTime.Now.AddMonths(-1), 
-                        CreatedDate = DateTime.Now.AddMonths(-500)}),
-                new Invoice(DateTime.Now.AddMonths(-3))
+                        UpdatedDate = DateTime.UtcNow.AddMonths(-1),
+                        CreatedDate = DateTime.UtcNow.AddMonths(-500)}),
+                new Invoice(DateTime.UtcNow.AddMonths(-3))
                     .AddNew(new InvoiceItem(0,0){
-                        UpdatedDate = DateTime.Now.AddMonths(-1), 
-                        CreatedDate = DateTime.Now.AddMonths(-500)}),
+                        UpdatedDate = DateTime.UtcNow.AddMonths(-1),
+                        CreatedDate = DateTime.UtcNow.AddMonths(-500)}),
             };
 
             invoices
@@ -404,19 +400,19 @@ namespace Invoices.Tests.Domain.Services
         [TestMethod]
         public void Should_not_have_itens_updated_after_the_date_informed_when_no_one_items_was_changed_after_the_date_informed()
         {
-            var baseDate = DateTime.Now.AddMonths(-4);
+            var baseDate = DateTime.UtcNow.AddMonths(-4);
 
             var invoices = new List<Invoice>
             {
-                new Invoice(DateTime.Now.AddMonths(-5))
-                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-5)})
-                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.Now.AddMonths(-5), CreatedDate = DateTime.Now.AddMonths(-5)}),
-                new Invoice(DateTime.Now.AddMonths(-6))
-                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-7)})
-                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.Now.AddMonths(-7), CreatedDate = DateTime.Now.AddMonths(-5)}),
-                new Invoice(DateTime.Now.AddMonths(-5))
-                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.Now.AddMonths(-100), CreatedDate = DateTime.Now.AddMonths(-5)})
-                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.Now.AddMonths(-500)}),
+                new Invoice(DateTime.UtcNow.AddMonths(-5))
+                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.UtcNow.AddMonths(-5)})
+                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.UtcNow.AddMonths(-5), CreatedDate = DateTime.UtcNow.AddMonths(-5)}),
+                new Invoice(DateTime.UtcNow.AddMonths(-6))
+                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.UtcNow.AddMonths(-7)})
+                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.UtcNow.AddMonths(-7), CreatedDate = DateTime.UtcNow.AddMonths(-5)}),
+                new Invoice(DateTime.UtcNow.AddMonths(-5))
+                    .AddNew(new InvoiceItem(0,0){ UpdatedDate = DateTime.UtcNow.AddMonths(-100), CreatedDate = DateTime.UtcNow.AddMonths(-5)})
+                    .AddNew(new InvoiceItem(0,0){ CreatedDate = DateTime.UtcNow.AddMonths(-500)}),
             };
 
             invoices
@@ -428,7 +424,7 @@ namespace Invoices.Tests.Domain.Services
         public void Should_return_true_when_the_invoice_has_the_close_date_after_the_date_informed()
         {
             _invoiceService
-                .ClosedInvoiceAfter(DateTime.Now.AddMonths(-1))(new Invoice(DateTime.Now))
+                .ClosedInvoiceAfter(DateTime.UtcNow.AddMonths(-1))(new Invoice(DateTime.UtcNow))
                 .Should().BeTrue();
         }
 
@@ -436,8 +432,141 @@ namespace Invoices.Tests.Domain.Services
         public void Should_return_false_when_the_invoice_not_has_the_close_date_after_the_date_informed()
         {
             _invoiceService
-              .ClosedInvoiceAfter(DateTime.Now)(new Invoice(DateTime.Now.AddMonths(-1)))
+              .ClosedInvoiceAfter(DateTime.UtcNow)(new Invoice(DateTime.UtcNow.AddMonths(-1)))
               .Should().BeFalse();
+        }
+
+        [TestMethod]
+        [DataRow("10/10/2020", "11/10/2020", 1)]
+        [DataRow("10/10/2020", "09/11/2020", 30)]
+        [DataRow("10/10/2020", "09/09/2021", 334)]
+        [DataRow("10/10/2020", "10/10/2020", 0)]
+        [DataRow("11/10/2020", "10/10/2020", -1)]
+        [DataRow("10/10/2020", "09/12/2020", 60)]
+        public void Should_return_the_correct_days_to_close(String baseDateString, String closeDateString, int expected)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService.DaysToClose(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [Description("Due date is 7 days after close date at this moment")]
+        [DataRow("10/10/2020", "11/10/2020", 8)]
+        [DataRow("17/10/2020", "10/10/2020", 0)]
+        [DataRow("18/10/2020", "10/10/2020", -1)]
+        [DataRow("10/10/2020", "09/11/2020", 37)]
+        [DataRow("10/10/2020", "09/09/2021", 341)]
+        [DataRow("10/10/2020", "10/10/2020", 7)]
+        [DataRow("10/10/2020", "09/12/2020", 67)]
+        public void Should_return_the_correct_days_to_overdue(String baseDateString, String closeDateString, int expected)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService.DaysToOverdue(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [Description("Due date is 7 days after close date at this moment")]
+        [DataRow("18/10/2020", "11/10/2020", 0)]
+        [DataRow("18/10/2020", "10/10/2020", 1)]
+        [DataRow("16/10/2020", "10/10/2020", -1)]
+        [DataRow("09/11/2020", "10/10/2020", 23)]
+        [DataRow("09/09/2021", "10/10/2020", 327)]
+        [DataRow("10/10/2020", "10/10/2020", -7)]
+        [DataRow("09/12/2020", "10/10/2020", 53)]
+        public void Should_return_the_correct_overdue_days(String baseDateString, String closeDateString, int expected)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService.OverdueDays(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [Description("Invoice close date is always the last month day at this moment")]
+        [DataRow("18/10/2020", "30/11/2020", 14)]
+        [DataRow("01/11/2020", "30/11/2020", 0)]
+        [DataRow("02/11/2020", "30/11/2020", -1)]
+        [DataRow("31/10/2020", "30/11/2020", 1)]
+        [DataRow("31/10/2021", "30/11/2020", -364)]
+        [DataRow("01/11/2020", "30/11/2021", 365)]
+        public void Should_return_the_correct_days_to_open(String baseDateString, String closeDateString, int expected)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService.DaysToOpen(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_is_paid_when_invoice_is_paid()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            invoice.WasPaidIn(DateTime.UtcNow);
+
+            _invoiceService.IsPaid(invoice).Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_is_not_paid_when_invoice_was_not_pay()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            _invoiceService.IsPaid(invoice).Should().BeFalse();
+        }
+
+        [TestMethod]
+        [DataRow("18/10/2020", "30/11/2020", false)]
+        [DataRow("30/11/2020", "30/11/2020", false)]
+        [DataRow("01/12/2020", "30/11/2020", true)]
+        [DataRow("01/01/2021", "30/11/2020", true)]
+        [DataRow("31/12/2019", "30/11/2020", false)]
+        public void Should_return_invoice_is_closed_correctly(String baseDateString, String closeDateString, bool expected)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService
+                .IsClosed(invoice, baseDate)
+                .Should().Be(expected);
         }
     }
 }
