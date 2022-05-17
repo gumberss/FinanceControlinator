@@ -48,49 +48,51 @@ namespace Invoices.Application.AppServices
         public async Task<Result<InvoiceSync, BusinessException>> SyncUpdatesFrom(long lastSyncTimestamp)
         {
             var lastSyncDateTime = DateTimeOffset.FromUnixTimeMilliseconds(lastSyncTimestamp).LocalDateTime;
+            long currentSyncDate = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
 
             var monthesToCompare = 6;
-
-            //find a better variable name
-            //start invoices contxt date
-            var invoiceDateToCompare = _dateService.FirstMonthDayDate(lastSyncDateTime.AddMonths(-monthesToCompare));
+            var invoicesContextStartDate = _dateService.FirstMonthDayDate(lastSyncDateTime.AddMonths(-monthesToCompare));
 
             //filter by user (other task)
             var contextInvoices = await _invoiceRepository.GetAllAsync(x => x.Items
             , _invoiceService.AnyItemChangedSince(lastSyncDateTime)
-            .Or(_invoiceService.ClosedInvoiceAfter(invoiceDateToCompare)));
+            .Or(_invoiceService.ClosedInvoiceAfter(invoicesContextStartDate)));
 
             if (contextInvoices.IsFailure) return contextInvoices.Error;
 
             var updatedInvoices = contextInvoices.Value
                 .Where(_invoiceService.AnyItemChangedSince(lastSyncDateTime));
 
-            if (contextInvoices.IsFailure) return contextInvoices.Error;
-
             return new InvoiceSync(
-                updatedInvoices.Select(invoice => BuildMonthDataSync(invoice, contextInvoices))
-                .ToList());
+                syncDate: currentSyncDate,
+                monthDataSyncs: updatedInvoices
+                    .Select(invoice => BuildMonthDataSync(invoice, contextInvoices))
+                    .ToList());
         }
 
         private InvoiceMonthDataSync BuildMonthDataSync(Invoice invoice, List<Invoice> contextInvoices)
         {
             var baseDate = DateTime.Now;
-
             var overviewStatus = _invoiceOverviewService.OverviewStatus(_invoiceService.Status(invoice, baseDate));
 
             var overviewStatusText = _textParser.Parse(
                 _invoiceOverviewService.OverviewStatusText(overviewStatus, _localization),
                 ("DAYS", _invoiceService.DaysRemainingToNextStage(invoice, baseDate).ToString()));
-            
+
             var overview = new InvoiceOverviewSync(
                  date: _invoiceOverviewService.InvoiceCloseDateText(invoice),
                  statusText: overviewStatusText,
                  status: overviewStatus,
                  totalCost: _localization.FORMAT_MONEY(invoice.TotalCost),
                  briefs: BuildBriefs(invoice, contextInvoices).ToList(),
-                 partitions: null);
+                 partitions: BuildPartitions(invoice));
 
             return new InvoiceMonthDataSync(overview, invoice);
+        }
+
+        private List<InvoicePartition> BuildPartitions(Invoice invoice)
+        {
+            return null;
         }
 
         private IEnumerable<InvoiceBrief> BuildBriefs(Invoice invoice, List<Invoice> contextInvoices)
