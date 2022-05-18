@@ -536,7 +536,7 @@ namespace Invoices.Tests.Domain.Services
 
             invoice.WasPaidIn(DateTime.UtcNow);
 
-            _invoiceService.IsPaid(invoice).Should().BeTrue();
+            _invoiceService.IsPaid(invoice, invoice.PaymentDate.Value).Should().BeTrue();
         }
 
         [TestMethod]
@@ -544,7 +544,7 @@ namespace Invoices.Tests.Domain.Services
         {
             var invoice = new Invoice(DateTime.UtcNow);
 
-            _invoiceService.IsPaid(invoice).Should().BeFalse();
+            _invoiceService.IsPaid(invoice, DateTime.UtcNow).Should().BeFalse();
         }
 
         [TestMethod]
@@ -616,6 +616,109 @@ namespace Invoices.Tests.Domain.Services
             _invoiceService
                 .IsOpened(invoice, baseDate)
                 .Should().Be(expected);
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_status_when_invoice_is_paid()
+        {
+            var invoice = new Invoice(DateTime.UtcNow)
+                .WasPaidIn(DateTime.UtcNow.AddDays(-1));
+
+            _invoiceService
+                .Status(invoice, DateTime.UtcNow)
+                .Should().Be(InvoiceStatus.Paid);
+
+            _invoiceService
+               .Status(invoice, invoice.PaymentDate.Value)
+               .Should().Be(InvoiceStatus.Paid);
+
+            _invoiceService
+               .Status(invoice, invoice.PaymentDate.Value.AddMilliseconds(-1))
+               .Should().NotBe(InvoiceStatus.Paid, because: "The base date is before the payment date");
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_status_when_invoice_is_not_paid()
+        {
+            var invoice = new Invoice(DateTime.UtcNow.AddYears(-100));
+
+            _invoiceService
+                .Status(invoice, DateTime.UtcNow)
+                .Should().NotBe(InvoiceStatus.Paid, because: "Invoice was never paid");
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_status_when_invoice_is_overdue()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            _invoiceService
+                .Status(invoice, invoice.DueDate)
+                .Should().NotBe(InvoiceStatus.Overdue);
+
+            _invoiceService
+               .Status(invoice, invoice.DueDate.AddDays(1))
+               .Should().Be(InvoiceStatus.Overdue);
+
+            _invoiceService
+               .Status(invoice, invoice.DueDate.AddDays(-1))
+               .Should().NotBe(InvoiceStatus.Overdue);
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_status_when_invoice_is_closed()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            _invoiceService
+                .Status(invoice, invoice.CloseDate)
+                .Should().NotBe(InvoiceStatus.Closed);
+
+            _invoiceService
+               .Status(invoice, invoice.CloseDate.AddDays(1))
+               .Should().Be(InvoiceStatus.Closed);
+
+            _invoiceService
+               .Status(invoice, invoice.CloseDate.AddDays(-1))
+               .Should().NotBe(InvoiceStatus.Closed);
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_status_when_invoice_is_opened()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            _invoiceService
+                .Status(invoice, invoice.CloseDate)
+                .Should().Be(InvoiceStatus.Open);
+
+            _invoiceService
+               .Status(invoice, invoice.CloseDate.AddDays(1))
+               .Should().NotBe(InvoiceStatus.Open);
+
+            _invoiceService
+               .Status(invoice, invoice.CloseDate.AddDays(-1))
+               .Should().Be(InvoiceStatus.Open);
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_status_when_invoice_is_future()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            //The negative value below is in the base date, so,
+            //it is like I'm consulting the current invoice in the past
+            _invoiceService
+                .Status(invoice, invoice.CloseDate.AddMonths(-1))
+                .Should().Be(InvoiceStatus.Future);
+
+            _invoiceService
+               .Status(invoice, invoice.CloseDate.AddMonths(-10))
+               .Should().Be(InvoiceStatus.Future);
+
+            _invoiceService
+               .Status(invoice, invoice.CloseDate)
+               .Should().NotBe(InvoiceStatus.Future);
         }
     }
 }
