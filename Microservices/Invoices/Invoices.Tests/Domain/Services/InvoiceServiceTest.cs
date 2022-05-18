@@ -568,5 +568,54 @@ namespace Invoices.Tests.Domain.Services
                 .IsClosed(invoice, baseDate)
                 .Should().Be(expected);
         }
+
+        [TestMethod]
+        [Description("Due date is 7 days after close date at this moment")]
+        [DataRow("18/10/2020", "30/11/2020", false)]
+        [DataRow("07/12/2020", "30/11/2020", false)]
+        [DataRow("08/12/2020", "30/11/2020", true)]
+        [DataRow("01/01/2021", "30/11/2020", true)]
+        [DataRow("31/12/2019", "30/11/2020", false)]
+        public void Should_return_invoice_is_overdue_correctly(String baseDateString, String closeDateString, bool expected)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService
+                .IsOverdue(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [Description("Close date day is always the last day in th month at this moment")]
+        [DataRow("01/05/2022", "31/05/2022", true)]
+        [DataRow("31/05/2022", "31/05/2022", true)]
+        [DataRow("30/05/2022", "31/05/2022", true)]
+        [DataRow("02/05/2022", "31/05/2022", true)]
+        [DataRow("31/05/2022", "31/05/2022", true)]
+        [DataRow("01/06/2022", "31/05/2022", false)]
+        [DataRow("02/05/2023", "31/05/2022", false)]
+        [DataRow("02/07/2022", "31/05/2022", false)]
+        public void Should_return_invoice_is_opened_correctly(String baseDateString, String closeDateString, bool expected)
+        {
+            string dateFormat = "dd/MM/yyyy";
+
+            CultureInfo ptbr = new CultureInfo("pt-BR");
+
+            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService
+                .IsOpened(invoice, baseDate)
+                .Should().Be(expected);
+        }
     }
 }
