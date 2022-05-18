@@ -21,11 +21,16 @@ namespace Invoices.Tests.Domain.Services
         private static DateTime _purchaseDay;
         private Expense _expense;
 
+        static string _dateFormat;
+        static CultureInfo _ptbr;
+
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
             _invoiceService = new InvoiceService();
             _purchaseDay = new DateTime(2021, 08, 05);
+            _dateFormat = "dd/MM/yyyy";
+            _ptbr = new CultureInfo("pt-BR");
         }
 
         [TestInitialize]
@@ -445,12 +450,8 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("10/10/2020", "09/12/2020", 60)]
         public void Should_return_the_correct_days_to_close(String baseDateString, String closeDateString, int expected)
         {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
-            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
 
             var invoice = new Invoice(closeDate);
 
@@ -469,12 +470,8 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("10/10/2020", "09/12/2020", 67)]
         public void Should_return_the_correct_days_to_overdue(String baseDateString, String closeDateString, int expected)
         {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
-            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
 
             var invoice = new Invoice(closeDate);
 
@@ -493,12 +490,8 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("09/12/2020", "10/10/2020", 53)]
         public void Should_return_the_correct_overdue_days(String baseDateString, String closeDateString, int expected)
         {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
-            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
 
             var invoice = new Invoice(closeDate);
 
@@ -516,12 +509,8 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("01/11/2020", "30/11/2021", 365)]
         public void Should_return_the_correct_days_to_open(String baseDateString, String closeDateString, int expected)
         {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
-            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
 
             var invoice = new Invoice(closeDate);
 
@@ -555,12 +544,8 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("31/12/2019", "30/11/2020", false)]
         public void Should_return_invoice_is_closed_correctly(String baseDateString, String closeDateString, bool expected)
         {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
-            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
 
             var invoice = new Invoice(closeDate);
 
@@ -578,12 +563,8 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("31/12/2019", "30/11/2020", false)]
         public void Should_return_invoice_is_overdue_correctly(String baseDateString, String closeDateString, bool expected)
         {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
-            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
 
             var invoice = new Invoice(closeDate);
 
@@ -604,12 +585,8 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("02/07/2022", "31/05/2022", false)]
         public void Should_return_invoice_is_opened_correctly(String baseDateString, String closeDateString, bool expected)
         {
-            string dateFormat = "dd/MM/yyyy";
-
-            CultureInfo ptbr = new CultureInfo("pt-BR");
-
-            var closeDate = DateTime.ParseExact(closeDateString, dateFormat, ptbr);
-            var baseDate = DateTime.ParseExact(baseDateString, dateFormat, ptbr);
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
 
             var invoice = new Invoice(closeDate);
 
