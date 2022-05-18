@@ -31,7 +31,7 @@ namespace Invoices.Domain.Services
         int OverdueDays(Invoice invoice, DateTime baseDate);
         int DaysToOverdue(Invoice invoice, DateTime baseDate);
         int DaysToClose(Invoice invoice, DateTime baseDate);
-        bool IsPaid(Invoice invoice);
+        bool IsPaid(Invoice invoice, DateTime baseDate);
 
         bool IsClosed(Invoice invoice, DateTime baseDate);
     }
@@ -163,7 +163,7 @@ namespace Invoices.Domain.Services
         public InvoiceStatus Status(Invoice invoice, DateTime baseDate)
             => invoice switch
             {
-                _ when IsPaid(invoice) => InvoiceStatus.Paid,
+                _ when IsPaid(invoice, baseDate) => InvoiceStatus.Paid,
                 _ when IsOverdue(invoice, baseDate) => InvoiceStatus.Overdue,
                 _ when IsClosed(invoice, baseDate) => InvoiceStatus.Closed,
                 _ when IsOpened(invoice, baseDate) => InvoiceStatus.Open,
@@ -195,8 +195,9 @@ namespace Invoices.Domain.Services
         private int DiffInDays(DateTime date1, DateTime date2)
             => (date1.Date - date2.Date).Days;
 
-        public bool IsPaid(Invoice invoice)
-            => invoice.PaymentStatus == PaymentStatus.Paid;
+        public bool IsPaid(Invoice invoice, DateTime baseDate)
+            => invoice.PaymentStatus == PaymentStatus.Paid
+            && baseDate >= invoice.PaymentDate;
 
         public bool IsOpened(Invoice invoice, DateTime baseDate)
             => !IsClosed(invoice, baseDate)
@@ -204,7 +205,7 @@ namespace Invoices.Domain.Services
 
         public bool IsOverdue(Invoice invoice, DateTime baseDate)
             => IsClosed(invoice, baseDate)
-            && !IsPaid(invoice)
+            && !IsPaid(invoice, baseDate)
             && invoice.DueDate.Date < baseDate.Date;
 
         public bool IsClosed(Invoice invoice, DateTime baseDate)
