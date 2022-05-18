@@ -181,7 +181,7 @@ namespace Invoices.Domain.Services
            };
 
         public int DaysToOpen(Invoice invoice, DateTime baseDate)
-            => DiffInDays(GetInvoiceCloseDateBy(invoice.CloseDate.AddMonths(-1)).AddDays(1), baseDate);
+            => DiffInDays(CurrentInvoiceOpenDate(invoice), baseDate);
 
         public int OverdueDays(Invoice invoice, DateTime baseDate)
             => DiffInDays(baseDate, invoice.DueDate);
@@ -200,8 +200,7 @@ namespace Invoices.Domain.Services
 
         public bool IsOpened(Invoice invoice, DateTime baseDate)
             => !IsClosed(invoice, baseDate)
-            && invoice.CloseDate.Month == baseDate.Month
-            && invoice.CloseDate.Year == baseDate.Year;
+            && baseDate.Date >= CurrentInvoiceOpenDate(invoice).Date;
 
         public bool IsOverdue(Invoice invoice, DateTime baseDate)
             => IsClosed(invoice, baseDate)
@@ -210,5 +209,8 @@ namespace Invoices.Domain.Services
 
         public bool IsClosed(Invoice invoice, DateTime baseDate)
             => invoice.CloseDate.Date < baseDate.Date;
+
+        private DateTime CurrentInvoiceOpenDate(Invoice invoice)
+            => GetInvoiceCloseDateBy(invoice.CloseDate.AddMonths(-1)).AddDays(1);
     }
 }
