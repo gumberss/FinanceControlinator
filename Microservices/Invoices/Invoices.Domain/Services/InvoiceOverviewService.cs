@@ -2,7 +2,6 @@
 using Invoices.Domain.Localizations;
 using Invoices.Domain.Models;
 using Invoices.Domain.Models.Sync;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -70,6 +69,12 @@ namespace Invoices.Domain.Services
                 _ => localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES
             };
 
+        private static decimal PercentByType(Invoice invoice, InvoiceItemType type)
+            => Percent(invoice.Items
+                    .Where(x => x.Type == type)
+                    .Sum(x => x.InstallmentCost)
+                , invoice.TotalCost);
+
         public InvoiceOverviewStatus OverviewStatus(InvoiceStatus invoiceStatus)
             => invoiceStatus switch
             {
@@ -80,22 +85,6 @@ namespace Invoices.Domain.Services
                 _ => InvoiceOverviewStatus.Future,
             };
 
-        private static decimal PercentByType(Invoice invoice, InvoiceItemType type)
-            => Percent(invoice.Items
-                    .Where(x => x.Type == type)
-                    .Sum(x => x.InstallmentCost)
-                , invoice.TotalCost);
-
-        private static decimal AveragePercent(decimal toFind, decimal total, int totalItems)
-            => totalItems == 0 || totalItems == 0
-            ? 0 
-            : Percent(toFind - total / totalItems, total / totalItems);
-
-        private static decimal Percent(decimal toFind, decimal total)
-            => total == 0 
-            ? 0 
-            : (toFind / total) * 100;
-
         public string OverviewStatusText(InvoiceOverviewStatus overviewStatus, ILocalization localization)
             => overviewStatus switch
             {
@@ -105,5 +94,15 @@ namespace Invoices.Domain.Services
                 InvoiceOverviewStatus.Closed => localization.CLOSED,
                 _ => string.Empty,
             };
+
+        private static decimal AveragePercent(decimal toFind, decimal total, int totalItems)
+         => totalItems == 0
+         ? 0
+         : Percent(toFind - total / totalItems, total / totalItems);
+
+        private static decimal Percent(decimal toFind, decimal total)
+            => total == 0
+            ? 0
+            : (toFind / total) * 100;
     }
 }

@@ -277,5 +277,43 @@ namespace Invoices.Tests.Domain.Services
                 .InvoicePercentComparedWithLastSixMonthesText(0, _localization)
                 .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES);
         }
+
+        [TestMethod]
+        public void Should_return_the_correct_overview_status()
+        {
+            _invoiceOverviewService.OverviewStatus(InvoiceStatus.Overdue)
+                .Should().Be(InvoiceOverviewStatus.Overdue);
+
+            _invoiceOverviewService.OverviewStatus(InvoiceStatus.Paid)
+                .Should().Be(InvoiceOverviewStatus.Paid);
+
+            _invoiceOverviewService.OverviewStatus(InvoiceStatus.Closed)
+                .Should().Be(InvoiceOverviewStatus.Closed);
+
+            _invoiceOverviewService.OverviewStatus(InvoiceStatus.Open)
+                .Should().Be(InvoiceOverviewStatus.Open);
+
+            _invoiceOverviewService.OverviewStatus(InvoiceStatus.Future)
+                .Should().Be(InvoiceOverviewStatus.Future);
+        }
+
+        [TestMethod]
+        public void Should_return_the_correct_overview_status_text()
+        {
+            _invoiceOverviewService.OverviewStatusText(InvoiceOverviewStatus.Overdue, _localization)
+                .Should().Be(_localization.OVERDUE);
+
+            _invoiceOverviewService.OverviewStatusText(InvoiceOverviewStatus.Paid, _localization)
+                .Should().Be(_localization.PAID);
+
+            _invoiceOverviewService.OverviewStatusText(InvoiceOverviewStatus.Closed, _localization)
+                .Should().Be(_localization.CLOSED);
+
+            _invoiceOverviewService.OverviewStatusText(InvoiceOverviewStatus.Open, _localization)
+                .Should().Be(_localization.OPEN);
+
+            _invoiceOverviewService.OverviewStatusText(InvoiceOverviewStatus.Future, _localization)
+                .Should().BeEmpty();
+        }
     }
 }

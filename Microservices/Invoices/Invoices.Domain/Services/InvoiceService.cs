@@ -26,13 +26,11 @@ namespace Invoices.Domain.Services
         Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare);
         InvoiceStatus Status(Invoice invoice, DateTime baseDate);
         int DaysRemainingToNextStage(Invoice invoice, DateTime baseDate);
-
         int DaysToOpen(Invoice invoice, DateTime baseDate);
         int OverdueDays(Invoice invoice, DateTime baseDate);
         int DaysToOverdue(Invoice invoice, DateTime baseDate);
         int DaysToClose(Invoice invoice, DateTime baseDate);
         bool IsPaid(Invoice invoice, DateTime baseDate);
-
         bool IsClosed(Invoice invoice, DateTime baseDate);
     }
 
