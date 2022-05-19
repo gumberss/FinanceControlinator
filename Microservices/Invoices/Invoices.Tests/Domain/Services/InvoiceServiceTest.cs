@@ -697,5 +697,41 @@ namespace Invoices.Tests.Domain.Services
                .Status(invoice, invoice.CloseDate)
                .Should().NotBe(InvoiceStatus.Future);
         }
+
+        [TestMethod]
+        [DataRow("31/05/2022", "31/05/2022", 0)]
+        [DataRow("01/06/2022", "31/05/2022", 0)]
+        [DataRow("02/05/2023", "31/05/2022", 0)]
+        [DataRow("02/07/2022", "31/05/2022", 0)]
+        public void Should_return_invoice_days_remaining_when_paid_correctly(String baseDateString, String paymentDateString, int expected)
+        {
+            var paymentDate = DateTime.ParseExact(paymentDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
+
+            var invoice = new Invoice(paymentDate)
+                .WasPaidIn(paymentDate);
+
+            _invoiceService
+                .DaysRemainingToNextStage(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [Description("Due date is 7 days after close date at this moment")]
+        [DataRow("01/06/2022", "31/05/2022", 6)]
+        [DataRow("07/06/2022", "31/05/2022", 0)]
+        [DataRow("06/06/2022", "31/05/2022", 1)]
+        public void Should_return_invoice_days_remaining_when_closed_correctly(String baseDateString, String closeDateString, int expected)
+        {
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService
+                .DaysRemainingToNextStage(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
     }
 }
