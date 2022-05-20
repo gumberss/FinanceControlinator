@@ -426,6 +426,102 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_was_created_since_base_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow) { CreatedDate = DateTime.UtcNow };
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddMilliseconds(0))(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_was_updated_since_base_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow)
+            {
+                CreatedDate = DateTime.UtcNow.AddYears(-100),
+                UpdatedDate = DateTime.UtcNow,
+            };
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddMilliseconds(0))(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_item_was_created_since_base_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow)
+            {
+                CreatedDate = DateTime.UtcNow.AddYears(-100),
+                UpdatedDate = DateTime.UtcNow.AddYears(-100),
+            };
+
+            var itemDate = DateTime.UtcNow;
+
+            invoice.AddNew(new InvoiceItem(0, 0) { CreatedDate = itemDate });
+
+            _invoiceService.AnyChangeSince(itemDate.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(0))(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_item_was_updated_since_base_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow)
+            {
+                CreatedDate = DateTime.UtcNow.AddYears(-100),
+                UpdatedDate = DateTime.UtcNow.AddYears(-100),
+            };
+
+            var itemDate = DateTime.UtcNow;
+
+            invoice.AddNew(new InvoiceItem(0, 0) { UpdatedDate = itemDate });
+
+            _invoiceService.AnyChangeSince(itemDate.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(0))(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
         public void Should_return_true_when_the_invoice_has_the_close_date_after_the_date_informed()
         {
             _invoiceService
@@ -732,6 +828,9 @@ namespace Invoices.Tests.Domain.Services
                 .DaysRemainingToNextStage(invoice, baseDate)
                 .Should().Be(expected);
         }
+
+
+
 
     }
 }
