@@ -33,8 +33,6 @@ namespace Invoices.Domain.Models
 
         public PaymentStatus PaymentStatus { get; private set; }
 
-        public String Title => CloseDate.ToString("MM/yy");
-
         public Invoice AddNew(InvoiceItem invoiceItem)
         {
             Items.Add(invoiceItem);

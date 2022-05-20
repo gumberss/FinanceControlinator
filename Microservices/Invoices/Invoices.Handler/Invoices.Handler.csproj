@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\..\Common\FinanceControlinator.Events\FinanceControlinator.Events.csproj" />
     <ProjectReference Include="..\Invoices.Application\Invoices.Application.csproj" />
     <ProjectReference Include="..\Invoices.Application\Invoices.Application.csproj" />
+    <ProjectReference Include="..\Invoices.DTOs\Invoices.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

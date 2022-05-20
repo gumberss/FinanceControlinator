@@ -28,7 +28,6 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         public InvoiceHandler(
             IInvoiceAppService invoiceAppService
             , ILogger<InvoiceHandler> logger
-            , IBus bus
             , IAsyncDocumentSession documentSession
         )
         {
