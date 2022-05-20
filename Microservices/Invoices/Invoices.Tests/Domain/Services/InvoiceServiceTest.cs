@@ -283,7 +283,7 @@ namespace Invoices.Tests.Domain.Services
         [DataRow("10/09/2021", "09/09/2021", 0)]//not complete a month
         [DataRow("10/10/2021", "11/09/2021", 0)]//end date before start date
         [DataRow("10/10/2021", "11/11/2020", 0)]//end day and month after but year before the start date
-        [DataRow("10/10/2020", "11/11/2021", 13)]//day, month and year before the start date
+        [DataRow("10/10/2020", "11/11/2021", 13)]//end day, month and year after the start date
         public void Should_find_correctly_the_installment_count
             (String startDateString, String endDateString, int expected)
         {
