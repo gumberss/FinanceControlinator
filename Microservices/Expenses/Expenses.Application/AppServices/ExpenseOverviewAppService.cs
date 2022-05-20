@@ -62,33 +62,23 @@ namespace Expenses.Application.AppServices
 
             if (mostSpentType.HasValue)
             {
-                var parsers = new List<(String key, String value)>
-                {
-                    ("MOST_SPENT_TYPE", _localization.EXPENSE_TYPE(mostSpentType.Value))
-                };
-
-                yield return new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE, parsers));
+                yield return new ExpenseBrief(_textParser.Parse(_localization.MOST_EXPENT_TYPE_TEMPLATE
+                    , ("MOST_SPENT_TYPE", _localization.EXPENSE_TYPE(mostSpentType.Value))));
             }
 
             (String mostSpentMoneyPlace, decimal totalSpentMoneyInThePlace) = _expenseOverviewService.MostSpentMoneyPlace(expenses);
 
             if (totalSpentMoneyInThePlace > 0)
             {
-                var parsers = new List<(String key, String value)>
-                {
-                    ("MOST_SPENT_PLACE", mostSpentMoneyPlace),
-                    ("TOTAL_VALUE", totalSpentMoneyInThePlace.ToString(_localization.CULTURE))
-                };
-
-                yield return new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE, parsers));
+                yield return new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_MONEY_IN_THE_PLACE_TEMPLATE
+                    , ("MOST_SPENT_PLACE", mostSpentMoneyPlace)
+                    , ("TOTAL_VALUE", totalSpentMoneyInThePlace.ToString(_localization.CULTURE))));
             }
 
             decimal totalMonthExpense = _expenseOverviewService.TotalMoneySpent(expenses);
 
-            yield return new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE, new List<(String key, String value)>
-                {
-                    ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString(_localization.CULTURE))
-                }));
+            yield return new ExpenseBrief(_textParser.Parse(_localization.TOTAL_SPENT_IN_THE_MONTH_TEMPLATE
+                , ("TOTAL_SPENT_IN_THE_MONTH", totalMonthExpense.ToString(_localization.CULTURE))));
         }
     }
 }

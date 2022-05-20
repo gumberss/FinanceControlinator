@@ -11,7 +11,12 @@ namespace FinanceControlinator.Common.Parsers.TextParsers
     /// </summary>
     public class TextParser : ITextParser
     {
-        public String Parse(String message, IEnumerable<(String key, String value)> parsers)
+        public String Parse(String message, params (String key, String value)[] parsers)
+        {
+            return Parse(message, parsers.AsEnumerable());
+        }
+
+        private String Parse(String message, IEnumerable<(String key, String value)> parsers)
         {
             if (!parsers.Any()) return message;
 
