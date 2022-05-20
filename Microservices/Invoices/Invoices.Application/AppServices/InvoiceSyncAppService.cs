@@ -55,13 +55,13 @@ namespace Invoices.Application.AppServices
 
             //filter by user (other task)
             var contextInvoices = await _invoiceRepository.GetAllAsync(x => x.Items
-            , _invoiceService.AnyItemChangedSince(lastSyncDateTime)
+            , _invoiceService.AnyChangeSince(lastSyncDateTime)
             .Or(_invoiceService.ClosedInvoiceAfter(invoicesContextStartDate)));
 
             if (contextInvoices.IsFailure) return contextInvoices.Error;
 
             var updatedInvoices = contextInvoices.Value
-                .Where(_invoiceService.AnyItemChangedSince(lastSyncDateTime));
+                .Where(_invoiceService.AnyChangeSince(lastSyncDateTime));
 
             return new InvoiceSync(
                 syncDate: currentSyncDate,

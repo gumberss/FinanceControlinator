@@ -32,6 +32,7 @@ namespace Invoices.Domain.Services
         int DaysToClose(Invoice invoice, DateTime baseDate);
         bool IsPaid(Invoice invoice, DateTime baseDate);
         bool IsClosed(Invoice invoice, DateTime baseDate);
+        Func<Invoice, bool> AnyChangeSince(DateTime lastSyncDateTime);
     }
 
     public class InvoiceService : IInvoiceService
@@ -154,6 +155,11 @@ namespace Invoices.Domain.Services
         public Func<Invoice, bool> AnyItemChangedSince(DateTime lastSyncDateTime)
             => x => x.Items.Any(y => y.CreatedDate > lastSyncDateTime
                                   || y.UpdatedDate > lastSyncDateTime);
+
+        public Func<Invoice, bool> AnyChangeSince(DateTime lastSyncDateTime)
+            => invoice => invoice.UpdatedDate > lastSyncDateTime
+            || invoice.CreatedDate > lastSyncDateTime
+            || AnyItemChangedSince(lastSyncDateTime)(invoice);
 
         public Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare)
             => x => x.CloseDate > invoiceDateToCompare;
