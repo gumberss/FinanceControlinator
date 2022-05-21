@@ -219,11 +219,11 @@ namespace Invoices.Tests.Domain.Services
         {
             _invoiceOverviewService
                 .BillPercentComparedWithLastSixMonthesText(10, _localization)
-                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_SIX_MONTHES);
+                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_MONTHES);
 
             _invoiceOverviewService
                 .BillPercentComparedWithLastSixMonthesText(0.01m, _localization)
-                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_SIX_MONTHES);
+                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_MONTHES);
         }
 
         [TestMethod]
@@ -231,11 +231,11 @@ namespace Invoices.Tests.Domain.Services
         {
             _invoiceOverviewService
                 .BillPercentComparedWithLastSixMonthesText(-500, _localization)
-                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_SIX_MONTHES);
+                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_MONTHES);
 
             _invoiceOverviewService
                 .BillPercentComparedWithLastSixMonthesText(-0.01m, _localization)
-                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_SIX_MONTHES);
+                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_MONTHES);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace Invoices.Tests.Domain.Services
         {
             _invoiceOverviewService
                 .BillPercentComparedWithLastSixMonthesText(0, _localization)
-                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES);
+                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_INVOICES);
         }
 
         [TestMethod]
@@ -251,11 +251,11 @@ namespace Invoices.Tests.Domain.Services
         {
             _invoiceOverviewService
                 .InvoicePercentComparedWithLastSixMonthesText(0.01m, _localization)
-                .Should().Be(_localization.INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_SIX_INVOICES);
+                .Should().Be(_localization.INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_INVOICES);
 
             _invoiceOverviewService
                 .InvoicePercentComparedWithLastSixMonthesText(10, _localization)
-                .Should().Be(_localization.INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_SIX_INVOICES);
+                .Should().Be(_localization.INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_INVOICES);
         }
 
         [TestMethod]
@@ -263,11 +263,11 @@ namespace Invoices.Tests.Domain.Services
         {
             _invoiceOverviewService
                 .InvoicePercentComparedWithLastSixMonthesText(-0.01m, _localization)
-                .Should().Be(_localization.INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_SIX_INVOICES);
+                .Should().Be(_localization.INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICES);
 
             _invoiceOverviewService
                .InvoicePercentComparedWithLastSixMonthesText(-20, _localization)
-               .Should().Be(_localization.INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_SIX_INVOICES);
+               .Should().Be(_localization.INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICES);
         }
 
         [TestMethod]
@@ -275,7 +275,7 @@ namespace Invoices.Tests.Domain.Services
         {
             _invoiceOverviewService
                 .InvoicePercentComparedWithLastSixMonthesText(0, _localization)
-                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES);
+                .Should().Be(_localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_INVOICES);
         }
 
         [TestMethod]

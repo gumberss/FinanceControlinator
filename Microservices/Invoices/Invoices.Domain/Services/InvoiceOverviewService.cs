@@ -1,7 +1,9 @@
-﻿using Invoices.Domain.Enums;
+﻿using FinanceControlinator.Common.Parsers.TextParsers;
+using Invoices.Domain.Enums;
 using Invoices.Domain.Localizations;
 using Invoices.Domain.Models;
 using Invoices.Domain.Models.Sync;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,6 +21,12 @@ namespace Invoices.Domain.Services
         string InvoicePercentComparedWithLastSixMonthesText(decimal invoiceCosDifftPercentLastSixMonthes, ILocalization localization);
         InvoiceOverviewStatus OverviewStatus(InvoiceStatus invoiceStatus);
         string OverviewStatusText(InvoiceOverviewStatus overviewStatus, ILocalization localization);
+        List<InvoicePartition> BuildPartitions(List<InvoiceItem> invoiceItems, ILocalization localization);
+
+        InvoiceBrief InvoicePercentComparedWithLastSixMonthesBrief(Invoice invoice, List<Invoice> rangeInvoicesFromCurrentInvoice, ITextParser textParser, ILocalization localization);
+        InvoiceBrief BillPercentComparedWithRangeMonthesBrief(Invoice invoice, List<Invoice> rangeInvoicesFromCurrentInvoice, ITextParser textParser, ILocalization localization);
+        InvoiceBrief InvestmentPercentBrief(Invoice invoice, ITextParser textParser, ILocalization localization);
+        InvoiceBrief FuturePurchasePercentBrief(Invoice invoice, ITextParser textParser, ILocalization localization);
     }
 
     public class InvoiceOverviewService : IInvoiceOverviewService
@@ -56,17 +64,17 @@ namespace Invoices.Domain.Services
         public string BillPercentComparedWithLastSixMonthesText(decimal billPercentIncrease, ILocalization localization)
             => billPercentIncrease switch
             {
-                > 0 => localization.INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_SIX_MONTHES,
-                < 0 => localization.INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_SIX_MONTHES,
-                _ => localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES
+                > 0 => localization.INVOICE_OVERVIEW_BILL_PERCENT_INCREASE_COMPARED_LAST_MONTHES,
+                < 0 => localization.INVOICE_OVERVIEW_BILL_PERCENT_DECREASE_COMPARED_LAST_MONTHES,
+                _ => localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_INVOICES
             };
 
         public string InvoicePercentComparedWithLastSixMonthesText(decimal invoiceCostDifftPercentLastSixMonthes, ILocalization localization)
             => invoiceCostDifftPercentLastSixMonthes switch
             {
-                > 0 => localization.INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_SIX_INVOICES,
-                < 0 => localization.INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_SIX_INVOICES,
-                _ => localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_SIX_INVOICES
+                > 0 => localization.INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_INVOICES,
+                < 0 => localization.INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICES,
+                _ => localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_INVOICES
             };
 
         private static decimal PercentByType(Invoice invoice, InvoiceItemType type)
@@ -94,6 +102,60 @@ namespace Invoices.Domain.Services
                 InvoiceOverviewStatus.Closed => localization.CLOSED,
                 _ => string.Empty,
             };
+
+        public List<InvoicePartition> BuildPartitions(List<InvoiceItem> invoiceItems, ILocalization localization)
+        {
+            var totalSpent = invoiceItems.Sum(x => x.InstallmentCost);
+
+            var partitionsSpent = invoiceItems
+                .GroupBy(x => x.Type)
+                .Select(x =>
+                    new InvoicePartition(type: x.Key,
+                        typeText: localization.INVOICE_ITEM_TYPE(x.Key),
+                        percent: Percent(x.Sum(y => y.InstallmentCost), totalSpent),
+                        totalValue: x.Sum(y => y.InstallmentCost)))
+                .ToList();
+
+            var partitionsNotSpent =
+                Enum.GetValues(typeof(InvoiceItemType))
+                .Cast<InvoiceItemType>()
+                .Except(partitionsSpent.Select(x => x.Type))
+                .Select(x => new InvoicePartition(x, localization.INVOICE_ITEM_TYPE(x), 0, 0));
+
+            return partitionsSpent.Concat(partitionsNotSpent).ToList();
+        }
+
+        public InvoiceBrief InvoicePercentComparedWithLastSixMonthesBrief(Invoice invoice, List<Invoice> rangeInvoicesFromCurrentInvoice, ITextParser textParser, ILocalization localization)
+        {
+            var invoiceCosDiffPercentRangeMonthes = InvoiceSpentDiffPercent(invoice, rangeInvoicesFromCurrentInvoice);
+
+            return new InvoiceBrief(
+                textParser.Parse(
+                    InvoicePercentComparedWithLastSixMonthesText(invoiceCosDiffPercentRangeMonthes, localization)
+                    , ("PERCENT", invoiceCosDiffPercentRangeMonthes.ToString(localization.CULTURE))
+                    , ("INVOICES_QUANTITIES", rangeInvoicesFromCurrentInvoice.Count.ToString()))
+                , PercentBriefStatus(invoiceCosDiffPercentRangeMonthes));
+        }
+
+        public InvoiceBrief BillPercentComparedWithRangeMonthesBrief(Invoice invoice, List<Invoice> rangeInvoicesFromCurrentInvoice, ITextParser textParser, ILocalization localization)
+        {
+            var billPercentRangeMonthes = BillAverageSpentDiffPercent(invoice, rangeInvoicesFromCurrentInvoice);
+
+            return new InvoiceBrief(
+                textParser.Parse(
+                    BillPercentComparedWithLastSixMonthesText(billPercentRangeMonthes, localization)
+                    , ("PERCENT", Math.Abs(billPercentRangeMonthes).ToString(localization.CULTURE))
+                    , ("INVOICES_QUANTITIES", rangeInvoicesFromCurrentInvoice.Count.ToString()))
+                , PercentBriefStatus(billPercentRangeMonthes));
+        }
+
+        public InvoiceBrief InvestmentPercentBrief(Invoice invoice, ITextParser textParser, ILocalization localization)
+            => new InvoiceBrief(textParser.Parse(localization.INVOICE_OVERVIEW_INVESTMENT_PERCENT
+                , ("PERCENT", InvestmentPercent(invoice).ToString(localization.CULTURE))));
+
+        public InvoiceBrief FuturePurchasePercentBrief(Invoice invoice, ITextParser textParser, ILocalization localization)
+            => new InvoiceBrief(textParser.Parse(localization.OVERVIEW_FUTURE_PURCHASE_PERCENT
+                , ("PERCENT", FuturePurchasePercent(invoice).ToString(localization.CULTURE))));
 
         private static decimal AveragePercent(decimal toFind, decimal total, int totalItems)
          => totalItems == 0
