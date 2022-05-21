@@ -27,15 +27,11 @@ namespace Invoices.Tests.Application.AppServices
     public class InvoiceSyncAppServiceTest
     {
         private readonly Mock<IInvoiceRepository> _invoiceRepository;
-        private readonly Mock<ILocalization> _localization;
-        private readonly Mock<ITextParser> _textParser;
         private readonly Mock<IInvoiceService> _invoiceService;
-        private readonly Mock<ILogger<IInvoiceAppService>> _logger;
         private readonly Mock<IDateService> _dateService;
-        private readonly Mock<IInvoiceOverviewService> _invoiceOverviewService;
         private readonly InvoiceSyncAppService _invoiceSyncAppService;
 
-        List<Invoice> invoicesDb = new List<Invoice>
+        readonly List<Invoice> invoicesDb = new List<Invoice>
         {
             new Invoice(DateTime.UtcNow.AddMonths(2)).AddNew(new InvoiceItem(1, 10)),
             new Invoice(DateTime.UtcNow.AddMonths(1)).AddNew(new InvoiceItem(1, 15)),
@@ -52,12 +48,12 @@ namespace Invoices.Tests.Application.AppServices
         public InvoiceSyncAppServiceTest()
         {
             _invoiceRepository = new Mock<IInvoiceRepository>();
-            _localization = new Mock<ILocalization>();
-            _textParser = new Mock<ITextParser>();
+            var _localization = new Mock<ILocalization>();
+           var _textParser = new Mock<ITextParser>();
             _invoiceService = new Mock<IInvoiceService>();
-            _logger = new Mock<ILogger<IInvoiceAppService>>();
+           var _logger = new Mock<ILogger<IInvoiceAppService>>();
             _dateService = new Mock<IDateService>();
-            _invoiceOverviewService = new Mock<IInvoiceOverviewService>();
+            var _invoiceOverviewService = new Mock<IInvoiceOverviewService>();
 
             _invoiceSyncAppService = new InvoiceSyncAppService(
                 _invoiceRepository.Object,
@@ -102,7 +98,7 @@ namespace Invoices.Tests.Application.AppServices
 
             _invoiceRepository
                .Setup(x => x.GetAllAsync(x => x.Items, It.IsAny<Expression<Func<Invoice, bool>>>()))
-               .Returns<Expression<Func<Invoice, object>>, Expression<Func<Invoice, bool>>[]>((include, wheres)
+               .Returns<Expression<Func<Invoice, object>>, Expression<Func<Invoice, bool>>[]>((_, wheres)
                    => Result.Try(() =>
                    {
                        var invs = invoicesDb.Select(x => x);

@@ -18,7 +18,7 @@ namespace Invoices.Domain.Services
         decimal InvoiceSpentDiffPercent(Invoice current, List<Invoice> comparable);
         InvoiceBriefStatus PercentBriefStatus(decimal percentIncrease, bool increaseIsBetter);
         string BillPercentComparedWithLastSixMonthesText(decimal billPercentIncrease, ILocalization localization);
-        string InvoiceCostPercentComparedWithRangeMonthesText(decimal invoiceCosDifftPercentLastSixMonthes, ILocalization localization);
+        string InvoiceCostPercentComparedWithRangeMonthesText(decimal invoiceCostDifftPercentRangeMonthes, ILocalization localization);
         InvoiceOverviewStatus OverviewStatus(InvoiceStatus invoiceStatus);
         string OverviewStatusText(InvoiceOverviewStatus overviewStatus, ILocalization localization);
         List<InvoicePartition> BuildPartitions(List<InvoiceItem> invoiceItems, ILocalization localization);
@@ -71,8 +71,8 @@ namespace Invoices.Domain.Services
                 _ => localization.INVOICE_OVERVIEW_BILL_PERCENT_NOT_CHANGE_COMPARED_WITH_INVOICES
             };
 
-        public string InvoiceCostPercentComparedWithRangeMonthesText(decimal invoiceCostDifftPercentLastSixMonthes, ILocalization localization)
-            => invoiceCostDifftPercentLastSixMonthes switch
+        public string InvoiceCostPercentComparedWithRangeMonthesText(decimal invoiceCostDifftPercentRangeMonthes, ILocalization localization)
+            => invoiceCostDifftPercentRangeMonthes switch
             {
                 > 0 => localization.INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_INVOICES,
                 < 0 => localization.INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICES,
