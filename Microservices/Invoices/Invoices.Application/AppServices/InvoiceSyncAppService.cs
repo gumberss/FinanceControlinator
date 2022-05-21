@@ -48,7 +48,7 @@ namespace Invoices.Application.AppServices
         public async Task<Result<InvoiceSync, BusinessException>> SyncUpdatesFrom(long lastSyncTimestamp)
         {
             var lastSyncDateTime = DateTimeOffset.FromUnixTimeMilliseconds(lastSyncTimestamp).LocalDateTime;
-            long currentSyncDate = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
+            DateTime currentSyncDate = DateTime.UtcNow;
 
             var monthesToCompare = 6;
             var invoicesContextStartDate = _dateService.FirstMonthDayDate(lastSyncDateTime.AddMonths(-monthesToCompare));
@@ -61,10 +61,11 @@ namespace Invoices.Application.AppServices
             if (contextInvoices.IsFailure) return contextInvoices.Error;
 
             var updatedInvoices = contextInvoices.Value
-                .Where(_invoiceService.AnyChangeSince(lastSyncDateTime));
+                .Where(invoice => _invoiceService.AnyChangeSince(lastSyncDateTime)(invoice)
+                || _invoiceService.StatusChanged(lastSyncDateTime, currentSyncDate)(invoice));
 
             return new InvoiceSync(
-                syncDate: currentSyncDate,
+                syncDate: ((DateTimeOffset)currentSyncDate).ToUnixTimeMilliseconds(),
                 monthDataSyncs: updatedInvoices
                     .Select(invoice => BuildMonthDataSync(invoice, contextInvoices))
                     .ToList());
