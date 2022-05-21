@@ -1,6 +1,5 @@
 ﻿using Expenses.Data.Contexts;
 using Expenses.Data.Interfaces.Contexts;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

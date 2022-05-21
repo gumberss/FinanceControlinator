@@ -1,5 +1,4 @@
 ﻿using Expenses.API.Commons;
-using Expenses.Domain.Models.Expenses;
 using Expenses.DTO.Expenses;
 using Expenses.Handler.Domain.Cqrs.Events.Expenses;
 using Expenses.Handler.Domain.Cqrs.ExpenseOverviews;

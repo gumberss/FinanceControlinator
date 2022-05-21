@@ -3,7 +3,6 @@ using Expenses.DTO.Expenses;
 using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using MediatR;
-using System;
 
 namespace Expenses.Handler.Domain.Cqrs.Events.Expenses
 {

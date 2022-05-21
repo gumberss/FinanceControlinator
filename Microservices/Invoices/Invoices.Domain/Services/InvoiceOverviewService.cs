@@ -52,7 +52,7 @@ namespace Invoices.Domain.Services
 
         public decimal InvoiceSpentDiffPercent(Invoice current, List<Invoice> comparable)
             => AveragePercent(current.TotalCost, comparable.Sum(x => x.TotalCost), comparable.Count);
-      
+
         public InvoiceBriefStatus PercentBriefStatus(decimal percentIncrease, bool increaseIsBetter)
           => percentIncrease switch
           {

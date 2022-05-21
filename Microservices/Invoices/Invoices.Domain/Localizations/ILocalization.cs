@@ -1,5 +1,4 @@
 ﻿using Invoices.Domain.Enums;
-using System;
 using System.Globalization;
 
 namespace Invoices.Domain.Localizations
