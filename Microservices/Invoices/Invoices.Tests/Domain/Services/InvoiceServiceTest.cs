@@ -497,14 +497,13 @@ namespace Invoices.Tests.Domain.Services
         [TestMethod]
         public void Should_return_invoice_with_changes_when_invoice_item_was_updated_since_base_date()
         {
+            var itemDate = DateTime.UtcNow;
+
             var invoice = new Invoice(DateTime.UtcNow)
             {
                 CreatedDate = DateTime.UtcNow.AddYears(-100),
                 UpdatedDate = DateTime.UtcNow.AddYears(-100),
             };
-
-            var itemDate = DateTime.UtcNow;
-
             invoice.AddNew(new InvoiceItem(0, 0) { UpdatedDate = itemDate });
 
             _invoiceService.AnyChangeSince(itemDate.AddDays(-100))(invoice)
@@ -513,7 +512,7 @@ namespace Invoices.Tests.Domain.Services
             _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(-1))(invoice)
                 .Should().BeTrue();
 
-            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(0))(invoice)
+            _invoiceService.AnyChangeSince(itemDate)(invoice)
                 .Should().BeFalse();
 
             _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(1))(invoice)
