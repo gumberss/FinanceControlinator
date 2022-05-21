@@ -85,44 +85,23 @@ namespace Invoices.Application.AppServices
                  statusText: overviewStatusText,
                  status: overviewStatus,
                  totalCost: _localization.FORMAT_MONEY(invoice.TotalCost),
-                 briefs: BuildBriefs(invoice, contextInvoices).ToList(),
-                 partitions: BuildPartitions(invoice));
+                 briefs: BuildBriefs(invoice, contextInvoices),
+                 partitions: _invoiceOverviewService.BuildPartitions(invoice.Items, _localization));
 
             return new InvoiceMonthDataSync(overview, invoice);
         }
 
-        private List<InvoicePartition> BuildPartitions(Invoice invoice)
+        private List<InvoiceBrief> BuildBriefs(Invoice invoice, List<Invoice> contextInvoices)
         {
-            return null;
-        }
-
-        private IEnumerable<InvoiceBrief> BuildBriefs(Invoice invoice, List<Invoice> contextInvoices)
-        {
-            yield return new InvoiceBrief(_textParser.Parse(_localization.OVERVIEW_FUTURE_PURCHASE_PERCENT
-                , ("PERCENT", _invoiceOverviewService.FuturePurchasePercent(invoice).ToString(_localization.CULTURE))));
-
-            yield return new InvoiceBrief(_textParser.Parse(_localization.INVOICE_OVERVIEW_INVESTMENT_PERCENT
-                , ("PERCENT", _invoiceOverviewService.InvestmentPercent(invoice).ToString(_localization.CULTURE))));
-
             var lastSixInvoicesFromCurrentInvoce = _invoiceService.LastInvoicesFrom(invoice, contextInvoices, 6);
 
-            var billPercentLastSixMonthes = _invoiceOverviewService
-                    .BillAverageSpentDiffPercent(invoice, lastSixInvoicesFromCurrentInvoce);
-
-            yield return new InvoiceBrief(
-                _textParser.Parse(
-                    _invoiceOverviewService.BillPercentComparedWithLastSixMonthesText(billPercentLastSixMonthes, _localization)
-                    , ("PERCENT", Math.Abs(billPercentLastSixMonthes).ToString(_localization.CULTURE)))
-                , _invoiceOverviewService.PercentBriefStatus(billPercentLastSixMonthes));
-
-            var invoiceCosDifftPercentLastSixMonthes = _invoiceOverviewService
-                  .InvoiceSpentDiffPercent(invoice, lastSixInvoicesFromCurrentInvoce);
-
-            yield return new InvoiceBrief(
-                _textParser.Parse(
-                    _invoiceOverviewService.InvoicePercentComparedWithLastSixMonthesText(invoiceCosDifftPercentLastSixMonthes, _localization)
-                    , ("PERCENT", invoiceCosDifftPercentLastSixMonthes.ToString(_localization.CULTURE)))
-                , _invoiceOverviewService.PercentBriefStatus(invoiceCosDifftPercentLastSixMonthes));
+            return new List<InvoiceBrief>
+            {
+                _invoiceOverviewService.FuturePurchasePercentBrief(invoice, _textParser, _localization),
+                _invoiceOverviewService.InvestmentPercentBrief(invoice, _textParser, _localization),
+                _invoiceOverviewService.BillPercentComparedWithRangeMonthesBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization),
+                _invoiceOverviewService.InvoicePercentComparedWithLastSixMonthesBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization)
+            };
         }
     }
 }
