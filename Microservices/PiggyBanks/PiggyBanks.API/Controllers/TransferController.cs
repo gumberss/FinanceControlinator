@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using FinanceControlinator.Events.PiggyBanks;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PiggyBanks.API.Commons;
 using PiggyBanks.Domain.Models;
-using PiggyBanks.Handler.Domain.Cqrs.Events;
 using PiggyBanks.Handler.Domain.Cqrs.Events.Transfers;
 using System.Threading.Tasks;
 

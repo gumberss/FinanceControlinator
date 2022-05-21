@@ -1,6 +1,6 @@
+using Identity.Extensions;
 using Identity.Routes;
 using Identity.Tokens;
-using Identity.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

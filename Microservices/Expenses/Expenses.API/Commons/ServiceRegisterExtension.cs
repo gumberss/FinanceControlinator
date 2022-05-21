@@ -37,7 +37,7 @@ namespace Expenses.API.Commons
             services.AddTransient<IExpenseService, ExpenseService>();
             services.AddTransient<IExpenseOverviewService, ExpenseOverviewService>();
             services.AddTransient<ITextParser, TextParser>();
-            
+
             services.AddTransient<IExpenseAppService, ExpenseAppService>();
             services.AddTransient<IExpenseOverviewAppService, ExpenseOverviewAppService>();
             services.AddTransient<IInvoiceAppService, InvoiceAppService>();
@@ -48,7 +48,7 @@ namespace Expenses.API.Commons
             services.AddTransient<IInvoiceItemRepository, InvoiceItemRepository>();
 
             services.AddTransient<IExpenseValidator, ExpenseValidator>();
-            
+
             // Must be the last one
             services.ConfigureHandlerAutoMapper();
         }

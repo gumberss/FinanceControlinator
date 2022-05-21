@@ -9,8 +9,8 @@ using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Parsers.TextParsers;
 using FinanceControlinator.Common.Utils;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.AppServices

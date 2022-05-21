@@ -28,7 +28,7 @@ namespace Expenses.Handler.Configurations
                 .Where(x => x.GetConstructors().Any(x => x.GetParameters().Any() && x.GetParameters().Any(y => y.ParameterType == typeof(IServiceProvider))))
                 .Select(x => Activator.CreateInstance(x, provider));
 
-            services.AddSingleton(s => new MapperConfiguration(conf => 
+            services.AddSingleton(s => new MapperConfiguration(conf =>
             parameterLess.Concat(providerParameter)
                 .ToList()
                 .ForEach(x => conf.AddProfile((Profile)x)))

@@ -1,5 +1,8 @@
-﻿using Invoices.Application.Interfaces.AppServices;
+﻿using FinanceControlinator.Common.Exceptions;
+using FinanceControlinator.Common.Parsers.TextParsers;
 using FinanceControlinator.Common.Utils;
+using Invoices.Application.Interfaces.AppServices;
+using Invoices.Data.Commons;
 using Invoices.Data.Repositories;
 using Invoices.Domain.Localizations;
 using Invoices.Domain.Models;
@@ -10,9 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Parsers.TextParsers;
-using Invoices.Data.Commons;
 
 namespace Invoices.Application.AppServices
 {

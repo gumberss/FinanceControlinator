@@ -76,11 +76,11 @@ namespace Payments.Domain.Models
         public Payment Reject(String reason)
         {
             Status = PaymentStatus.PaymentRejected;
-            
+
             Description = reason;
-            
+
             Updated();
-            
+
             return this;
         }
 

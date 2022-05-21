@@ -3,7 +3,6 @@ using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using PiggyBanks.Data.Configurations;
 using PiggyBanks.Data.Interfaces.Contexts;
 using PiggyBanks.Domain.Models;
 using System;

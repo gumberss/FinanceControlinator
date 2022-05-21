@@ -1,7 +1,6 @@
 ﻿using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Utils;
 using PiggyBanks.Application.Interfaces.AppServices;
-using PiggyBanks.Data.Interfaces.Contexts;
 using PiggyBanks.Data.Repositories;
 using PiggyBanks.Domain.Models;
 using System.Threading.Tasks;

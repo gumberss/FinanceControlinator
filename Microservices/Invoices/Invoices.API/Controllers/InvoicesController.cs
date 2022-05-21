@@ -1,8 +1,6 @@
 using Invoices.API.Commons;
-using Invoices.DTOs.Invoices.Sync;
 using Invoices.Handler.Domain.Cqrs.Events.Sync;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
