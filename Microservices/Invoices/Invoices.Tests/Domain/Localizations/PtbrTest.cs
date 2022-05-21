@@ -5,17 +5,14 @@ using Invoices.Domain.Enums;
 using Invoices.Domain.Localizations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Invoices.Tests.Domain.Localizations
 {
     [TestClass]
     public class PtbrTest
     {
-        Ptbr _ptbr;
+        readonly Ptbr _ptbr;
         public PtbrTest() => _ptbr = new Ptbr();
 
         [TestMethod]

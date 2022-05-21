@@ -37,7 +37,7 @@ namespace Invoices.Tests.Application.AppServices
 
             invoiceServiceMock
                 .Setup(x => x.GetAllAsync(It.IsAny<Expression<Func<Invoice, object>>>(), It.IsAny<Expression<Func<Invoice, bool>>>()))
-                   .Returns<Expression<Func<Invoice, object>>, Expression<Func<Invoice, bool>>[]>((include, wheres)
+                   .Returns<Expression<Func<Invoice, object>>, Expression<Func<Invoice, bool>>[]>((_, wheres)
                     => Result.Try(() =>
                     {
                         wheres.ToList().ForEach(x => invoices = invoices.Where(x.Compile()).ToList());

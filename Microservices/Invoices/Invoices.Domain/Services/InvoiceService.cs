@@ -23,7 +23,7 @@ namespace Invoices.Domain.Services
 
         Func<Invoice, bool> AnyItemChangedSince(DateTime baseDate);
 
-        Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare);
+        Func<Invoice, bool> ClosedInvoiceAfter(DateTime baseDate);
         InvoiceStatus Status(Invoice invoice, DateTime baseDate);
         int DaysRemainingToNextStage(Invoice invoice, DateTime baseDate);
         int DaysToOpen(Invoice invoice, DateTime baseDate);
