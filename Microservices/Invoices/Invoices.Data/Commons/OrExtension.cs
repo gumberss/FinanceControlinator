@@ -7,15 +7,29 @@ namespace Invoices.Data.Commons
     {
         public static Expression<Func<T, bool>> Or<T>(this Func<T, bool> left, Func<T, bool> right)
         {
-            if (left == null && right == null) throw new ArgumentException("At least one argument must not be null");
-            if (left == null) return Expression.Lambda<Func<T, bool>>(Expression.Call(left.Method));
-            if (right == null) return Expression.Lambda<Func<T, bool>>(Expression.Call(right.Method));
+            if (left is null && right is null) throw new ArgumentException("At least one argument must not be null");
+            if (left is null) return ToExpression(right);
+            if (right is null) return ToExpression(left);
 
             var leftExpression = ToExpression(left);
             var rightExpression = ToExpression(right);
 
             var parameter = Expression.Parameter(typeof(T), "p");
             var combined = new ParameterReplacer(parameter).Visit(Expression.OrElse(leftExpression.Body, rightExpression.Body));
+            return Expression.Lambda<Func<T, bool>>(combined, parameter);
+        }
+
+        public static Expression<Func<T, bool>> And<T>(this Func<T, bool> left, Func<T, bool> right)
+        {
+            if (left is null && right is null) throw new ArgumentException("At least one argument must not be null");
+            if (left is null) return ToExpression(right);
+            if (right is null) return ToExpression(left);
+
+            var leftExpression = ToExpression(left);
+            var rightExpression = ToExpression(right);
+
+            var parameter = Expression.Parameter(typeof(T), "p");
+            var combined = new ParameterReplacer(parameter).Visit(Expression.AndAlso(leftExpression.Body, rightExpression.Body));
             return Expression.Lambda<Func<T, bool>>(combined, parameter);
         }
 
