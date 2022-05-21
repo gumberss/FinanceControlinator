@@ -33,6 +33,8 @@ namespace Invoices.Domain.Services
         bool IsPaid(Invoice invoice, DateTime baseDate);
         bool IsClosed(Invoice invoice, DateTime baseDate);
         Func<Invoice, bool> AnyChangeSince(DateTime baseDate);
+
+        Func<Invoice, bool> StatusChanged(DateTime moment, DateTime secondMoment);
     }
 
     public class InvoiceService : IInvoiceService
@@ -174,6 +176,9 @@ namespace Invoices.Domain.Services
                 _ => InvoiceStatus.Future
             };
 
+        public Func<Invoice, bool> StatusChanged(DateTime moment, DateTime secondMoment)
+            => invoice => Status(invoice, moment) != Status(invoice, secondMoment);
+
         public int DaysRemainingToNextStage(Invoice invoice, DateTime baseDate)
            => Status(invoice, baseDate) switch
            {
@@ -201,7 +206,7 @@ namespace Invoices.Domain.Services
 
         public bool IsPaid(Invoice invoice, DateTime baseDate)
             => invoice.PaymentStatus == PaymentStatus.Paid
-            && baseDate >= invoice.PaymentDate;
+            && baseDate >= invoice.PaymentDate.Value;
 
         public bool IsOpened(Invoice invoice, DateTime baseDate)
             => !IsClosed(invoice, baseDate)
