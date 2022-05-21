@@ -8,6 +8,8 @@ namespace Invoices.DTOs.Invoices.Sync
 
         public float Percent { get; set; }
 
+        public string TypeText { get; set; }
+
         public decimal TotalValue { get; set; }
     }
 }
