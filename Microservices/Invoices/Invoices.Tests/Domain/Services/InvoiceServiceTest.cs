@@ -504,7 +504,11 @@ namespace Invoices.Tests.Domain.Services
                 CreatedDate = DateTime.UtcNow.AddYears(-100),
                 UpdatedDate = DateTime.UtcNow.AddYears(-100),
             };
-            invoice.AddNew(new InvoiceItem(0, 0) { UpdatedDate = itemDate });
+            invoice.AddNew(new InvoiceItem(0, 0)
+            {
+                UpdatedDate = itemDate,
+                CreatedDate = DateTime.UtcNow.AddYears(-100)
+            });
 
             _invoiceService.AnyChangeSince(itemDate.AddDays(-100))(invoice)
                 .Should().BeTrue();
