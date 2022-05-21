@@ -132,7 +132,7 @@ namespace Invoices.Domain.Services
             return new InvoiceBrief(
                 textParser.Parse(
                     InvoicePercentComparedWithLastSixMonthesText(invoiceCosDiffPercentRangeMonthes, localization)
-                    , ("PERCENT", invoiceCosDiffPercentRangeMonthes.ToString(localization.CULTURE))
+                    , ("PERCENT", invoiceCosDiffPercentRangeMonthes.ToString("F", localization.CULTURE))
                     , ("INVOICES_QUANTITIES", rangeInvoicesFromCurrentInvoice.Count.ToString()))
                 , PercentBriefStatus(invoiceCosDiffPercentRangeMonthes));
         }
@@ -144,18 +144,18 @@ namespace Invoices.Domain.Services
             return new InvoiceBrief(
                 textParser.Parse(
                     BillPercentComparedWithLastSixMonthesText(billPercentRangeMonthes, localization)
-                    , ("PERCENT", Math.Abs(billPercentRangeMonthes).ToString(localization.CULTURE))
+                    , ("PERCENT", Math.Abs(billPercentRangeMonthes).ToString("F", localization.CULTURE))
                     , ("INVOICES_QUANTITIES", rangeInvoicesFromCurrentInvoice.Count.ToString()))
                 , PercentBriefStatus(billPercentRangeMonthes));
         }
 
         public InvoiceBrief InvestmentPercentBrief(Invoice invoice, ITextParser textParser, ILocalization localization)
             => new InvoiceBrief(textParser.Parse(localization.INVOICE_OVERVIEW_INVESTMENT_PERCENT
-                , ("PERCENT", InvestmentPercent(invoice).ToString(localization.CULTURE))));
+                , ("PERCENT", InvestmentPercent(invoice).ToString("F", localization.CULTURE))));
 
         public InvoiceBrief FuturePurchasePercentBrief(Invoice invoice, ITextParser textParser, ILocalization localization)
             => new InvoiceBrief(textParser.Parse(localization.OVERVIEW_FUTURE_PURCHASE_PERCENT
-                , ("PERCENT", FuturePurchasePercent(invoice).ToString(localization.CULTURE))));
+                , ("PERCENT", FuturePurchasePercent(invoice).ToString("F", localization.CULTURE))));
 
         private static decimal AveragePercent(decimal toFind, decimal total, int totalItems)
          => totalItems == 0
