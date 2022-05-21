@@ -62,7 +62,7 @@ namespace Invoices.Application.AppServices
 
             var updatedInvoices = contextInvoices.Value
                 .Where(invoice => _invoiceService.AnyChangeSince(lastSyncDateTime)(invoice)
-                || _invoiceService.StatusChanged(lastSyncDateTime, currentSyncDate)(invoice));
+                               || _invoiceService.StatusChanged(lastSyncDateTime, currentSyncDate)(invoice));
 
             return new InvoiceSync(
                 syncDate: ((DateTimeOffset)currentSyncDate).ToUnixTimeMilliseconds(),
@@ -95,13 +95,14 @@ namespace Invoices.Application.AppServices
         {
             var lastSixInvoicesFromCurrentInvoce = _invoiceService.LastInvoicesFrom(invoice, contextInvoices, 6);
 
-            return new List<InvoiceBrief>
-            {
+            return new[]{
                 _invoiceOverviewService.FuturePurchasePercentBrief(invoice, _textParser, _localization),
-                _invoiceOverviewService.InvestmentPercentBrief(invoice, _textParser, _localization),
-                _invoiceOverviewService.BillPercentComparedWithRangeMonthesBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization),
-                _invoiceOverviewService.InvoicePercentComparedWithLastSixMonthesBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization)
-            };
+                _invoiceOverviewService.InvestmentPercentBrief(invoice, _textParser, _localization)
+            }.Concat(new[] {
+                _invoiceOverviewService.BillCostPercentComparedWithRangeMonthesBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization),
+                _invoiceOverviewService.InvoiceCostPercentComparedWithRangeBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization)
+            }.Where(_ => lastSixInvoicesFromCurrentInvoce.Count > 0))
+            .ToList();
         }
     }
 }
