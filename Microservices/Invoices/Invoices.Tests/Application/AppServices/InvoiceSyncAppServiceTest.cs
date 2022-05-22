@@ -49,9 +49,9 @@ namespace Invoices.Tests.Application.AppServices
         {
             _invoiceRepository = new Mock<IInvoiceRepository>();
             var _localization = new Mock<ILocalization>();
-            var _textParser = new Mock<ITextParser>();
+           var _textParser = new Mock<ITextParser>();
             _invoiceService = new Mock<IInvoiceService>();
-            var _logger = new Mock<ILogger<IInvoiceAppService>>();
+           var _logger = new Mock<ILogger<IInvoiceAppService>>();
             _dateService = new Mock<IDateService>();
             var _invoiceOverviewService = new Mock<IInvoiceOverviewService>();
 
