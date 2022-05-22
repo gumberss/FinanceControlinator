@@ -65,6 +65,7 @@ namespace Invoices.Application.AppServices
                                || _invoiceService.StatusChanged(lastSyncDateTime, currentSyncDate)(invoice));
 
             return new InvoiceSync(
+                syncName: _localization.INVOICE_SYNC_NAME,
                 syncDate: ((DateTimeOffset)currentSyncDate).ToUnixTimeMilliseconds(),
                 monthDataSyncs: updatedInvoices
                     .Select(invoice => BuildMonthDataSync(invoice, contextInvoices))
