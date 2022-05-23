@@ -12,7 +12,7 @@ namespace Invoices.API.Commons
 {
     public static class MigrationsExtension
     {
-        public static T EnsureDatabaseExists<T>(this T host) where T: IHost
+        public static T EnsureDatabaseExists<T>(this T host) where T : IHost
         {
             var serviceScopeFactory = host.Services.GetService<IServiceScopeFactory>();
 

@@ -3,7 +3,6 @@ using FinanceControlinator.Common.Utils;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Domain.Models;
 using Invoices.Handler.Domain.Cqrs.Events;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Raven.Client.Documents.Session;

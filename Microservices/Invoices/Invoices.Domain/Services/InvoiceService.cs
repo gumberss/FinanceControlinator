@@ -21,9 +21,9 @@ namespace Invoices.Domain.Services
 
         List<Invoice> LastInvoicesFrom(Invoice invoice, List<Invoice> pastInvoices, int count);
 
-        Func<Invoice, bool> AnyItemChangedSince(DateTime lastSyncDateTime);
+        Func<Invoice, bool> AnyItemChangedSince(DateTime baseDate);
 
-        Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare);
+        Func<Invoice, bool> ClosedInvoiceAfter(DateTime baseDate);
         InvoiceStatus Status(Invoice invoice, DateTime baseDate);
         int DaysRemainingToNextStage(Invoice invoice, DateTime baseDate);
         int DaysToOpen(Invoice invoice, DateTime baseDate);
@@ -32,6 +32,9 @@ namespace Invoices.Domain.Services
         int DaysToClose(Invoice invoice, DateTime baseDate);
         bool IsPaid(Invoice invoice, DateTime baseDate);
         bool IsClosed(Invoice invoice, DateTime baseDate);
+        Func<Invoice, bool> AnyChangeSince(DateTime baseDate);
+
+        Func<Invoice, bool> StatusChanged(DateTime moment, DateTime secondMoment);
     }
 
     public class InvoiceService : IInvoiceService
@@ -151,12 +154,17 @@ namespace Invoices.Domain.Services
                 .OrderByDescending(x => x.CloseDate)
                 .Take(count).ToList();
 
-        public Func<Invoice, bool> AnyItemChangedSince(DateTime lastSyncDateTime)
-            => x => x.Items.Any(y => y.CreatedDate > lastSyncDateTime
-                                  || y.UpdatedDate > lastSyncDateTime);
+        public Func<Invoice, bool> AnyItemChangedSince(DateTime baseDate)
+            => x => x.Items.Any(y => y.CreatedDate > baseDate
+                                  || y.UpdatedDate > baseDate);
 
-        public Func<Invoice, bool> ClosedInvoiceAfter(DateTime invoiceDateToCompare)
-            => x => x.CloseDate > invoiceDateToCompare;
+        public Func<Invoice, bool> AnyChangeSince(DateTime baseDate)
+            => invoice => invoice.UpdatedDate > baseDate
+                       || invoice.CreatedDate > baseDate
+                       || AnyItemChangedSince(baseDate)(invoice);
+
+        public Func<Invoice, bool> ClosedInvoiceAfter(DateTime baseDate)
+            => x => x.CloseDate > baseDate;
 
         public InvoiceStatus Status(Invoice invoice, DateTime baseDate)
             => invoice switch
@@ -167,6 +175,9 @@ namespace Invoices.Domain.Services
                 _ when IsOpened(invoice, baseDate) => InvoiceStatus.Open,
                 _ => InvoiceStatus.Future
             };
+
+        public Func<Invoice, bool> StatusChanged(DateTime moment, DateTime secondMoment)
+            => invoice => Status(invoice, moment) != Status(invoice, secondMoment);
 
         public int DaysRemainingToNextStage(Invoice invoice, DateTime baseDate)
            => Status(invoice, baseDate) switch
@@ -195,7 +206,7 @@ namespace Invoices.Domain.Services
 
         public bool IsPaid(Invoice invoice, DateTime baseDate)
             => invoice.PaymentStatus == PaymentStatus.Paid
-            && baseDate >= invoice.PaymentDate;
+            && baseDate >= invoice.PaymentDate.Value;
 
         public bool IsOpened(Invoice invoice, DateTime baseDate)
             => !IsClosed(invoice, baseDate)

@@ -1,5 +1,4 @@
-﻿using Expenses.Domain.Enums;
-using Expenses.Domain.Models.Expenses;
+﻿using Expenses.Domain.Models.Expenses;
 using Expenses.Domain.Models.Invoices;
 using System.Collections.Generic;
 
@@ -12,6 +11,6 @@ namespace Expenses.Domain.Interfaces.Services
         bool IsTotalCostValid(Expense expense, List<Invoice> invoicesWithExpenseCosts);
 
         bool InstallmentsCountIsValid(Expense expense, List<Invoice> invoicesWithExpenseCosts);
-        
+
     }
 }

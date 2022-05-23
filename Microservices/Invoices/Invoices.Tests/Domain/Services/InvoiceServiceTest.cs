@@ -426,6 +426,105 @@ namespace Invoices.Tests.Domain.Services
         }
 
         [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_was_created_since_base_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow) { CreatedDate = DateTime.UtcNow };
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddMilliseconds(0))(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(invoice.CreatedDate.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_was_updated_since_base_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow)
+            {
+                CreatedDate = DateTime.UtcNow.AddYears(-100),
+                UpdatedDate = DateTime.UtcNow,
+            };
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddMilliseconds(0))(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(invoice.UpdatedDate.Value.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_item_was_created_since_base_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow)
+            {
+                CreatedDate = DateTime.UtcNow.AddYears(-100),
+                UpdatedDate = DateTime.UtcNow.AddYears(-100),
+            };
+
+            var itemDate = DateTime.UtcNow;
+
+            invoice.AddNew(new InvoiceItem(0, 0) { CreatedDate = itemDate });
+
+            _invoiceService.AnyChangeSince(itemDate.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(0))(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_with_changes_when_invoice_item_was_updated_since_base_date()
+        {
+            var itemDate = DateTime.UtcNow;
+
+            var invoice = new Invoice(DateTime.UtcNow)
+            {
+                CreatedDate = DateTime.UtcNow.AddYears(-100),
+                UpdatedDate = DateTime.UtcNow.AddYears(-100),
+            };
+            invoice.AddNew(new InvoiceItem(0, 0)
+            {
+                UpdatedDate = itemDate,
+                CreatedDate = DateTime.UtcNow.AddYears(-100)
+            });
+
+            _invoiceService.AnyChangeSince(itemDate.AddDays(-100))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(-1))(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.AnyChangeSince(itemDate)(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.AnyChangeSince(itemDate.AddMilliseconds(1))(invoice)
+                .Should().BeFalse();
+
+        }
+
+        [TestMethod]
         public void Should_return_true_when_the_invoice_has_the_close_date_after_the_date_informed()
         {
             _invoiceService
@@ -439,6 +538,34 @@ namespace Invoices.Tests.Domain.Services
             _invoiceService
               .ClosedInvoiceAfter(DateTime.UtcNow)(new Invoice(DateTime.UtcNow.AddMonths(-1)))
               .Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_is_paid_when_invoice_is_paid()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            invoice.WasPaidIn(DateTime.UtcNow);
+
+            _invoiceService.IsPaid(invoice, invoice.PaymentDate.Value).Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_is_not_paid_when_invoice_was_not_pay()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            _invoiceService.IsPaid(invoice, DateTime.UtcNow).Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void Should_return_invoice_is_not_paid_based_on_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            invoice.WasPaidIn(DateTime.UtcNow);
+
+            _invoiceService.IsPaid(invoice, DateTime.UtcNow.AddDays(-1)).Should().BeFalse();
         }
 
         [TestMethod]
@@ -516,24 +643,6 @@ namespace Invoices.Tests.Domain.Services
 
             _invoiceService.DaysToOpen(invoice, baseDate)
                 .Should().Be(expected);
-        }
-
-        [TestMethod]
-        public void Should_return_invoice_is_paid_when_invoice_is_paid()
-        {
-            var invoice = new Invoice(DateTime.UtcNow);
-
-            invoice.WasPaidIn(DateTime.UtcNow);
-
-            _invoiceService.IsPaid(invoice, invoice.PaymentDate.Value).Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void Should_return_invoice_is_not_paid_when_invoice_was_not_pay()
-        {
-            var invoice = new Invoice(DateTime.UtcNow);
-
-            _invoiceService.IsPaid(invoice, DateTime.UtcNow).Should().BeFalse();
         }
 
         [TestMethod]
@@ -731,6 +840,70 @@ namespace Invoices.Tests.Domain.Services
             _invoiceService
                 .DaysRemainingToNextStage(invoice, baseDate)
                 .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [DataRow("30/05/2022", "31/05/2022", 1)]
+        [DataRow("31/05/2022", "31/05/2022", 0)]
+        [DataRow("01/04/2022", "31/05/2022", 30)]
+        public void Should_return_invoice_days_remaining_when_open_correctly(String baseDateString, String closeDateString, int expected)
+        {
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService
+                .DaysRemainingToNextStage(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [Description("Due date is 7 days after close date at this moment")]
+        [DataRow("08/06/2022", "31/05/2022", 1)]
+        [DataRow("02/07/2022", "31/05/2022", 25)]
+        [DataRow("03/03/2023", "31/05/2022", 269)]
+        public void Should_return_invoice_days_remaining_when_overdue_correctly(String baseDateString, String closeDateString, int expected)
+        {
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService
+                .DaysRemainingToNextStage(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        [DataRow("29/04/2022", "31/05/2022", 2)]
+        [DataRow("30/04/2022", "31/05/2022", 1)]
+        [DataRow("31/12/2021", "31/05/2022", 121)]
+        public void Should_return_invoice_days_remaining_to_open_correctly(String baseDateString, String closeDateString, int expected)
+        {
+            var closeDate = DateTime.ParseExact(closeDateString, _dateFormat, _ptbr);
+            var baseDate = DateTime.ParseExact(baseDateString, _dateFormat, _ptbr);
+
+            var invoice = new Invoice(closeDate);
+
+            _invoiceService
+                .DaysRemainingToNextStage(invoice, baseDate)
+                .Should().Be(expected);
+        }
+
+        [TestMethod]
+        public void Should_return_status_changed_when_the_invoice_status_change_based_on_the_date()
+        {
+            var invoice = new Invoice(DateTime.UtcNow);
+
+            _invoiceService.StatusChanged(invoice.CloseDate, invoice.DueDate)(invoice)
+                .Should().BeTrue();
+
+            _invoiceService.StatusChanged(invoice.CloseDate, invoice.CloseDate)(invoice)
+                .Should().BeFalse();
+
+            _invoiceService.StatusChanged(invoice.DueDate, invoice.DueDate)(invoice)
+                .Should().BeFalse();
         }
 
     }

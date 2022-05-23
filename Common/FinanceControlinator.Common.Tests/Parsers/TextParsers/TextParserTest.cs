@@ -3,7 +3,6 @@ using FinanceControlinator.Tests.Categories;
 using FinanceControlinator.Tests.Categories.Enums;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace FinanceControlinator.Common.Tests.Parsers.TextParsers
 {
