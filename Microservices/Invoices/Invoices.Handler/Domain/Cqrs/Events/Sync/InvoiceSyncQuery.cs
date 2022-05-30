@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Invoices.Handler.Domain.Cqrs.Events.Sync
 {
-    public class InvoiceSyncQuery : IRequest<Result<InvoiceSyncDTO, BusinessException>>
+    public class InvoiceSyncQuery : IRequest<Result<InvoiceDataSyncDTO, BusinessException>>
     {
         public long LastSyncTimestamp { get; set; }
 
