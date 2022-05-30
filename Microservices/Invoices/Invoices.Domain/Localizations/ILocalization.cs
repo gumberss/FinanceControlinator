@@ -27,7 +27,7 @@ namespace Invoices.Domain.Localizations
         string OPEN { get; }
         string CLOSED { get; }
         string INVOICE_SYNC_NAME { get; }
-
+        string INVOICE_INSTALLMENT_NUMBER { get; }
         string FORMAT_MONEY(decimal value);
         string INVOICE_ITEM_TYPE(InvoiceItemType key);
     }
