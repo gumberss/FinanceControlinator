@@ -29,6 +29,6 @@ namespace Invoices.Domain.Services
                 parser.Parse(localization.INVOICE_INSTALLMENT_NUMBER, ("INSTALLMENT_NUMBER", item.InstallmentNumber.ToString())),
                 localization.FORMAT_MONEY(item.InstallmentCost),
                 item.Type,
-                item.PurchaseDay.ToString(localization.CULTURE));
+                $"{item.PurchaseDay.ToString("m", localization.CULTURE)} - {item.PurchaseDay.ToString("t", localization.CULTURE)}");
     }
 }
