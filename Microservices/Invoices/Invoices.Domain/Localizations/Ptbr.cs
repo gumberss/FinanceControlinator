@@ -42,6 +42,8 @@ namespace Invoices.Domain.Localizations
 
         public string INVOICE_INSTALLMENT_NUMBER => "Parcela: [[INSTALLMENT_NUMBER]]";
 
+        public string INVOICE_SYNC_NAME => "Faturas";
+
         public string FORMAT_MONEY(decimal value) => value.ToString("C2", CULTURE);
 
         public string INVOICE_ITEM_TYPE(InvoiceItemType invoiceItemType) => new Dictionary<InvoiceItemType, String>
