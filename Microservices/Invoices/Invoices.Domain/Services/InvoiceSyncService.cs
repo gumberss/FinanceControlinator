@@ -17,9 +17,9 @@ namespace Invoices.Domain.Services
         public InvoiceSync BuildInvoiceSync(Invoice invoice, ILocalization localization, ITextParser parser)
             => new InvoiceSync(invoice.Id,
                 localization.FORMAT_MONEY(invoice.TotalCost),
-                invoice.CloseDate.ToString(localization.CULTURE),
-                invoice.DueDate.ToString(localization.CULTURE),
-                invoice.PaymentDate?.ToString(localization.CULTURE) ?? string.Empty,
+                invoice.CloseDate.ToString(localization.CULTURE.DateTimeFormat.ShortDatePattern),
+                invoice.DueDate.ToString(localization.CULTURE.DateTimeFormat.ShortDatePattern),
+                invoice.PaymentDate?.ToString(localization.CULTURE.DateTimeFormat.ShortDatePattern) ?? string.Empty,
                 invoice.PaymentStatus,
                 invoice.Items.Select(x => BuildInvoiceItemSync(x, localization, parser)).ToList());
 
