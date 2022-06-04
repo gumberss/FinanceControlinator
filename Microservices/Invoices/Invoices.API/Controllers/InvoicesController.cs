@@ -1,6 +1,7 @@
 using Invoices.API.Commons;
 using Invoices.Handler.Domain.Cqrs.Events.Sync;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace Invoices.API.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("[controller]")]
     public class InvoicesController : ApiControllerBase
     {
@@ -23,7 +24,7 @@ namespace Invoices.API.Controllers
 
         [HttpGet("sync")]
         public async Task<IActionResult> Sync([FromQuery] long timestamp)
-            => //!UserId.HasValue ? Unauthorized(): 
+            => !UserId.HasValue ? Unauthorized(): 
             await FromAsync(_mediator.Send(new InvoiceSyncQuery(timestamp)));
     }
 }

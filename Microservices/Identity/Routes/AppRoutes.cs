@@ -47,7 +47,8 @@ namespace Identity.Routes
         {
             return tokenService.BuildToken(app.Configuration["Jwt:Key"],
                                  app.Configuration["Jwt:Issuer"],
-                                 new[] { app.Configuration["Jwt:ExpenseAud"] },
+                                 new[] { app.Configuration["Jwt:ExpenseAud"],
+                                         app.Configuration["Jwt:InvoiceAud"]},
                                  user!.UserName,
                                  user.Id,
                                  TimeSpan.FromMinutes(int.Parse(app.Configuration["Jwt:Duration"])));
