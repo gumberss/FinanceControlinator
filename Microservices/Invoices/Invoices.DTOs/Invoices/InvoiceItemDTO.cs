@@ -5,6 +5,8 @@ namespace Invoices.DTOs.Invoices
 {
     public record InvoiceItemDTO
     {
+        public String Id { get; set; }
+
         public String ExpenseId { get; set; }
 
         public int InstallmentNumber { get; set; }

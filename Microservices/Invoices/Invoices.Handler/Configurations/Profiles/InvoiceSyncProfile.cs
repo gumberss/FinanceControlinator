@@ -8,11 +8,13 @@ namespace Invoices.Handler.Configurations.Profiles
     {
         public InvoiceSyncProfile()
         {
-            CreateMap<InvoiceSync, InvoiceSyncDTO>();
+            CreateMap<InvoiceDataSync, InvoiceDataSyncDTO>();
             CreateMap<InvoiceMonthDataSync, InvoiceMonthDataDTO>();
             CreateMap<InvoiceOverviewSync, InvoiceOverviewDTO>();
             CreateMap<InvoiceBrief, InvoiceBriefDTO>();
             CreateMap<InvoicePartition, InvoicePartitionDTO>();
+            CreateMap<InvoiceSync, InvoiceSyncDTO>();
+            CreateMap<InvoiceItemSync, InvoiceItemSyncDTO>();
 
         }
     }

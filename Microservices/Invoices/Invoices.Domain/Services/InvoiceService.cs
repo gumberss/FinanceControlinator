@@ -35,6 +35,8 @@ namespace Invoices.Domain.Services
         Func<Invoice, bool> AnyChangeSince(DateTime baseDate);
 
         Func<Invoice, bool> StatusChanged(DateTime moment, DateTime secondMoment);
+
+        DateTime CurrentInvoiceOpenDate(Invoice invoice);
     }
 
     public class InvoiceService : IInvoiceService
@@ -220,7 +222,7 @@ namespace Invoices.Domain.Services
         public bool IsClosed(Invoice invoice, DateTime baseDate)
             => invoice.CloseDate.Date < baseDate.Date;
 
-        private DateTime CurrentInvoiceOpenDate(Invoice invoice)
+        public DateTime CurrentInvoiceOpenDate(Invoice invoice)
             => GetInvoiceCloseDateBy(invoice.CloseDate.AddMonths(-1)).AddDays(1);
     }
 }

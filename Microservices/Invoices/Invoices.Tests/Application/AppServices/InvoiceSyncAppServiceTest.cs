@@ -54,6 +54,7 @@ namespace Invoices.Tests.Application.AppServices
             var _logger = new Mock<ILogger<IInvoiceAppService>>();
             _dateService = new Mock<IDateService>();
             var _invoiceOverviewService = new Mock<IInvoiceOverviewService>();
+            var invoiceSyncService = new Mock<IInvoiceSyncService>();
 
             _invoiceSyncAppService = new InvoiceSyncAppService(
                 _invoiceRepository.Object,
@@ -62,7 +63,8 @@ namespace Invoices.Tests.Application.AppServices
                 _invoiceService.Object,
                 _logger.Object,
                 _dateService.Object,
-                _invoiceOverviewService.Object);
+                _invoiceOverviewService.Object,
+                invoiceSyncService.Object);
 
             var invoiceService = new InvoiceService();
             var invoiceOverviewService = new InvoiceOverviewService();

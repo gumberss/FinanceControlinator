@@ -26,19 +26,21 @@ namespace Invoices.Domain.Localizations
         public string INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICE => "O valor da fatura diminuiu [[PERCENT]]% comparado com a anterior";
         public string INVOICE_COST_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_INVOICE => "O valor da fatura não mudou comparado com a anterior";
 
-        public string INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_INVOICES => "O valor da fatura aumentou [[PERCENT]]% comparado com as ultimas [[INVOICES_QUANTITIES]]";
-        public string INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICES => "O valor da fatura diminuiu [[PERCENT]]% comparado com as ultimas [[INVOICES_QUANTITIES]]";
-        public string INVOICE_COST_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_INVOICES => "O valor da fatura não mudou comparado com as ultimas [[INVOICES_QUANTITIES]]";
+        public string INVOICE_COST_PERCENT_INCREASE_COMPARED_WITH_LAST_INVOICES => "O valor da fatura aumentou [[PERCENT]]% comparado com as ultimas [[INVOICES_QUANTITIES]] faturas";
+        public string INVOICE_COST_PERCENT_DECREASE_COMPARED_WITH_LAST_INVOICES => "O valor da fatura diminuiu [[PERCENT]]% comparado com as ultimas [[INVOICES_QUANTITIES]] faturas";
+        public string INVOICE_COST_PERCENT_NOT_CHANGE_COMPARED_WITH_LAST_INVOICES => "O valor da fatura não mudou comparado com as ultimas [[INVOICES_QUANTITIES]] faturas";
 
-        public string OVERDUE => "[[DAYS]] dias atrasada";
+        public string OVERDUE => "Fatura atrasada";
 
         public string PAID => "Paga";
 
-        public string OPEN => "[[DAYS]] dias para fechar";
+        public string OPEN => "Fatura aberta";
 
-        public string CLOSED => "[[DAYS]] dias para vencer";
+        public string CLOSED => "Fatura fechada";
 
         public string INVOICE_SYNC_NAME => "Faturas";
+
+        public string INVOICE_INSTALLMENT_NUMBER => "Parcela: [[INSTALLMENT_NUMBER]]";
 
         public string FORMAT_MONEY(decimal value) => value.ToString("C2", CULTURE);
 

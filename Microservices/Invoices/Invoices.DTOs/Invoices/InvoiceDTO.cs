@@ -6,6 +6,8 @@ namespace Invoices.DTOs.Invoices
 {
     public record InvoiceDTO
     {
+        public Guid Id { get; set; }
+
         public decimal TotalCost { get; set; }
 
         public DateTime CloseDate { get; set; }

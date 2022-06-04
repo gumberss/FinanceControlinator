@@ -4,9 +4,9 @@
     {
         public InvoiceOverviewSync Overview { get; set; }
 
-        public Invoice Invoice { get; set; }
+        public InvoiceSync Invoice { get; set; }
 
-        public InvoiceMonthDataSync(InvoiceOverviewSync overview, Invoice invoice)
+        public InvoiceMonthDataSync(InvoiceOverviewSync overview, InvoiceSync invoice)
         {
             Overview = overview;
             Invoice = invoice;

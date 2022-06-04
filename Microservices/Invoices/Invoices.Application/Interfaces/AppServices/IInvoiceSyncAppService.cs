@@ -7,6 +7,6 @@ namespace Invoices.Application.Interfaces.AppServices
 {
     public interface IInvoiceSyncAppService
     {
-        Task<Result<InvoiceSync, BusinessException>> SyncUpdatesFrom(long lastSyncTimestamp);
+        Task<Result<InvoiceDataSync, BusinessException>> SyncUpdatesFrom(long lastSyncTimestamp);
     }
 }

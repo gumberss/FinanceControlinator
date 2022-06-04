@@ -23,6 +23,7 @@ namespace Invoices.Application.AppServices
         private readonly ILogger<IInvoiceAppService> _logger;
         private readonly IInvoiceOverviewService _invoiceOverviewService;
         private readonly IInvoiceService _invoiceService;
+        private readonly IInvoiceSyncService _invoiceSyncService;
         private readonly IDateService _dateService;
         private readonly ITextParser _textParser;
 
@@ -33,7 +34,8 @@ namespace Invoices.Application.AppServices
                 , IInvoiceService invoiceService
                 , ILogger<IInvoiceAppService> logger
                 , IDateService dateService
-                , IInvoiceOverviewService invoiceOverviewService
+                , IInvoiceOverviewService invoiceOverviewService,
+                IInvoiceSyncService invoiceSyncService
             )
         {
             _invoiceRepository = invoiceRepository;
@@ -41,11 +43,12 @@ namespace Invoices.Application.AppServices
             _logger = logger;
             _invoiceOverviewService = invoiceOverviewService;
             _invoiceService = invoiceService;
+            _invoiceSyncService = invoiceSyncService;
             _dateService = dateService;
             _textParser = textParser;
         }
 
-        public async Task<Result<InvoiceSync, BusinessException>> SyncUpdatesFrom(long lastSyncTimestamp)
+        public async Task<Result<InvoiceDataSync, BusinessException>> SyncUpdatesFrom(long lastSyncTimestamp)
         {
             var lastSyncDateTime = DateTimeOffset.FromUnixTimeMilliseconds(lastSyncTimestamp).LocalDateTime;
             DateTime currentSyncDate = DateTime.UtcNow;
@@ -64,7 +67,7 @@ namespace Invoices.Application.AppServices
                 .Where(invoice => _invoiceService.AnyChangeSince(lastSyncDateTime)(invoice)
                                || _invoiceService.StatusChanged(lastSyncDateTime, currentSyncDate)(invoice));
 
-            return new InvoiceSync(
+            return new InvoiceDataSync(
                 syncName: _localization.INVOICE_SYNC_NAME,
                 syncDate: ((DateTimeOffset)currentSyncDate).ToUnixTimeMilliseconds(),
                 monthDataSyncs: updatedInvoices
@@ -89,7 +92,7 @@ namespace Invoices.Application.AppServices
                  briefs: BuildBriefs(invoice, contextInvoices),
                  partitions: _invoiceOverviewService.BuildPartitions(invoice.Items, _localization));
 
-            return new InvoiceMonthDataSync(overview, invoice);
+            return new InvoiceMonthDataSync(overview, _invoiceSyncService.BuildInvoiceSync(invoice, _localization, _textParser));
         }
 
         private List<InvoiceBrief> BuildBriefs(Invoice invoice, List<Invoice> contextInvoices)
