@@ -5,28 +5,17 @@ using FinanceControlinator.Events.Invoices;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Expenses.IntegrationTests
 {
-
-
-
-
-    public class PongMessage
-    {
-
-    }
     public class SimpleTest
     {
 
         [Fact]
-        public async void a()
+        public async void OnlyMessageSimpleIntegrationTest()
         {
             try
             {
@@ -44,12 +33,10 @@ namespace Expenses.IntegrationTests
             {
 
             }
-
-
         }
 
         [Fact]
-        public async void B()
+        public async void FirstSimpleIntegrationTest()
         {
             try
             {
@@ -70,8 +57,6 @@ namespace Expenses.IntegrationTests
             {
 
             }
-
-
         }
     }
 }
