@@ -1,5 +1,5 @@
-﻿using Identity.DTOs;
-using Identity.Tokens;
+﻿using FinanceControlinator.Authentication.Services;
+using Identity.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 

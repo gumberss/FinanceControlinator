@@ -18,23 +18,44 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var rabbitMqValues = new RabbitMqValues
+if (!builder.Environment.IsDevelopment())
 {
-    Host = builder.Configuration.GetSection("RabbitMq:Host").Value,
-    Username = builder.Configuration.GetSection("RabbitMq:Username").Value,
-    Password = builder.Configuration.GetSection("RabbitMq:Password").Value,
-};
+    var rabbitMqValues = new RabbitMqValues
+    {
+        Host = builder.Configuration.GetSection("RabbitMq:Host").Value,
+        Username = builder.Configuration.GetSection("RabbitMq:Username").Value,
+        Password = builder.Configuration.GetSection("RabbitMq:Password").Value,
+    };
 
-builder.Services.ConfigureMassTransit(rabbitMqValues);
+    builder.Services.ConfigureMassTransit(rabbitMqValues);
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
-        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-    );
+    builder.Services.AddControllers()
+        .AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+        );
 
-builder.Services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
+    builder.Services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ExpensesDbConnection"));
+    });
+
+
+
+}
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(option =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ExpensesDbConnection"));
+    option.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
 });
 
 builder.Services.AddSwaggerGen(x =>
@@ -42,44 +63,32 @@ builder.Services.AddSwaggerGen(x =>
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "Expenses Microservice", Version = "v1" });
 });
 
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers(x => x.UseCentralRoutePrefix(new RouteAttribute("api/")));
 
 builder.Services.RegisterServices();
-
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(option =>
-    {
-        option.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
-
-builder.Services.AddAuthorization();
 
 builder.Logging
     .ClearProviders()
     .AddConsole()
     .AddProvider(new CustomLogProvider(new CustomLogConfig()));
 
-builder.Services.AddSwaggerGen();
 
 var app = builder
-    .Build()
-    .Migrate()
-    .Result;
+    .Build();
+if (!app.Environment.IsDevelopment())
+{
+    app = app.Migrate().Result;
+}
 
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
@@ -96,3 +105,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+public partial class Program { }

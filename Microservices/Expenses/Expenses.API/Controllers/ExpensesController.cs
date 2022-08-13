@@ -29,6 +29,10 @@ namespace Expenses.API.Controllers
             => !UserId.HasValue ? Unauthorized()
             : From(await _mediator.Send(new UpdateExpenseCommand(expense with { UserId = UserId.Value })));
 
+        [HttpGet("a")]
+        public async Task<IActionResult> Get()
+        => Ok("Oi");
+
         [HttpGet("{page}/{count}")]
         public async Task<IActionResult> Get(int page, int count)
             => !UserId.HasValue ? Unauthorized()
