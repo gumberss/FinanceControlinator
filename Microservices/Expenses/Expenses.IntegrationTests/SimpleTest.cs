@@ -53,16 +53,18 @@ namespace Expenses.IntegrationTests
         {
             try
             {
-
                 var w = new WebApplicationMockBuilder();
-                var (client, harness) = w.WithConsumers(new FakeConsumer<InvoicePaidEvent>())
+                var (client, harness) = w.WithConsumers(new FakeConsumer<GenerateInvoicesEvent>())
                     .WithAuthorizedUser(Guid.NewGuid())
                     .Build();
                 Fixture fixture = new Fixture();
 
-                var a = fixture.Create<ExpenseDTO>();
+                var expense = fixture.Create<ExpenseDTO>();
+                expense.TotalCost = expense.Items.Sum(x => x.Cost * x.Amount);
 
-                var b = await client.PostAsync("api/expenses", JsonContent.Create(a));
+                var apiResult = await client.PostAsync("api/expenses", JsonContent.Create(expense));
+                var messagesResult =await  harness.Consumed.Any();
+                var messagesResult2 = await harness.Consumed.Any<GenerateInvoicesEvent>();
             }
             catch (Exception ex)
             {
