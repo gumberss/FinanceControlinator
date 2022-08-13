@@ -52,6 +52,8 @@ namespace Expenses.IntegrationTests
                 var apiResult = await client.PostAsync("api/expenses", JsonContent.Create(expense));
                 var messagesResult =await  harness.Consumed.Any();
                 var messagesResult2 = await harness.Consumed.Any<GenerateInvoicesEvent>();
+                var messagesResult3 = harness.Consumed.Select<GenerateInvoicesEvent>();
+                var theEvent = messagesResult3.ToList().First().Context.Message;
             }
             catch (Exception ex)
             {
