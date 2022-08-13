@@ -35,8 +35,9 @@ namespace Expenses.IntegrationTests.TestFactories
 
             var provider = services.BuildServiceProvider();
             var harness = provider.GetRequiredService<InMemoryTestHarness>();
-
             await harness.Start();
+
+            services.AddScoped<IBus>((_) => harness.Bus);
 
             return harness;
         }

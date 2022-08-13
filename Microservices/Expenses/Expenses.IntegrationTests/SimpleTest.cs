@@ -1,10 +1,13 @@
-﻿using Expenses.IntegrationTests.TestFactories;
+﻿using AutoFixture;
+using Expenses.DTO.Expenses;
+using Expenses.IntegrationTests.TestFactories;
 using FinanceControlinator.Events.Invoices;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,7 +22,7 @@ namespace Expenses.IntegrationTests
     {
 
     }
-    public class TEstinho
+    public class SimpleTest
     {
 
         [Fact]
@@ -51,10 +54,15 @@ namespace Expenses.IntegrationTests
             try
             {
 
-                var w = new WebApplication();
-                var client = w.Mock2(Guid.NewGuid());
+                var w = new WebApplicationMockBuilder();
+                var (client, harness) = w.WithConsumers(new FakeConsumer<InvoicePaidEvent>())
+                    .WithAuthorizedUser(Guid.NewGuid())
+                    .Build();
+                Fixture fixture = new Fixture();
 
-                var b = await client.GetAsync("api/expenses/a");
+                var a = fixture.Create<ExpenseDTO>();
+
+                var b = await client.PostAsync("api/expenses", JsonContent.Create(a));
             }
             catch (Exception ex)
             {
