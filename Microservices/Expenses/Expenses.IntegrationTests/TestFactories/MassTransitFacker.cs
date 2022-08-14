@@ -3,7 +3,8 @@ using System;
 using System.Threading.Tasks;
 using MassTransit.Testing;
 using MassTransit;
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Expenses.IntegrationTests.TestFactories
 {
@@ -22,24 +23,37 @@ namespace Expenses.IntegrationTests.TestFactories
         }
     }
 
-    public class MassTransitFacker
+    public class MassTransitFacker : IFakeConfig<InMemoryTestHarness>
     {
-        public async Task<InMemoryTestHarness> ConfigureMassTransit(IServiceCollection services,  params IConsumer[] consumers)
+        private List<IConsumer> _consumers;
+        InMemoryTestHarness? _harness;
+
+        public MassTransitFacker()
+        {
+            _consumers = new List<IConsumer>();
+        }
+
+        public MassTransitFacker WithConsumers(params IConsumer[] consumers)
+        {
+            _consumers = consumers.ToList();
+            return this;
+        }
+
+        public async Task Configure(IServiceCollection services)
         {
             services
-             .AddMassTransitInMemoryTestHarness(cfg =>
-             {
-                 foreach (var consumer in consumers)
-                     cfg.AddConsumer(consumer.GetType());
-             });
+            .AddMassTransitInMemoryTestHarness(cfg =>
+            {
+                _consumers.ForEach(x => cfg.AddConsumer(x.GetType()));
+            });
 
             var provider = services.BuildServiceProvider();
-            var harness = provider.GetRequiredService<InMemoryTestHarness>();
-            await harness.Start();
+            _harness = provider.GetRequiredService<InMemoryTestHarness>();
+            await _harness.Start();
 
-            services.AddScoped<IBus>((_) => harness.Bus);
-
-            return harness;
+            services.AddScoped((_) => _harness.Bus);
         }
+
+        public InMemoryTestHarness Get(IServiceProvider provider) => _harness!;
     }
 }

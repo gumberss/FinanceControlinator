@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
-using MassTransit;
 using Expenses.Data.Interfaces.Contexts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Expenses.Data.Contexts;
@@ -10,17 +9,34 @@ using System.Net.Http.Headers;
 using FinanceControlinator.Authentication.Services;
 using Microsoft.Extensions.Configuration;
 using MassTransit.Testing;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Expenses.IntegrationTests.TestFactories
 {
-    public class WebApplicationMockBuilder
+    public interface IFakeConfig
+    {
+        Task Configure(IServiceCollection services);
+
+    }
+
+    public interface IFakeConfig<TResult> : IFakeConfig where TResult : class
+    {
+        TResult Get(IServiceProvider provider);
+    }
+
+    public class WebApplicationMockBuilder : IDisposable
     {
         private Guid _userId;
-        private IConsumer[] _consumers;
+        private List<IFakeConfig> _fakeConfigs;
+        private IServiceScope _scope;
+
+        private bool _disposed;
 
         public WebApplicationMockBuilder()
         {
-
+            _fakeConfigs = new List<IFakeConfig>();
         }
 
         public WebApplicationMockBuilder WithAuthorizedUser(Guid userId)
@@ -29,43 +45,54 @@ namespace Expenses.IntegrationTests.TestFactories
             return this;
         }
 
-        public WebApplicationMockBuilder WithConsumers(params IConsumer[] consumers)
+        public WebApplicationMockBuilder AddServiceConfiguration<TResult>(IFakeConfig<TResult> fakeConfig) where TResult : class
         {
-            _consumers = consumers;
+            _fakeConfigs.Add(fakeConfig);
+
             return this;
         }
 
-        public (HttpClient, InMemoryTestHarness) Build()
+        /// <summary>
+        /// Call After Build!
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        public TResult? GetFake<TResult>() where TResult : class
+            => _fakeConfigs.OfType<IFakeConfig<TResult>>()
+                    .FirstOrDefault()
+                    ?.Get(_scope.ServiceProvider);
+
+        /// <summary>
+        /// Call After Build!
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        public TResult? GetService<TResult>() where TResult : class
+            => _scope.ServiceProvider.GetService<TResult>();
+
+        public HttpClient Build()
         {
             IConfiguration config = null;
-            InMemoryTestHarness harness = null;
 
             var application = new WebApplicationFactory<Program>()
               .WithWebHostBuilder(builder =>
               {
                   builder.ConfigureServices(services =>
                   {
-                      services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
-                      {
-                          options.UseInMemoryDatabase("InMemoryDbForTesting");
-                      });
-
-                      harness = new MassTransitFacker().ConfigureMassTransit(services, _consumers).Result;
+                      _fakeConfigs.ForEach(x => x.Configure(services));
 
                       var sp = services.BuildServiceProvider(true);
 
-                      using var scope = sp.CreateScope();
-                      var scopedServices = scope.ServiceProvider;
-
+                      _scope = sp.CreateScope();
+                      var scopedServices = _scope.ServiceProvider;
                       config = scopedServices.GetRequiredService<IConfiguration>();
-                      var db = scopedServices.GetRequiredService<IExpenseDbContext>();
-                      ((ExpenseDbContext)db).Database.EnsureCreated();
+
                   });
               });
 
             var client = application.CreateClient();
             Authorize(client, _userId, config!);
-            return (client, harness!);
+            return client;
         }
 
         public static HttpClient Authorize(HttpClient client, Guid userId, IConfiguration config)
@@ -80,6 +107,14 @@ namespace Expenses.IntegrationTests.TestFactories
                                  TimeSpan.FromMinutes(10)));
 
             return client;
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            _scope.Dispose();
         }
     }
 }
