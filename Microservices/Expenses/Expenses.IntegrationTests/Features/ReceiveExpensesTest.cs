@@ -48,7 +48,7 @@ namespace Expenses.IntegrationTests.Features
             var expense = _fixture.Create<ExpenseDTO>();
             expense.TotalCost = expense.Items.Sum(x => x.Cost * x.Amount);
 
-            var _ = await _client.PostAsync("api/expenses", JsonContent.Create(expense));
+            await _client.PostAsync("api/expenses", JsonContent.Create(expense));
 
             var publishedEvent = _harness!.Published.Select<GenerateInvoicesEvent>().First();
             var invoiceExpense = publishedEvent.Context.Message.InvoiceExpense;

@@ -19,7 +19,7 @@ namespace Expenses.IntegrationTests.TestFactories
 
     }
 
-    public interface IFakeConfig<TResult> : IFakeConfig where TResult : class
+    public interface IFakeConfig<out TResult> : IFakeConfig where TResult : class
     {
         TResult Get(IServiceProvider provider);
     }
