@@ -3,9 +3,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Identity.Tokens
+namespace FinanceControlinator.Authentication.Services
 {
-    internal interface ITokenService
+    public interface ITokenService
     {
         string BuildToken(string key, string issuer, IEnumerable<string> audience, string userName, String userId, TimeSpan duration);
     }

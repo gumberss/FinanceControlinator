@@ -105,7 +105,7 @@ namespace Invoices.Application.AppServices
             }.Concat(new[] {
                 _invoiceOverviewService.BillCostPercentComparedWithRangeMonthesBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization),
                 _invoiceOverviewService.InvoiceCostPercentComparedWithRangeBrief(invoice, lastSixInvoicesFromCurrentInvoce, _textParser, _localization)
-            }.Where(_ => lastSixInvoicesFromCurrentInvoce.Count > 0))
+            }.Where(_ => lastSixInvoicesFromCurrentInvoce.Any()))
             .ToList();
         }
     }

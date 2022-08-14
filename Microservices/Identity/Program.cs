@@ -1,6 +1,6 @@
+using FinanceControlinator.Authentication.Services;
 using Identity.Extensions;
 using Identity.Routes;
-using Identity.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
