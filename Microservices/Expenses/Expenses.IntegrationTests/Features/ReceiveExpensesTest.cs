@@ -1,11 +1,11 @@
 ﻿using AutoFixture;
-using Expenses.Data.Interfaces.Contexts;
 using Expenses.Data.Repositories;
 using Expenses.DTO.Expenses;
 using Expenses.IntegrationTests.TestFactories;
 using FinanceControlinator.Events.Invoices;
+using FinanceControlinator.Tests.Categories;
+using FinanceControlinator.Tests.Categories.Enums;
 using FluentAssertions;
-using MassTransit;
 using MassTransit.Testing;
 using System;
 using System.Linq;
@@ -40,6 +40,8 @@ namespace Expenses.IntegrationTests.Features
         }
 
         [Fact]
+        [JourneyCategory(TestUserJourneyEnum.RecordingPiggyBanks)]
+        [IntegrationTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
         public async void Should_insert_a_new_expense()
         {
             var expense = _fixture.Create<ExpenseDTO>();

@@ -2,22 +2,24 @@
 using FinanceControlinator.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using Xunit.Sdk;
 
 namespace FinanceControlinator.Tests.Categories
 {
-    public class UnitTestCategoryAttribute : TestCategoryBaseAttribute
+    [TraitDiscoverer("FinanceControlinator.Tests.Categories.UnitDiscoverer", "FinanceControlinator.Tests")]
+    public class UnitTestCategoryAttribute : TestCategoryBaseAttribute, ITraitAttribute
     {
-        readonly TestMicroserviceEnum _microservice;
-        readonly TestFeatureEnum _feature;
+        public TestMicroserviceEnum Microservice { get; private set; }
+        public TestFeatureEnum Feature { get; private set; }
 
         public UnitTestCategoryAttribute(TestMicroserviceEnum microservice, TestFeatureEnum feature)
         {
-            _microservice = microservice;
-            _feature = feature;
+            Microservice = microservice;
+            Feature = feature;
         }
 
         public override IList<string> TestCategories => new[] {
-            $"Unit - {_microservice.GetDescription()} - {_feature.GetDescription()}"
+            $"Unit - {Microservice.GetDescription()} - {Feature.GetDescription()}"
         };
     }
 }
