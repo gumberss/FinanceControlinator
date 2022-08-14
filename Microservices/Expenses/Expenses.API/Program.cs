@@ -18,7 +18,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if (!builder.Environment.IsDevelopment())
+if (!builder.Environment.IsEnvironment("Test"))
 {
     var rabbitMqValues = new RabbitMqValues
     {
@@ -29,16 +29,16 @@ if (!builder.Environment.IsDevelopment())
 
     builder.Services.ConfigureMassTransit(rabbitMqValues);
 
-    builder.Services.AddControllers()
-        .AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-        );
-
     builder.Services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("ExpensesDbConnection"));
     });
 }
+
+builder.Services.AddControllers()
+     .AddNewtonsoftJson(options =>
+         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+     );
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(option =>
@@ -77,7 +77,7 @@ builder.Logging
 var app = builder
     .Build();
 
-if (!app.Environment.IsDevelopment())
+if (!app.Environment.IsEnvironment("Test"))
     app = app.Migrate().Result;
 
 app.UseRouting();

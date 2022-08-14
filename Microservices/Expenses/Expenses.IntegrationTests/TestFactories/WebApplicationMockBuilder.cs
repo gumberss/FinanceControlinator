@@ -1,16 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
-using Expenses.Data.Interfaces.Contexts;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Expenses.Data.Contexts;
-using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Headers;
 using FinanceControlinator.Authentication.Services;
 using Microsoft.Extensions.Configuration;
 using MassTransit.Testing;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Hosting;
 using System.Threading.Tasks;
 
 namespace Expenses.IntegrationTests.TestFactories
@@ -77,6 +75,7 @@ namespace Expenses.IntegrationTests.TestFactories
             var application = new WebApplicationFactory<Program>()
               .WithWebHostBuilder(builder =>
               {
+                  builder.UseEnvironment("Test");
                   builder.ConfigureServices(services =>
                   {
                       _fakeConfigs.ForEach(x => x.Configure(services));
