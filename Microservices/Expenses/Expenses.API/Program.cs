@@ -38,9 +38,6 @@ if (!builder.Environment.IsDevelopment())
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("ExpensesDbConnection"));
     });
-
-
-
 }
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -79,10 +76,9 @@ builder.Logging
 
 var app = builder
     .Build();
+
 if (!app.Environment.IsDevelopment())
-{
     app = app.Migrate().Result;
-}
 
 app.UseRouting();
 
