@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Expenses.IntegrationTests.Features
@@ -42,12 +43,12 @@ namespace Expenses.IntegrationTests.Features
         }
 
         [Fact]
-        public async void Should_insert_a_new_expense()
+        public async Task Should_insert_a_new_expense()
         {
             var expense = _fixture.Create<ExpenseDTO>();
             expense.TotalCost = expense.Items.Sum(x => x.Cost * x.Amount);
 
-            var apiResult = await _client.PostAsync("api/expenses", JsonContent.Create(expense));
+            var _ = await _client.PostAsync("api/expenses", JsonContent.Create(expense));
 
             var publishedEvent = _harness!.Published.Select<GenerateInvoicesEvent>().First();
             var invoiceExpense = publishedEvent.Context.Message.InvoiceExpense;

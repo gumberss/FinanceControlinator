@@ -26,8 +26,8 @@ namespace Expenses.IntegrationTests.TestFactories
 
     public class WebApplicationMockBuilder : IDisposable
     {
+        private readonly List<IFakeConfig> _fakeConfigs;
         private Guid _userId;
-        private List<IFakeConfig> _fakeConfigs;
         private IServiceScope _scope;
 
         private bool _disposed;

@@ -9,9 +9,7 @@ namespace Expenses.IntegrationTests.TestFactories
 {
     internal class EntityFrameworkFacker : IFakeConfig<IExpenseDbContext>
     {
-        private IExpenseDbContext _db;
-
-        String dbName = Guid.NewGuid().ToString();
+        readonly String dbName = Guid.NewGuid().ToString();
 
         public Task Configure(IServiceCollection services)
         {
@@ -25,10 +23,10 @@ namespace Expenses.IntegrationTests.TestFactories
 
         public IExpenseDbContext Get(IServiceProvider provider)
         {
-            _db = provider.GetRequiredService<IExpenseDbContext>();
-            ((ExpenseDbContext)_db).Database.EnsureCreated();
+            var db = provider.GetRequiredService<IExpenseDbContext>();
+            ((ExpenseDbContext)db).Database.EnsureCreated();
 
-            return _db;
+            return db;
         }
     }
 }
