@@ -54,7 +54,7 @@ namespace Expenses.IntegrationTests.TestFactories
             _harness.TestInactivityTimeout = TimeSpan.FromSeconds(1);
             await _harness.Start();
 
-            services.AddScoped((_) => _harness.Bus);
+            services.AddTransient((_) => _harness.Bus);
         }
 
         public InMemoryTestHarness Get(IServiceProvider provider) => _harness!;
