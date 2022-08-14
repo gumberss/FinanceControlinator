@@ -49,6 +49,9 @@ namespace Expenses.IntegrationTests.TestFactories
 
             var provider = services.BuildServiceProvider();
             _harness = provider.GetRequiredService<InMemoryTestHarness>();
+            _harness.TestTimeout = TimeSpan.FromMinutes(1);
+            //https://github.com/MassTransit/MassTransit/issues/2544#issuecomment-884858167
+            _harness.TestInactivityTimeout = TimeSpan.FromSeconds(1);
             await _harness.Start();
 
             services.AddScoped((_) => _harness.Bus);

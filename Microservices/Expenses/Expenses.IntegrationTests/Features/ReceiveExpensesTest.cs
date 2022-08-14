@@ -15,6 +15,8 @@ using Xunit;
 
 namespace Expenses.IntegrationTests.Features
 {
+    [JourneyCategory(TestUserJourneyEnum.RecordingPiggyBanks)]
+    [IntegrationTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
     public class ReceiveExpensesTest : IDisposable
     {
         private readonly WebApplicationMockBuilder _apiBuilder;
@@ -40,8 +42,6 @@ namespace Expenses.IntegrationTests.Features
         }
 
         [Fact]
-        [JourneyCategory(TestUserJourneyEnum.RecordingPiggyBanks)]
-        [IntegrationTestCategory(TestMicroserviceEnum.PiggyBanks, TestFeatureEnum.PiggyBankGeneration)]
         public async void Should_insert_a_new_expense()
         {
             var expense = _fixture.Create<ExpenseDTO>();
@@ -49,8 +49,6 @@ namespace Expenses.IntegrationTests.Features
 
             var apiResult = await _client.PostAsync("api/expenses", JsonContent.Create(expense));
 
-            _harness!.Published.Count().Should().Be(1);
-            _harness!.Published.Select<GenerateInvoicesEvent>().Should().HaveCount(1);
             var publishedEvent = _harness!.Published.Select<GenerateInvoicesEvent>().First();
             var invoiceExpense = publishedEvent.Context.Message.InvoiceExpense;
 

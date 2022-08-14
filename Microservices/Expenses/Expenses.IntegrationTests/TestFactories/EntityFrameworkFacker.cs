@@ -11,11 +11,13 @@ namespace Expenses.IntegrationTests.TestFactories
     {
         private IExpenseDbContext _db;
 
+        String dbName = Guid.NewGuid().ToString();
+
         public Task Configure(IServiceCollection services)
         {
             services.AddDbContext<IExpenseDbContext, ExpenseDbContext>(options =>
             {
-                options.UseInMemoryDatabase("InMemoryDbForTesting");
+                options.UseInMemoryDatabase(dbName);
             });
 
             return Task.CompletedTask;
