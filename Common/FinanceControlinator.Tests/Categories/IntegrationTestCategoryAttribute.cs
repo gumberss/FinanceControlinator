@@ -2,10 +2,12 @@
 using FinanceControlinator.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using Xunit.Sdk;
 
 namespace FinanceControlinator.Tests.Categories
 {
-    public class IntegrationTestCategoryAttribute : TestCategoryBaseAttribute
+    [TraitDiscoverer("FinanceControlinator.Tests.Categories.IntegrationDiscoverer", "FinanceControlinator.Tests")]
+    public class IntegrationTestCategoryAttribute : TestCategoryBaseAttribute, ITraitAttribute
     {
         readonly TestMicroserviceEnum _microservice;
         readonly TestFeatureEnum _feature;

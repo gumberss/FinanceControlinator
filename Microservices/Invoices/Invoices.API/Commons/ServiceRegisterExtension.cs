@@ -33,6 +33,7 @@ namespace Invoices.API.Commons
 
             services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddTransient<IInvoiceOverviewService, InvoiceOverviewService>();
+            services.AddTransient<IInvoiceSyncService, InvoiceSyncService>();
 
             services.AddTransient<IInvoiceRepository, InvoiceRepository>();
             services.AddTransient<IExpenseRepository, ExpenseRepository>();

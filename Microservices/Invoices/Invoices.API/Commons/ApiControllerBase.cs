@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Invoices.API.Commons
 {
@@ -25,6 +26,20 @@ namespace Invoices.API.Commons
             }
 
             return Ok(result.Value);
+        }
+
+        protected async Task<IActionResult> FromAsync<T, E>(Task<Result<T, E>> task) where E : class
+        {
+            try
+            {
+                var result = await task;
+                return From(result);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Invoices.Handler.Domain.Cqrs.Handlers
 {
-    public class InvoiceSyncHandler : IRequestHandler<InvoiceSyncQuery, Result<InvoiceSyncDTO, BusinessException>>
+    public class InvoiceSyncHandler : IRequestHandler<InvoiceSyncQuery, Result<InvoiceDataSyncDTO, BusinessException>>
     {
         private readonly IInvoiceSyncAppService _invoiceSyncAppService;
         private readonly IAsyncDocumentSession _documentSession;
@@ -37,13 +37,13 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
 
         }
 
-        public async Task<Result<InvoiceSyncDTO, BusinessException>> Handle(InvoiceSyncQuery request, CancellationToken cancellationToken)
+        public async Task<Result<InvoiceDataSyncDTO, BusinessException>> Handle(InvoiceSyncQuery request, CancellationToken cancellationToken)
         {
             var result = await _invoiceSyncAppService.SyncUpdatesFrom(request.LastSyncTimestamp);
 
             if (result.IsFailure) return result.Error;
 
-            return _mapper.Map<InvoiceSync, InvoiceSyncDTO>(result.Value);
+            return _mapper.Map<InvoiceDataSync, InvoiceDataSyncDTO>(result.Value);
         }
     }
 }

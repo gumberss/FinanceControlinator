@@ -2,20 +2,22 @@
 using FinanceControlinator.Tests.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using Xunit.Sdk;
 
 namespace FinanceControlinator.Tests.Categories
 {
-    public class JourneyCategoryAttribute : TestCategoryBaseAttribute
+    [TraitDiscoverer("FinanceControlinator.Tests.Categories.JourneyDiscoverer", "FinanceControlinator.Tests")]
+    public class JourneyCategoryAttribute : TestCategoryBaseAttribute, ITraitAttribute
     {
-        readonly TestUserJourneyEnum _journey;
+        public TestUserJourneyEnum Journey { get; private set; }
 
         public JourneyCategoryAttribute(TestUserJourneyEnum journey)
         {
-            _journey = journey;
+            Journey = journey;
         }
 
         public override IList<string> TestCategories => new[] {
-            $"Journey - {_journey.GetDescription()}"
+            $"Journey - {Journey.GetDescription()}"
         };
     }
 }

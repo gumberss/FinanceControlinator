@@ -93,7 +93,7 @@ namespace FinanceControlinator.Common.Utils
             if (input.IsFailure) return input.Error;
 
             return condiction(input.Value)
-                 ? await @then(input.Value)
+                ? await @then(input.Value)
                  : @else is not null
                      ? await @else(input.Value)
                      : Result.From(default(Tr));
@@ -111,7 +111,7 @@ namespace FinanceControlinator.Common.Utils
                 return result.Error;
 
             return condiction(result.Value)
-               ? @then(result.Value)
+                ? @then(result.Value)
                : @else is not null
                    ? @else(result.Value)
                    : Result.From(default(Tr));

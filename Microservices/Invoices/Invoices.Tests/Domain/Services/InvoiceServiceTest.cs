@@ -782,9 +782,14 @@ namespace Invoices.Tests.Domain.Services
                .Status(invoice, invoice.CloseDate.AddDays(1))
                .Should().NotBe(InvoiceStatus.Open);
 
+            // Sometimes this test can have the open date and the close date as the same
+            InvoiceStatus checkStatus = invoice.CloseDate.Date == _invoiceService.CurrentInvoiceOpenDate(invoice).Date
+                ? InvoiceStatus.Future
+                : InvoiceStatus.Open;
+
             _invoiceService
-               .Status(invoice, invoice.CloseDate.AddDays(-1))
-               .Should().Be(InvoiceStatus.Open);
+                .Status(invoice, invoice.CloseDate.AddDays(-1))
+                .Should().Be(checkStatus);
         }
 
         [TestMethod]

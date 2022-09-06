@@ -4,6 +4,6 @@
     {
         public InvoiceOverviewDTO Overview { get; set; }
 
-        public InvoiceDTO Invoice { get; set; }
+        public InvoiceSyncDTO Invoice { get; set; }
     }
 }
