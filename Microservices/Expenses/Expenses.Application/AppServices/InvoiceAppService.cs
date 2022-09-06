@@ -26,29 +26,14 @@ namespace Expenses.Application.AppServices
         }
 
         public async Task<Result<Invoice, BusinessException>> RegisterPaid(Invoice paidInvoice)
-        {
-            var registeredInvoice = await _invoiceRepository.GetByIdAsync(paidInvoice.Id);
-
-            if (registeredInvoice.IsFailure) return registeredInvoice.Error;
-
-            if (registeredInvoice.Value is not null)
-            {
-                var deleteItemsResult = await _invoiceItemRepository.DeleteAsync(registeredInvoice.Value.Items);
-
-                if (deleteItemsResult.IsFailure) return deleteItemsResult.Error;
-
-                var addNewItemsResult = await _invoiceItemRepository.AddAsync(paidInvoice.Items);
-
-                if (addNewItemsResult.IsFailure) return addNewItemsResult.Error;
-
-                registeredInvoice.Value
-                    .ChangeDueDate(paidInvoice.DueDate)
-                    .ReplaceItems(paidInvoice.Items);
-
-                return await _invoiceRepository.UpdateAsync(registeredInvoice.Value);
-            }
-
-            return await _invoiceRepository.AddAsync(paidInvoice);
-        }
+            => await _invoiceRepository.GetByIdAsync(paidInvoice.Id)
+                    .When(existentInvoice => existentInvoice is not null,
+                     @then: existentInvoice => _invoiceItemRepository.DeleteAsync(existentInvoice.Items)
+                        .Then(_ => _invoiceItemRepository.AddAsync(paidInvoice.Items))
+                        .Then(_ => existentInvoice
+                            .ChangeDueDate(paidInvoice.DueDate)
+                            .ReplaceItems(paidInvoice.Items))
+                        .Then(existentInvoice => _invoiceRepository.UpdateAsync(existentInvoice)),
+                     @else: _ => _invoiceRepository.AddAsync(paidInvoice));
     }
 }
