@@ -1,5 +1,4 @@
-﻿using FinanceControlinator.Common.Contexts;
-using FinanceControlinator.Common.Exceptions;
+﻿using FinanceControlinator.Common.Exceptions;
 using System;
 using System.Threading.Tasks;
 
@@ -7,9 +6,9 @@ namespace FinanceControlinator.Common.Utils
 {
     public static class ResultExtensions
     {
-        public async static Task<Result<Tr, BusinessException>> Then<Ti, Tr>
-           (this Task<Result<Ti, BusinessException>> input,
-           Func<Ti, Task<Result<Tr, BusinessException>>> func) where Tr : class
+        public async static Task<Result<Tr, Te>> Then<Ti, Tr, Te>
+           (this Task<Result<Ti, Te>> input,
+           Func<Ti, Task<Result<Tr, Te>>> func) where Te : class
         {
             var result = await input;
 
@@ -18,9 +17,9 @@ namespace FinanceControlinator.Common.Utils
                 : await func(result.Value);
         }
 
-        public async static Task<Result<Tr, BusinessException>> Then<Ti, Tr>
-             (this Task<Result<Ti, BusinessException>> input,
-             Func<Ti, Result<Tr, BusinessException>> func) where Tr : class
+        public async static Task<Result<Tr, Te>> Then<Ti, Tr, Te>
+             (this Task<Result<Ti, Te>> input,
+             Func<Ti, Result<Tr, Te>> func) where Te : class
         {
             var result = await input;
 
@@ -29,9 +28,9 @@ namespace FinanceControlinator.Common.Utils
                 : func(result.Value);
         }
 
-        public async static Task<Result<Tr, BusinessException>> Then<Ti, Tr>
-            (this Result<Ti, BusinessException> input,
-            Func<Ti, Task<Result<Tr, BusinessException>>> func) where Tr : class
+        public async static Task<Result<Tr, Te>> Then<Ti, Tr, Te>
+            (this Result<Ti, Te> input,
+            Func<Ti, Task<Result<Tr, Te>>> func) where Te : class
         {
             var result = input;
 
@@ -40,9 +39,9 @@ namespace FinanceControlinator.Common.Utils
                  : await func(result.Value);
         }
 
-        public async static Task<Result<Tr, BusinessException>> Then<Ti, Tr>
-            (this Task<Result<Ti, BusinessException>> input,
-            Func<Ti, Tr> func)
+        public async static Task<Result<Tr, Te>> Then<Ti, Tr, Te>
+            (this Task<Result<Ti, Te>> input,
+            Func<Ti, Tr> func) where Te : class
         {
             var result = await input;
 
@@ -51,11 +50,11 @@ namespace FinanceControlinator.Common.Utils
                 : func(result.Value);
         }
 
-        public async static Task<Result<Tr, BusinessException>> When<Ti, Tr>
-            (this Task<Result<Ti, BusinessException>> input,
+        public async static Task<Result<Tr, Te>> When<Ti, Tr, Te>
+            (this Task<Result<Ti, Te>> input,
             Func<Ti, bool> condiction,
-            Func<Ti, Task<Result<Tr, BusinessException>>> @then,
-            Func<Ti, Task<Result<Tr, BusinessException>>> @else = null) where Tr : class
+            Func<Ti, Task<Result<Tr, Te>>> @then,
+            Func<Ti, Task<Result<Tr, Te>>> @else = null) where Te : class
         {
             var result = await input;
 
@@ -65,14 +64,14 @@ namespace FinanceControlinator.Common.Utils
                 ? await @then(result.Value)
                 : @else is not null
                     ? await @else(result.Value)
-                    : Result.From(default(Tr));
+                    : Result.From<Tr, Te>(default);
         }
 
-        public async static Task<Result<Tr, BusinessException>> When<Ti, Tr>
-             (this Task<Result<Ti, BusinessException>> input,
+        public async static Task<Result<Tr, Te>> When<Ti, Tr, Te>
+             (this Task<Result<Ti, Te>> input,
              Func<Ti, bool> condiction,
-             Func<Ti, Result<Tr, BusinessException>> @then,
-             Func<Ti, Result<Tr, BusinessException>> @else = null) where Tr : class
+             Func<Ti, Result<Tr, Te>> @then,
+             Func<Ti, Result<Tr, Te>> @else = null) where Te : class
         {
             var result = await input;
 
@@ -82,14 +81,14 @@ namespace FinanceControlinator.Common.Utils
                 ? @then(result.Value)
                 : @else is not null
                     ? @else(result.Value)
-                    : Result.From(default(Tr));
+                    : Result.From<Tr, Te>(default);
         }
 
-        public async static Task<Result<Tr, BusinessException>> When<Ti, Tr>
-            (this Result<Ti, BusinessException> input,
+        public async static Task<Result<Tr, Te>> When<Ti, Tr, Te>
+            (this Result<Ti, Te> input,
             Func<Ti, bool> condiction,
-            Func<Ti, Task<Result<Tr, BusinessException>>> @then,
-            Func<Ti, Task<Result<Tr, BusinessException>>> @else = null) where Tr : class
+            Func<Ti, Task<Result<Tr, Te>>> @then,
+            Func<Ti, Task<Result<Tr, Te>>> @else = null) where Te : class
         {
             if (input.IsFailure) return input.Error;
 
@@ -97,14 +96,14 @@ namespace FinanceControlinator.Common.Utils
                 ? await @then(input.Value)
                  : @else is not null
                      ? await @else(input.Value)
-                     : Result.From(default(Tr));
+                     : Result.From<Tr, Te>(default);
         }
 
-        public async static Task<Result<Tr, BusinessException>> When<Ti, Tr>
-         (this Task<Result<Ti, BusinessException>> input,
+        public async static Task<Result<Tr, Te>> When<Ti, Tr, Te>
+         (this Task<Result<Ti, Te>> input,
             Func<Ti, bool> condiction,
             Func<Ti, Tr> @then,
-            Func<Ti, Tr> @else = null)
+            Func<Ti, Tr> @else = null) where Te : class
         {
             var result = await input;
 
@@ -115,7 +114,7 @@ namespace FinanceControlinator.Common.Utils
                 ? @then(result.Value)
                : @else is not null
                    ? @else(result.Value)
-                   : Result.From(default(Tr));
+                   : Result.From<Tr, Te>(default);
         }
     }
 }

@@ -126,6 +126,11 @@ namespace FinanceControlinator.Common.Utils
             });
         }
 
+        public static Result<T, E> From<T, E>(T data) where E : class
+        {
+            return new Result<T, E>(data);
+        }
+
         public static Result<T, BusinessException> From<T>(T data)
         {
             return new Result<T, BusinessException>(data);
