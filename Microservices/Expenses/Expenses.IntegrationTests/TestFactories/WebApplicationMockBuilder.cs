@@ -78,7 +78,7 @@ namespace Expenses.IntegrationTests.TestFactories
                   builder.UseEnvironment("Test");
                   builder.ConfigureServices(services =>
                   {
-                      _fakeConfigs.ForEach(x => x.Configure(services));
+                      _fakeConfigs.ForEach(x => x.Configure(services).Wait());
 
                       var sp = services.BuildServiceProvider(true);
 
