@@ -1,3 +1,4 @@
+using FinanceControlinator.Common.Contexts;
 using FinanceControlinator.Common.CustomLogs;
 using Invoices.API.Commons;
 using Invoices.Data.Contexts;
@@ -36,7 +37,8 @@ builder.Services.AddControllers()
 var dbConnection = builder.Configuration.GetConnectionString("InvoicesDbConnection");
 var dbName = builder.Configuration.GetConnectionString("InvoicesDbName");
 builder.Services.AddSingleton<IDocumentStore>(x => DocumentStoreHolder.GetStore(dbConnection, dbName));
-builder.Services.AddScoped<IAsyncDocumentSession>(x => x.GetService<IDocumentStore>().OpenAsyncSession());
+builder.Services.AddScoped<IContext>(x => new DocumentoStoreContext(x.GetService<IDocumentStore>()));
+builder.Services.AddScoped<IAsyncDocumentSession>(x => ((DocumentoStoreContext)x.GetService<IContext>()).Context());
 
 builder.Services.AddSwaggerGen(x =>
 {
