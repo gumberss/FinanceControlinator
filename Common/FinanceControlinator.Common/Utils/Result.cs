@@ -130,5 +130,10 @@ namespace FinanceControlinator.Common.Utils
         {
             return new Result<T, BusinessException>(data);
         }
+
+        public static Result<T, BusinessException> FromError<T>(BusinessException error)
+        {
+            return new Result<T, BusinessException>(error);
+        }
     }
 }
