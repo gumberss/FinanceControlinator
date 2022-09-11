@@ -1,7 +1,6 @@
 using AutoMapper;
-using FinanceControlinator.Common.Exceptions;
+using CleanHandling;
 using FinanceControlinator.Common.Messaging;
-using FinanceControlinator.Common.Utils;
 using FinanceControlinator.Events.Payments;
 using MediatR;
 using Microsoft.Extensions.Logging;

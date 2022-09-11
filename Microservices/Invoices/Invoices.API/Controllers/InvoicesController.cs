@@ -24,7 +24,7 @@ namespace Invoices.API.Controllers
 
         [HttpGet("sync")]
         public async Task<IActionResult> Sync([FromQuery] long timestamp)
-            => !UserId.HasValue ? Unauthorized(): 
+            => !UserId.HasValue ? Unauthorized() :
             await FromAsync(_mediator.Send(new InvoiceSyncQuery(timestamp)));
     }
 }
