@@ -1,7 +1,6 @@
+using CleanHandling;
 using FinanceControlinator.Common.Entities;
-using FinanceControlinator.Common.Exceptions;
 using FinanceControlinator.Common.Repositories;
-using FinanceControlinator.Common.Utils;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using System;

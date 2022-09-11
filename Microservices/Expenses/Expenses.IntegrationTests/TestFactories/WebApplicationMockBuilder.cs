@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net.Http.Headers;
-using FinanceControlinator.Authentication.Services;
-using Microsoft.Extensions.Configuration;
+﻿using FinanceControlinator.Authentication.Services;
 using MassTransit.Testing;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Expenses.IntegrationTests.TestFactories
@@ -78,7 +78,7 @@ namespace Expenses.IntegrationTests.TestFactories
                   builder.UseEnvironment("Test");
                   builder.ConfigureServices(services =>
                   {
-                      _fakeConfigs.ForEach(x => x.Configure(services).Wait());
+                      _fakeConfigs.ForEach(x => x.Configure(services));
 
                       var sp = services.BuildServiceProvider(true);
 

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CleanHandling" Version="1.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Invoices.Data\Invoices.Data.csproj" />
     <ProjectReference Include="..\Invoices.Domain\Invoices.Domain.csproj" />
     <ProjectReference Include="..\Invoices.Domain\Invoices.Domain.csproj" />

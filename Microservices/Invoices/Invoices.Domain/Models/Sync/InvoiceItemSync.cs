@@ -5,7 +5,7 @@ namespace Invoices.Domain.Models.Sync
 {
     public record InvoiceItemSync
     {
-        public InvoiceItemSync(string id, 
+        public InvoiceItemSync(string id,
             string title,
             string installmentNumber,
             string installmentCost,

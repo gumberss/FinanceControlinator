@@ -1,6 +1,5 @@
+using CleanHandling;
 using FinanceControlinator.Common.Contexts;
-using FinanceControlinator.Common.Exceptions;
-using FinanceControlinator.Common.Utils;
 using Invoices.Application.Interfaces.AppServices;
 using Invoices.Domain.Models;
 using Invoices.Handler.Domain.Cqrs.Events;
@@ -53,7 +52,7 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         public async Task<Result<Invoice, BusinessException>> Handle(RegisterInvoicePaymentCommand request, CancellationToken cancellationToken)
             => await _invoiceAppService.RegisterPayment(request.Payment)
                 .Then(invoice => _context.Commit().Then(_ => invoice));
-      
+
         public async Task<Result<List<Invoice>, BusinessException>> Handle(RegisterExpenseCommand request, CancellationToken cancellationToken)
             => await _invoiceAppService.RegisterInvoiceItems(request.Expense)
                 .Then(invoices => _context.Commit().Then(_ => invoices));

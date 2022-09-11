@@ -1,10 +1,9 @@
-﻿using FinanceControlinator.Common.Contexts;
+﻿using CleanHandling;
+using FinanceControlinator.Common.Contexts;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
-using System.Threading.Tasks;
-using FinanceControlinator.Common.Utils;
-using FinanceControlinator.Common.Exceptions;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Invoices.Data.Contexts
 {
