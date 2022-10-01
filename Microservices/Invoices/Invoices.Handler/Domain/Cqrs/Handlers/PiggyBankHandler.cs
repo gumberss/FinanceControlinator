@@ -34,24 +34,17 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         }
 
         public async Task<Result<List<Invoice>, BusinessException>> Handle(RegisterPiggyBankExpenseCommand request, CancellationToken cancellationToken)
-        {
-            var piggyBank = request.Expense;
-
-            var installmentCount = _invoiceService.GetInvoiceInstallmentsByDateRange(piggyBank.StartDate, piggyBank.GoalDate);
-
-            var expense = new Expense()
+            => await Result.From(request.Expense)
+            .Then(piggyBank =>
+                Result.From(_invoiceService.GetInvoiceInstallmentsByDateRange(piggyBank.StartDate, piggyBank.GoalDate))
+                .Then(installmentCount => Result.From<Expense, BusinessException>(new Expense()
                 .From(piggyBank)
-                .WithInstallmentCount(installmentCount);
+                .WithInstallmentCount(installmentCount))))
+            .Then(expense => _invoiceAppService.RegisterInvoiceItems(expense))
+            .Then(invoices => Result.Try(_documentSession.SaveChangesAsync())
+                   .Then(_ => invoices));
 
-            var result = await _invoiceAppService.RegisterInvoiceItems(expense);
-
-            if (result.IsFailure) return result.Error;
-
-            var saveResult = await Result.Try(_documentSession.SaveChangesAsync());
-
-            if (saveResult.IsFailure) return saveResult.Error;
-
-            return result;
-        }
     }
+
+
 }
