@@ -37,12 +37,7 @@ namespace Invoices.Handler.Domain.Cqrs.Handlers
         }
 
         public async Task<Result<InvoiceDataSyncDTO, BusinessException>> Handle(InvoiceSyncQuery request, CancellationToken cancellationToken)
-        {
-            var result = await _invoiceSyncAppService.SyncUpdatesFrom(request.LastSyncTimestamp);
-
-            if (result.IsFailure) return result.Error;
-
-            return _mapper.Map<InvoiceDataSync, InvoiceDataSyncDTO>(result.Value);
-        }
+         => await _invoiceSyncAppService.SyncUpdatesFrom(request.LastSyncTimestamp)
+            .Then(result => _mapper.Map<InvoiceDataSync, InvoiceDataSyncDTO>(result));
     }
 }
